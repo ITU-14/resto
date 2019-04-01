@@ -1,0 +1,99 @@
+- Resto ########
+	- nom
+	- description
+	- type de cuisine
+	- adresse
+	- no de telephone
+	- photo
+	- (latitude, longitude)
+	
+- User ###########
+	- nom
+	- email
+	- avatar
+	- (role)
+	
+- Menu
+	- nom
+	- prix
+	- horsd'oeuvre[]
+	- plats[]
+	- desserts[]
+	- resto_id
+
+	
+- Carte (ensemble hors d'oeuvres, plats, desserts)
+	- plats[]
+	- resto
+	
+- Plats
+	- nom
+	- type
+	- description
+	- Photo
+	- prix
+
+- Type Plats ###########
+	- nom
+
+- Commande
+	- plats[]
+	- menus[{},{}]
+	- user
+	- prix total
+	
+
+- Authentication firebase
+
+L'idéal serait qu'on ait à l'écran un moyen de consulter la carte et les menus, on clique sur les menus ou les plats et à droite de l'écran on voit la commande se mettre à jour...
+
+CONTRAINTES
+- au moins 50 restos - ok
+- au moins 3 menus par resto
+- au moins 30 plats par resto
+
+references web
+
+SCENARIO
+- appli web
+F.O
+- Chercher resto
+- consulter menu et cartes
+- Ajout commande
+- supprimer un element de la commande
+
+
+B.O
+- CRUD resto
+
+- CRUD carte
+
+- CRUD Plats
+
+
+
+TO DO
+- Populate database generate data
+
+
+- Render image
+
+- CRUD module for resto
+	- create
+	- Update
+	- Delete
+
+Display
+B.O
+- Details page resto
+- Set form inside modal(add, delete, edit)
+
+F.O
+- Search restos
+
+- Details restos
+	
+Fonctionnalités
+- CRUD Resto, Plat, Menu
+- Recherche resto
+- 
