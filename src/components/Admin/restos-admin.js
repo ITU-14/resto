@@ -1,12 +1,12 @@
 import React, {Component, createRef} from 'react';
 import {compose} from 'recompose';
 
-import { withStyles, CssBaseline, IconButton, Paper, Table, TableHead, TableCell, TableRow, TableBody, TableFooter, TablePagination, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField} from '@material-ui/core';
+import { withStyles, CssBaseline, IconButton, Paper, Table, TableHead, TableCell, TableRow, TableBody, TableFooter, TablePagination, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField, Avatar} from '@material-ui/core';
 import { Add, Edit, Delete } from '@material-ui/icons';
 
 import {withFirebase} from '../Firebase';
 import {withAuthorization} from '../Session';
-import Dropzone from 'react-dropzone'
+import Dropzone from 'react-dropzone';
 import AppbarAdmin from './appbar-admin';
 import * as ROLES from '../../constants/roles';
 
@@ -171,7 +171,9 @@ class RestosAdminPage extends Component {
                                             <TableCell>{resto.type_cuisine}</TableCell>
                                             <TableCell>{resto.adresse}</TableCell>
                                             <TableCell>{resto.telephone}</TableCell>
-                                            <TableCell>Image</TableCell>
+                                            <TableCell>
+                                                <Avatar alt={resto.nom_resto} src={resto.photo} className={classes.bigAvatar} />
+                                            </TableCell>
                                             <TableCell>
                                                 <IconButton size="small" color="primary" aria-label="Modifier" className={classes.margin}>
                                                     <Edit />
@@ -238,7 +240,7 @@ class RestosAdminPage extends Component {
                                     label="Description"
                                     type="text"
                                     multiline
-                                    rows="4"
+                                    rows="2"
                                     margin="normal"
                                     fullWidth
                                     className={classes.textField}
@@ -259,6 +261,7 @@ class RestosAdminPage extends Component {
                                     fullWidth
                                     className={classes.textField}
                                 />
+                                
                                 <TextField
                                     margin="normal"
                                     id="phone"
@@ -267,21 +270,13 @@ class RestosAdminPage extends Component {
                                     fullWidth
                                     className={classes.textField}
                                 />
-                                <TextField
-                                    margin="normal"
-                                    id="photo"
-                                    label="Photo"
-                                    type="text"
-                                    fullWidth
-                                    className={classes.textField}
-                                />
                                 <Dropzone ref={dropzoneRef}>
-                                {({getRootProps, getInputProps}) => (
-    <div {...getRootProps()}>
-      <input {...getInputProps()} />
-      <p>Drag 'n' drop some files here, or click to select files</p>
-    </div>
-  )}
+                                    {({getRootProps, getInputProps}) => (
+                                        <div {...getRootProps()}>
+                                        <input {...getInputProps()} />
+                                        <p>Cliquez pour choisir une image</p>
+                                        </div>
+                                    )}
                                 </Dropzone>
                             </DialogContent>
                             <DialogActions>

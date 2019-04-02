@@ -6,6 +6,7 @@
     "@material-ui/core": "^3.9.2",
     "@material-ui/icons": "^3.0.2",
     "firebase": "^5.9.0",
+    "material-ui-phone-number": "^1.4.0",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "react-dropzone": "^10.1.0",
