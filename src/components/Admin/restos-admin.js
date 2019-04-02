@@ -60,7 +60,14 @@ const styles = theme => ({
         '&:nth-of-type(odd)': {
             backgroundColor: theme.palette.background.default
         }
-    }
+    },
+    textField: {
+        margin: theme.spacing.unit
+    },
+    textArea: {
+        margin: theme.spacing.unit,
+        height: "6em"
+    },
 });
 
 class RestosAdminPage extends Component {
@@ -72,6 +79,7 @@ class RestosAdminPage extends Component {
             open: true,
             selectedIndexInList: 0,
             openDeleteDialog: false,
+            openEditDialog: false,
             page: 0,
             restos: [],
             rowsPerPage: 5
@@ -101,6 +109,14 @@ class RestosAdminPage extends Component {
         this.setState({openDeleteDialog: true});
     }
 
+    handleOpenEditDialog = () => {
+        this.setState({openEditDialog: true});
+    }
+
+    handleCloseEditDialog = () => {
+        this.setState({openEditDialog: false});
+    }
+
     handleCloseDeleteDialog = () => {
         this.setState({openDeleteDialog: false});
     }
@@ -125,7 +141,7 @@ class RestosAdminPage extends Component {
                     <div className={classes.appBarSpacer}/>
 
                     <div className={classes.tableContainer}>
-                        <Button variant="contained" className={classes.buttonAdd}>
+                        <Button variant="contained" className={classes.buttonAdd} onClick={this.handleOpenEditDialog}>
                             Ajouter
                             <Add className={classes.rightIcon} />
                         </Button>
@@ -203,28 +219,55 @@ class RestosAdminPage extends Component {
                             <DialogTitle id="alert-dialog-title">{"Creer un resto"}</DialogTitle>
                             <DialogContent>
                                 <TextField
-                                    autoFocus
-                                    margin="dense"
+                                    margin="normal"
                                     id="nom-resto"
                                     label="Nom du resto"
                                     type="text"
                                     fullWidth
+                                    className={classes.textField}
                                 />
                                 <TextField
-                                    margin="dense"
-                                    id="nom-resto"
-                                    label="Nom du resto"
+                                    id="description-resto"
+                                    label="Description"
+                                    type="text"
+                                    multiline
+                                    margin="normal"
+                                    //fullWidth
+                                    // className={classes.textField}
+                                />
+                                <TextField
+                                    margin="normal"
+                                    id="type-cuisine"
+                                    label="Type de cuisine"
                                     type="text"
                                     fullWidth
+                                    className={classes.textField}
                                 />
+                                <TextField
+                                    margin="normal"
+                                    id="address"
+                                    label="Adresse"
+                                    type="text"
+                                    fullWidth
+                                    className={classes.textField}
+                                />
+                                <TextField
+                                    margin="normal"
+                                    id="phone"
+                                    label="Numero de t&eacute;l&eacute;phone"
+                                    type="text"
+                                    fullWidth
+                                    className={classes.textField}
+                                />
+
                             </DialogContent>
                             <DialogActions>
-                                <Button onClick={this.handleClose} color="default">
+                                <Button onClick={this.handleCloseEditDialog} color="default">
                                 Annuler
                                 </Button>
 
-                                <Button onClick={this.handleClose} color="secondary" autoFocus>
-                                Supprimer
+                                <Button onClick={this.handleCloseEditDialog} color="primary" autoFocus>
+                                Cr&eacute;er
                                 </Button>
                             </DialogActions>
                         </Dialog>
@@ -242,7 +285,6 @@ const restosList = ({users}) => (
 );*/
 /* eslint-disable */
 const condition = authUser => authUser && authUser.roles.includes(ROLES.ADMIN);
-// console.log(authUser);
 
 /* eslint-enable */
 export default compose(withFirebase, withAuthorization(condition), withStyles(styles))(RestosAdminPage);

@@ -111,17 +111,17 @@ class MenusAdminPage extends Component {
 
     componentDidMount() {
         this.setState({loading: true});
-        this.props.firebase.plats().on('value', snapshot => {
+        /*this.props.firebase.plats().on('value', snapshot => {
             const platObjects = snapshot.val();
             const platsList = Object.keys(platObjects).map(key => ({
                 ...platObjects[key],
                 id: key
             }));
             this.setState({
-                plats: platsList,
+                // plats: platsList,
                 loading: false
             })
-        });
+        });*/
         this.props.firebase.typePlats().on('value', snapshot => {
             const categories = snapshot.val();
             const categoryList = Object.keys(categories).map(key => ({
@@ -156,7 +156,7 @@ class MenusAdminPage extends Component {
                     <div className={classes.appBarSpacer}/>
 
                     <div className={classes.tableContainer}>
-                        <Button variant="contained" className={classes.buttonAdd}>
+                        <Button variant="contained" className={classes.buttonAdd} onClick={this.handleOpenEditDialog}>
                             Ajouter
                             <Add className={classes.rightIcon} />
                         </Button>
@@ -172,8 +172,8 @@ class MenusAdminPage extends Component {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {plats.map(plat => (
-                                        <TableRow key={plat.id}>
+                                    
+                                        <TableRow key={1}>
                                             <TableCell>Photo</TableCell>
                                             <TableCell>Nom du plat</TableCell>
                                             <TableCell>Dessert</TableCell>
@@ -188,7 +188,7 @@ class MenusAdminPage extends Component {
                                                 </IconButton>
                                             </TableCell>
                                         </TableRow>
-                                    ))}
+                                    
                                 </TableBody>
                                 <TableFooter>
                                     <TableRow>
