@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, createRef} from 'react';
 import {compose} from 'recompose';
 
 import { withStyles, CssBaseline, IconButton, Paper, Table, TableHead, TableCell, TableRow, TableBody, TableFooter, TablePagination, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField} from '@material-ui/core';
@@ -6,6 +6,7 @@ import { Add, Edit, Delete } from '@material-ui/icons';
 
 import {withFirebase} from '../Firebase';
 import {withAuthorization} from '../Session';
+import Dropzone from 'react-dropzone'
 import AppbarAdmin from './appbar-admin';
 import * as ROLES from '../../constants/roles';
 
@@ -70,6 +71,8 @@ const styles = theme => ({
     },
 });
 
+const dropzoneRef = createRef()
+
 class RestosAdminPage extends Component {
     constructor(props) {
         super(props);
@@ -127,6 +130,10 @@ class RestosAdminPage extends Component {
 
     handleChangeRowsPerPage = (event) => {
         this.setState({page: 0, rowsPerPage: event.target.value});
+    }
+
+    onDropImage = () => {
+        
     }
 
     render() {
@@ -268,6 +275,14 @@ class RestosAdminPage extends Component {
                                     fullWidth
                                     className={classes.textField}
                                 />
+                                <Dropzone ref={dropzoneRef}>
+                                {({getRootProps, getInputProps}) => (
+    <div {...getRootProps()}>
+      <input {...getInputProps()} />
+      <p>Drag 'n' drop some files here, or click to select files</p>
+    </div>
+  )}
+                                </Dropzone>
                             </DialogContent>
                             <DialogActions>
                                 <Button onClick={this.handleCloseEditDialog} color="default">

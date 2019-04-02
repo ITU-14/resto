@@ -12,6 +12,31 @@
 	- email
 	- avatar
 	- (role)
+
+- Menu
+	- nom
+	- prix
+	- contents {typePlat, listePlats[]}
+	- resto
+
+exemple
+	{
+		nom: "Nom menu",
+		prix: 310,
+		contents: [{
+			typePlat: {nom: entree},
+			listePlats:[ {contenu an le plat}]
+		},
+		{
+			typePlat: {nom: resistance},
+			listePlats:[ {contenu an le plat}]
+		},
+		{
+			typePlat: {nom: dessert},
+			listePlats:[ {contenu an le plat}]
+		}],
+		resto: {contenu an le resto}
+	}
 	
 - Menu
 	- nom
@@ -97,3 +122,6 @@ Fonctionnalités
 - CRUD Resto, Plat, Menu
 - Recherche resto
 - 
+
+20190314T114131Z
+
