@@ -231,9 +231,10 @@ class RestosAdminPage extends Component {
                                     label="Description"
                                     type="text"
                                     multiline
+                                    rows="4"
                                     margin="normal"
-                                    //fullWidth
-                                    // className={classes.textField}
+                                    fullWidth
+                                    className={classes.textField}
                                 />
                                 <TextField
                                     margin="normal"
@@ -259,7 +260,14 @@ class RestosAdminPage extends Component {
                                     fullWidth
                                     className={classes.textField}
                                 />
-
+                                <TextField
+                                    margin="normal"
+                                    id="photo"
+                                    label="Photo"
+                                    type="text"
+                                    fullWidth
+                                    className={classes.textField}
+                                />
                             </DialogContent>
                             <DialogActions>
                                 <Button onClick={this.handleCloseEditDialog} color="default">
