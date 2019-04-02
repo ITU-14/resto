@@ -1,4 +1,4 @@
-import React, {Component, createRef} from 'react';
+import React, {Component} from 'react';
 import {compose} from 'recompose';
 
 import { withStyles, CssBaseline, IconButton, Paper, Table, TableHead, TableCell, TableRow, TableBody, TableFooter, TablePagination, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField, Avatar} from '@material-ui/core';
@@ -6,7 +6,6 @@ import { Add, Edit, Delete } from '@material-ui/icons';
 
 import {withFirebase} from '../Firebase';
 import {withAuthorization} from '../Session';
-import Dropzone from 'react-dropzone';
 import AppbarAdmin from './appbar-admin';
 import * as ROLES from '../../constants/roles';
 
@@ -71,7 +70,13 @@ const styles = theme => ({
     },
 });
 
-const dropzoneRef = createRef()
+const INITIAL_STATE = {
+    resto_name: '',
+    description: '',
+    typeCuisine: '',
+    address: '',
+    phoneNumber: ''
+};
 
 class RestosAdminPage extends Component {
     constructor(props) {
@@ -85,7 +90,8 @@ class RestosAdminPage extends Component {
             openEditDialog: false,
             page: 0,
             restos: [],
-            rowsPerPage: 5
+            rowsPerPage: 5,
+            ...INITIAL_STATE
         };
     }
 
@@ -113,7 +119,10 @@ class RestosAdminPage extends Component {
     }
 
     handleOpenEditDialog = () => {
-        this.setState({openEditDialog: true});
+        this.setState({
+            openEditDialog: true, 
+            resto_name: "Edit"
+        });
     }
 
     handleCloseEditDialog = () => {
@@ -132,14 +141,14 @@ class RestosAdminPage extends Component {
         this.setState({page: 0, rowsPerPage: event.target.value});
     }
 
-    onDropImage = () => {
-        
+    onChange = (event) => {
+        this.setState({ [event.target.name]: event.target.value });
     }
 
     render() {
         // const {users, loading} = this.state;
         const {classes} = this.props;
-        const {restos, page, rowsPerPage} = this.state;
+        const {restos, page, rowsPerPage, resto_name, description, typeCuisine, address, phoneNumber} = this.state;
         return (
             <div className={classes.root}>
                 <CssBaseline />       
@@ -229,21 +238,27 @@ class RestosAdminPage extends Component {
                             <DialogContent>
                                 <TextField
                                     margin="normal"
-                                    id="nom-resto"
+                                    id="resto_name"
                                     label="Nom du resto"
                                     type="text"
+                                    name="resto_name"
                                     fullWidth
                                     className={classes.textField}
+                                    value={resto_name}
+                                    onChange={this.onChange}
                                 />
                                 <TextField
                                     id="description-resto"
                                     label="Description"
                                     type="text"
+                                    name="description"
                                     multiline
                                     rows="2"
                                     margin="normal"
                                     fullWidth
                                     className={classes.textField}
+                                    value={description}
+                                    onChange={this.onChange}
                                 />
                                 <TextField
                                     margin="normal"
@@ -251,24 +266,33 @@ class RestosAdminPage extends Component {
                                     label="Type de cuisine"
                                     type="text"
                                     fullWidth
+                                    name="address"
                                     className={classes.textField}
+                                    value={typeCuisine}
+                                    onChange={this.onChange}
                                 />
                                 <TextField
                                     margin="normal"
                                     id="address"
                                     label="Adresse"
                                     type="text"
+                                    name="address"
                                     fullWidth
                                     className={classes.textField}
+                                    value={address}
+                                    onChange={this.onChange}
                                 />
                                 
                                 <TextField
                                     margin="normal"
                                     id="phone"
+                                    name="phoneNumber"
                                     label="Numero de t&eacute;l&eacute;phone"
                                     type="text"
                                     fullWidth
                                     className={classes.textField}
+                                    value={phoneNumber}
+                                    onChange={this.onChange}
                                 />
                             </DialogContent>
                             <DialogActions>
