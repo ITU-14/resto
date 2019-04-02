@@ -41,6 +41,9 @@ class Firebase {
         }
         this.user(authUser.uid).once('value').then(snapshot => {
             const dbUser = snapshot.val();
+            if(!dbUser) {
+                fallback();
+            }
             if(!dbUser.roles) {
                 dbUser.roles = [ROLES.USER];
             }

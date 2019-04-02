@@ -167,9 +167,9 @@ class RestosAdminPage extends Component {
                                 <TableBody>
                                     {restos.slice(page*rowsPerPage, (page*rowsPerPage) + rowsPerPage).map(resto => (
                                         <TableRow className={classes.row} key={resto.id}>
-                                            <TableCell>{resto.nom}</TableCell>
-                                            <TableCell>{resto.typedecuisine}</TableCell>
-                                            <TableCell>{resto.adress}</TableCell>
+                                            <TableCell>{resto.nom_resto}</TableCell>
+                                            <TableCell>{resto.type_cuisine}</TableCell>
+                                            <TableCell>{resto.adresse}</TableCell>
                                             <TableCell>{resto.telephone}</TableCell>
                                             <TableCell>Image</TableCell>
                                             <TableCell>

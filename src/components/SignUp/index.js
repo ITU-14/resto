@@ -92,7 +92,7 @@ class SignUpFormBase extends Component {
             return this.props.firebase.user(authUser.user.uid).set({username, email, roles});
         }).then(() => {
             this.setState({ ...INITIAL_STATE });
-            this.props.history.push(ROUTES.HOME);
+            this.props.history.push(ROUTES.LANDING);
         }).catch( error => {
             this.setState({ error });
         });
