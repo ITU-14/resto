@@ -270,14 +270,6 @@ class RestosAdminPage extends Component {
                                     fullWidth
                                     className={classes.textField}
                                 />
-                                <Dropzone ref={dropzoneRef}>
-                                    {({getRootProps, getInputProps}) => (
-                                        <div {...getRootProps()}>
-                                        <input {...getInputProps()} />
-                                        <p>Cliquez pour choisir une image</p>
-                                        </div>
-                                    )}
-                                </Dropzone>
                             </DialogContent>
                             <DialogActions>
                                 <Button onClick={this.handleCloseEditDialog} color="default">
