@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { compose } from 'recompose';
-import { withStyles, Paper, Card, Typography, TextField, Button, CardMedia, CardContent, CardActions } from '@material-ui/core';
-import { Search, Map } from '@material-ui/icons';
+import { withStyles, Paper, Card, Typography, Button, CardMedia, CardContent, CardActions } from '@material-ui/core';
+import { Map } from '@material-ui/icons';
 
 const styles = theme => ({
     paper: {
@@ -82,43 +82,6 @@ class RestosDetails extends Component {
 
         return (
             <Paper className={classes.paper}>
-                <Typography component="h2" variant="h5" className={classes.searchTitle}>
-                    Recherche de restos
-                </Typography>
-
-                <br />
-                <form className={classes.container}>                      
-                    <TextField 
-                        id="nomResto" 
-                        label="Nom" 
-                        type="text" 
-                        name="nomResto" 
-                        variant="outlined" 
-                        className={classes.textField1}
-                    />
-                
-                    <TextField 
-                        id="typeCuisine" 
-                        label="Type de cuisine" 
-                        type="text" 
-                        name="typeCuisine" 
-                        variant="outlined"
-                        className={classes.textField} 
-                    />
-                    
-                    <Button 
-                        variant="contained"
-                        type="submit"
-                        color="primary"
-                        className={classes.textField}
-                    >
-                        <Search />
-                        <Typography className={classes.searchText}>
-                            Rechercher
-                        </Typography>
-                        
-                    </Button>
-                </form>
                 <Card className={classes.card}>
                     <CardMedia
                         className={classes.cover}
@@ -143,7 +106,7 @@ class RestosDetails extends Component {
                     <CardActions className={classes.cardButton}>
                         <Button color="primary">
                             <Map/>
-                            Voir la carte
+                            Commander
                         </Button>
                     </CardActions>
                 </Card>
