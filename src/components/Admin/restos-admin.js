@@ -75,7 +75,9 @@ const INITIAL_STATE = {
     description: '',
     typeCuisine: '',
     address: '',
-    phoneNumber: ''
+    phoneNumber: '',
+    editLabel: '',
+    editButton: ''
 };
 
 class RestosAdminPage extends Component {
@@ -118,10 +120,32 @@ class RestosAdminPage extends Component {
         this.setState({openDeleteDialog: true});
     }
 
-    handleOpenEditDialog = () => {
+    handleOpenCreateDialog = () => {
         this.setState({
             openEditDialog: true, 
-            resto_name: "Edit"
+            resto_name: '',
+            description: '',
+            typeCuisine: '',
+            address: '',
+            phoneNumber: '',
+            editLabel: 'Ajouter un resto',
+            editButton: 'Valider'
+        });
+    }
+
+    handleOpenEditDialog = (resto) => {
+        /* eslint-disable */
+        console.log(resto);
+        /* eslint-enable */
+        this.setState({
+            openEditDialog: true, 
+            resto_name: resto.nom_resto,
+            description: resto.description,
+            typeCuisine: resto.type_cuisine,
+            address: resto.adresse,
+            phoneNumber: resto.telephone,
+            editLabel: `Modifier resto: ${resto.nom_resto}`,
+            editButton: 'Modifier'
         });
     }
 
@@ -148,7 +172,7 @@ class RestosAdminPage extends Component {
     render() {
         // const {users, loading} = this.state;
         const {classes} = this.props;
-        const {restos, page, rowsPerPage, resto_name, description, typeCuisine, address, phoneNumber} = this.state;
+        const {restos, page, rowsPerPage, resto_name, description, typeCuisine, address, phoneNumber, editLabel, editButton} = this.state;
         return (
             <div className={classes.root}>
                 <CssBaseline />       
@@ -157,7 +181,7 @@ class RestosAdminPage extends Component {
                     <div className={classes.appBarSpacer}/>
 
                     <div className={classes.tableContainer}>
-                        <Button variant="contained" className={classes.buttonAdd} onClick={this.handleOpenEditDialog}>
+                        <Button variant="contained" className={classes.buttonAdd} onClick={this.handleOpenCreateDialog}>
                             Ajouter
                             <Add className={classes.rightIcon} />
                         </Button>
@@ -184,7 +208,7 @@ class RestosAdminPage extends Component {
                                                 <Avatar alt={resto.nom_resto} src={resto.photo} className={classes.bigAvatar} />
                                             </TableCell>
                                             <TableCell>
-                                                <IconButton size="small" color="primary" aria-label="Modifier" className={classes.margin} onClick={this.handleOpenEditDialog}>
+                                                <IconButton size="small" color="primary" aria-label="Modifier" className={classes.margin} onClick={() => this.handleOpenEditDialog(resto)}>
                                                     <Edit />
                                                 </IconButton>
                                                 
@@ -234,7 +258,7 @@ class RestosAdminPage extends Component {
                         </Dialog>
 
                         <Dialog open={this.state.openEditDialog} onClose={this.handleCloseEditDialog} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
-                            <DialogTitle id="alert-dialog-title">{"Creer un resto"}</DialogTitle>
+                            <DialogTitle id="alert-dialog-title">{editLabel}</DialogTitle>
                             <DialogContent>
                                 <TextField
                                     margin="normal"
@@ -301,7 +325,7 @@ class RestosAdminPage extends Component {
                                 </Button>
 
                                 <Button onClick={this.handleCloseEditDialog} color="primary" autoFocus>
-                                Cr&eacute;er
+                                {editButton}
                                 </Button>
                             </DialogActions>
                         </Dialog>
