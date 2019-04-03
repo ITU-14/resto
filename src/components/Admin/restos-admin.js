@@ -184,7 +184,7 @@ class RestosAdminPage extends Component {
                                                 <Avatar alt={resto.nom_resto} src={resto.photo} className={classes.bigAvatar} />
                                             </TableCell>
                                             <TableCell>
-                                                <IconButton size="small" color="primary" aria-label="Modifier" className={classes.margin}>
+                                                <IconButton size="small" color="primary" aria-label="Modifier" className={classes.margin} onClick={this.handleOpenEditDialog}>
                                                     <Edit />
                                                 </IconButton>
                                                 

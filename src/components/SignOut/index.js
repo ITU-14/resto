@@ -1,11 +1,14 @@
 import React from 'react';
 
 import { withFirebase } from '../Firebase';
+import { IconButton } from '@material-ui/core';
+import { PowerSettingsNew } from '@material-ui/icons';
 
 const SignOutButton = ({firebase}) => (
-  <button type="button" onClick={firebase.logout}>
+  <IconButton color="inherit" onClick={firebase.logout}>
+    <PowerSettingsNew />
     Se d&eacute;connecter
-  </button>
+  </IconButton>
 );
 
 export default withFirebase(SignOutButton);
