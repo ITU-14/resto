@@ -92,10 +92,6 @@ class Restos extends Component {
     }
     componentDidMount() {
         this.setState({ loading: true });
-        const {search} = this.state;
-
-       
-
         this.props.firebase.restos().on('value', snapshot => {
             const restosObject = snapshot.val();
             const restosList = Object.keys(restosObject).map(key => ({
@@ -109,15 +105,16 @@ class Restos extends Component {
             });
         });
 
-     
+
     }
 
     filterList = () => {
-        console.log("tonga ato"+e.target.value);
+        //console.log("tonga ato"+e.target.value);
         //this.setState({search : e.target.value});
 
         //this.setState({ loading: true });
-        const {searchName} = this.state;
+        const { searchName , searchTypeCuisine} = this.state;
+        const {  } = this.state;
 
         this.props.firebase.restos().on('value', snapshot => {
             const restosObject = snapshot.val();
@@ -128,8 +125,10 @@ class Restos extends Component {
 
             const listeResto = [];
             restosList.forEach(resto => {
-                if(resto.nom_resto.indexOf(searchName) > -1)
+                if (resto.nom_resto.indexOf(searchName) > -1 && resto.type_cuisine.indexOf(searchTypeCuisine) > -1 )
                     listeResto.push(resto);
+           //     if (resto.nom_resto.indexOf(searchTypeCuisine) > -1)
+            //        listeResto.push(resto);
             });
             this.setState({
                 restos: listeResto,
@@ -177,7 +176,7 @@ class Restos extends Component {
 
     render() {
         const { classes } = this.props;
-        const { restos, page, rowsPerPage , searchName, searchTypeCuisine} = this.state;
+        const { restos, page, rowsPerPage, searchName, searchTypeCuisine } = this.state;
 
         return (
             <Paper className={classes.paper}>
@@ -202,7 +201,7 @@ class Restos extends Component {
                         id="typeCuisine"
                         label="Type de cuisine"
                         type="text"
-                        name="typeCuisine"
+                        name="searchTypeCuisine"
                         variant="outlined"
                         className={classes.textField}
                         value={searchTypeCuisine}
