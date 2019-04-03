@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { compose } from 'recompose';
 import { withStyles, Paper, Card, Typography, TextField, Button, CardMedia, CardContent, CardActions } from '@material-ui/core';
 import { Search, Map } from '@material-ui/icons';
-import { IconButton, Table, TableHead, TableCell, TableRow, TableBody, TableFooter, TablePagination } from '@material-ui/core';
-import { Edit, Delete } from '@material-ui/icons';
+import { Table, TableRow, TableFooter, TablePagination } from '@material-ui/core';
 
 import { withFirebase } from '../Firebase';
 
@@ -74,6 +73,11 @@ const styles = theme => ({
 });
 
 class Restos extends Component {
+
+state = {
+    search : ""
+}
+
     constructor(props) {
         super(props);
         this.state = {
@@ -89,17 +93,58 @@ class Restos extends Component {
     }
     componentDidMount() {
         this.setState({ loading: true });
+        const {search} = this.state;
+
+       
+
         this.props.firebase.restos().on('value', snapshot => {
             const restosObject = snapshot.val();
             const restosList = Object.keys(restosObject).map(key => ({
                 ...restosObject[key],
                 id: key
             }));
+
             this.setState({
                 restos: restosList,
                 loading: false
             });
         });
+
+     
+    }
+
+    filterList = e =>{
+        console.log("tonga ato"+e.target.value);
+        this.setState({search : e.target.value});
+
+        this.setState({ loading: true });
+        const {search} = this.state;
+
+       
+
+        this.props.firebase.restos().on('value', snapshot => {
+            const restosObject = snapshot.val();
+            const restosList = Object.keys(restosObject).map(key => ({
+                ...restosObject[key],
+                id: key
+            }));
+
+            const listeResto = [];
+            restosList.forEach(resto => {
+                if(resto.nom_resto.indexOf(search) > -1)
+                    listeResto.push(resto);
+            });
+            this.setState({
+                restos: listeResto,
+                loading: true
+            })
+
+            this.setState({
+                restos: restosList,
+                loading: false
+            });
+        });
+
     }
 
     componentWillUnmount() {
@@ -134,12 +179,19 @@ class Restos extends Component {
 
     }
 
+
+
+
     render() {
         const { classes } = this.props;
         const { restos, page, rowsPerPage } = this.state;
+
+
+
+
         return (
             <Paper className={classes.paper}>
-                <Typography component="h2" variant="h5" className={classes.searchTitle}>
+                <Typography component="h2" variant="h5" className={classes.searchTitle}  >
                     Recherche de restos
                 </Typography>
 
@@ -152,6 +204,7 @@ class Restos extends Component {
                         name="nomResto"
                         variant="outlined"
                         className={classes.textField1}
+                        
                     />
 
                     <TextField
@@ -168,6 +221,7 @@ class Restos extends Component {
                         type="submit"
                         color="primary"
                         className={classes.textField}
+                        onClick={this.filterList}
                     >
                         <Search />
                         <Typography className={classes.searchText}>
@@ -177,9 +231,9 @@ class Restos extends Component {
                     </Button>
                 </form>
                 {restos.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(resto => (
-                    
-                <Card className={classes.card} >
-                  
+
+                    <Card className={classes.card} key={resto.id}>
+
 
                         <CardMedia
                             className={classes.cover}
@@ -187,21 +241,21 @@ class Restos extends Component {
                             title="Live from space album cover"
                         />
 
-                        
-                 
-                        <CardContent className={classes.content}>
+
+
+                        <CardContent className={classes.content} >
                             <Typography component="h5" variant="h5">
-                            {resto.nom_resto}
-                        </Typography>
+                                {resto.nom_resto}
+                            </Typography>
                             <Typography variant="subtitle1" color="textSecondary">
-                            {resto.type_cuisine}
-                        </Typography>
+                                {resto.type_cuisine}
+                            </Typography>
                             <Typography variant="subtitle2" color="textSecondary">
-                            {resto.adresse}
-                        </Typography>
+                                {resto.adresse}
+                            </Typography>
                             <Typography variant="subtitle2" color="textSecondary">
-                            {resto.telephone}
-                        </Typography>
+                                {resto.telephone}
+                            </Typography>
                         </CardContent>
                         <CardActions className={classes.cardButton}>
                             <Button color="primary">
@@ -209,10 +263,10 @@ class Restos extends Component {
                                 Voir la carte
                         </Button>
                         </CardActions>
-                     
-                </Card>
-                
-   ))}
+
+                    </Card>
+
+                ))}
                 <Table className={classes.table}>
                     <TableFooter>
                         <TableRow>
