@@ -74,10 +74,6 @@ const styles = theme => ({
 
 class Restos extends Component {
 
-state = {
-    search : ""
-}
-
     constructor(props) {
         super(props);
         this.state = {
@@ -88,7 +84,10 @@ state = {
             openEditDialog: false,
             page: 0,
             restos: [],
-            rowsPerPage: 5
+            rowsPerPage: 5,
+
+            searchName: '',
+            searchTypeCuisine: ''
         }
     }
     componentDidMount() {
@@ -113,14 +112,12 @@ state = {
      
     }
 
-    filterList = e =>{
+    filterList = () => {
         console.log("tonga ato"+e.target.value);
-        this.setState({search : e.target.value});
+        //this.setState({search : e.target.value});
 
-        this.setState({ loading: true });
-        const {search} = this.state;
-
-       
+        //this.setState({ loading: true });
+        const {searchName} = this.state;
 
         this.props.firebase.restos().on('value', snapshot => {
             const restosObject = snapshot.val();
@@ -131,16 +128,11 @@ state = {
 
             const listeResto = [];
             restosList.forEach(resto => {
-                if(resto.nom_resto.indexOf(search) > -1)
+                if(resto.nom_resto.indexOf(searchName) > -1)
                     listeResto.push(resto);
             });
             this.setState({
                 restos: listeResto,
-                loading: true
-            })
-
-            this.setState({
-                restos: restosList,
                 loading: false
             });
         });
@@ -175,19 +167,17 @@ state = {
         this.setState({ page: 0, rowsPerPage: event.target.value });
     }
 
+    onChange = (event) => {
+        this.setState({ [event.target.name]: event.target.value });
+    }
+
     onDropImage = () => {
 
     }
 
-
-
-
     render() {
         const { classes } = this.props;
-        const { restos, page, rowsPerPage } = this.state;
-
-
-
+        const { restos, page, rowsPerPage , searchName, searchTypeCuisine} = this.state;
 
         return (
             <Paper className={classes.paper}>
@@ -201,10 +191,11 @@ state = {
                         id="nomResto"
                         label="Nom"
                         type="text"
-                        name="nomResto"
+                        name="searchName"
                         variant="outlined"
                         className={classes.textField1}
-                        
+                        value={searchName}
+                        onChange={this.onChange}
                     />
 
                     <TextField
@@ -214,6 +205,8 @@ state = {
                         name="typeCuisine"
                         variant="outlined"
                         className={classes.textField}
+                        value={searchTypeCuisine}
+                        onChange={this.onChange}
                     />
 
                     <Button
