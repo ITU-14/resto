@@ -218,7 +218,7 @@ state = {
 
                     <Button
                         variant="contained"
-                        type="submit"
+                        type="button"
                         color="primary"
                         className={classes.textField}
                         onClick={this.filterList}
