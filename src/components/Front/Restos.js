@@ -39,7 +39,9 @@ const styles = theme => ({
         marginLeft: 'auto',
         marginRight: 'auto',
         // maxWidth: 345,
-        display: 'flex'
+        display: 'flex',
+        marginBottom: theme.spacing.unit,
+        marginTop: theme.spacing.unit
     },
     media: {
         height: 140,
@@ -114,7 +116,7 @@ class Restos extends Component {
 
         //this.setState({ loading: true });
         const { searchName , searchTypeCuisine} = this.state;
-        const {  } = this.state;
+        
 
         this.props.firebase.restos().on('value', snapshot => {
             const restosObject = snapshot.val();
@@ -222,19 +224,14 @@ class Restos extends Component {
 
                     </Button>
                 </form>
+
                 {restos.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(resto => (
-
                     <Card className={classes.card} key={resto.id}>
-
-
                         <CardMedia
                             className={classes.cover}
                             image="/assets/img/joystick_318-1404.jpg"
                             title="Live from space album cover"
                         />
-
-
-
                         <CardContent className={classes.content} >
                             <Typography component="h5" variant="h5">
                                 {resto.nom_resto}
@@ -255,10 +252,9 @@ class Restos extends Component {
                                 Voir la carte
                         </Button>
                         </CardActions>
-
                     </Card>
-
                 ))}
+
                 <Table className={classes.table}>
                     <TableFooter>
                         <TableRow>

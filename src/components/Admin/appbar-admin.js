@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { compose } from 'recompose';
 import classNames from 'classnames';
 import { withStyles, AppBar, Toolbar, IconButton, Typography, Badge, Drawer, Divider } from '@material-ui/core';
-import { Menu, NotificationsActive, ChevronLeftSharp, PowerSettingsNew } from '@material-ui/icons';
+import { Menu, NotificationsActive, ChevronLeftSharp } from '@material-ui/icons';
 import SidebarAdmin from './sidebar-admin';
 import SignOutButton from '../SignOut';
 
