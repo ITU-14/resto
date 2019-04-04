@@ -1,6 +1,6 @@
 # resto
-Projet MBDS - REACT.
-LAI Christophe
+Projet MBDS - REACT. <br/>
+LAI Christophe <br/>
 NIRIJAONA Lala Ricoeur Khino
 
 ## Installation du projet en local
