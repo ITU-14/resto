@@ -21,30 +21,30 @@ class Firebase {
     }
 
     registerWithEmailAndPassword = (email, password) => this.auth.createUserWithEmailAndPassword(email, password);
-    
+
 
     loginWithEmailAndPassword = (email, password) => this.auth.signInWithEmailAndPassword(email, password);
-    
+
 
     logout = () => this.auth.signOut();
-    
+
 
     doPasswordReset = (email) => this.auth.sendPasswordResetEmail(email);
-    
+
 
     resetPassword = () => this.auth.currentUser.updatePassword();
 
     onAuthUserListener = (next, fallback) => this.auth.onAuthStateChanged(authUser => {
-        if(!authUser) {
+        if (!authUser) {
             fallback();
             return;
         }
         this.user(authUser.uid).once('value').then(snapshot => {
             const dbUser = snapshot.val();
-            if(!dbUser) {
+            if (!dbUser) {
                 fallback();
             }
-            if(!dbUser.roles) {
+            if (!dbUser.roles) {
                 dbUser.roles = [ROLES.USER];
             }
             authUser = {
@@ -58,7 +58,7 @@ class Firebase {
 
     /* USERS API */
     user = uid => this.db.ref(`user/${uid}`);
-    
+
     users = () => this.db.ref('user');
 
     /* RESTO API */
@@ -72,10 +72,13 @@ class Firebase {
     /* get list of menus */
     menus = () => this.db.ref('menu');
 
+    /* get menu by resto id */
+    menuresto = restoid => this.db.ref(`menu/${restoid}`);
+
     /* get menu by id */
     menu = menuid => this.db.ref(`menu/${menuid}`);
 
-    /* CARTES API */
+    /* CARTES API */ 
     /* get list of cartes */
     cartes = () => this.db.ref('carte');
 
@@ -89,6 +92,7 @@ class Firebase {
     /* get plat by id */
     plat = platid => this.db.ref(`plat/${platid}`);
 
+    
     /* TYPE PLAT API */
     /* get list of type plat */
     typePlats = () => this.db.ref('typePlat');
