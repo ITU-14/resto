@@ -1,5 +1,5 @@
 export const LANDING = '/';
-export const DETAILS = '/fiche-resto';
+export const DETAILS = '/fiche-resto/:idresto';
 export const SIGN_UP = '/signup';
 export const SIGN_IN = '/login';
 export const HOME = '/home';

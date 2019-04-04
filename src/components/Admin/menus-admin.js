@@ -125,7 +125,7 @@ class MenusAdminPage extends Component {
             this.setState({
                 plats: platsList,
                 loading: false
-            })
+            });
         });
         this.props.firebase.typePlats().on('value', snapshot => {
             const categories = snapshot.val();

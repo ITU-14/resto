@@ -8,13 +8,13 @@ import * as ROUTES from '../../constants/routes';
 import { withAuthentication } from '../Session';
 import { RestosAdminPage, CardsAdminPage, MenusAdminPage } from '../Admin';
 import HomePageResto from '../Home';
-import RestosDetails from '../Front/RestosDetails';
+import DetailsResto from '../Details';
 
 const App = () => (
     <Router>
         <div>
             <Route exact path={ROUTES.LANDING} component={HomePageResto} />
-            <Route path={ROUTES.DETAILS} component={RestosDetails} />
+            <Route path={ROUTES.DETAILS} component={DetailsResto} />
             <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
             <Route path={ROUTES.SIGN_IN} component={SignInPage} />
             <Route path={ROUTES.ADMIN_RESTOS} component={RestosAdminPage} />

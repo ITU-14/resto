@@ -4,7 +4,6 @@ import { withStyles, Paper, Card, Typography, Button,TextField, CardMedia, CardC
 import { Search, Map } from '@material-ui/icons';
 import { withFirebase } from '../Firebase';
 import { Table, TableRow, TableFooter, TablePagination } from '@material-ui/core';
-import { Link } from 'react-router-dom';
 
 const styles = theme => ({
     paper: {

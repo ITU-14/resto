@@ -249,12 +249,12 @@ class Restos extends Component {
                         </CardContent>
                         <CardActions className={classes.cardButton}>
 
-                        <Link to={`/fiche-resto/${resto.id}`} class="btn btn-success primary">Voir menu </Link>&nbsp;
-          
+                        <Link to={`/fiche-resto/${resto.id}`} color="primary">
                             <Button color="primary">
                                 <Map />
                                 Voir la carte
-                        </Button>
+                            </Button>
+                        </Link>
                         </CardActions>
                     </Card>
                 ))}
