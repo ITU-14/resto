@@ -71,13 +71,15 @@ const styles = theme => ({
 });
 
 const INITIAL_STATE = {
+    resto_id: '',
     resto_name: '',
     description: '',
     typeCuisine: '',
     address: '',
     phoneNumber: '',
     editLabel: '',
-    editButton: ''
+    editButton: '',
+    deleteLabel: ''
 };
 
 class RestosAdminPage extends Component {
@@ -116,13 +118,19 @@ class RestosAdminPage extends Component {
         this.props.firebase.restos().off();
     }
 
-    handleOpenDeleteDialog = () => {
-        this.setState({openDeleteDialog: true});
+    handleOpenDeleteDialog = (resto) => {
+        this.setState({
+            openDeleteDialog: true,
+            deleteLabel: `Voulez-vous supprimer le resto ${resto.nom_resto}`,
+            resto_id: resto.id,
+            resto_name: resto.nom_resto
+        });
     }
 
     handleOpenCreateDialog = () => {
         this.setState({
             openEditDialog: true, 
+            resto_id: '',
             resto_name: '',
             description: '',
             typeCuisine: '',
@@ -134,11 +142,9 @@ class RestosAdminPage extends Component {
     }
 
     handleOpenEditDialog = (resto) => {
-        /* eslint-disable */
-        console.log(resto);
-        /* eslint-enable */
         this.setState({
             openEditDialog: true, 
+            resto_id: resto.id,
             resto_name: resto.nom_resto,
             description: resto.description,
             typeCuisine: resto.type_cuisine,
@@ -212,7 +218,7 @@ class RestosAdminPage extends Component {
                                                     <Edit />
                                                 </IconButton>
                                                 
-                                                <IconButton color='secondary' aria-label="Supprimer" className={classes.margin} onClick={this.handleOpenDeleteDialog}>
+                                                <IconButton color='secondary' aria-label="Supprimer" className={classes.margin} onClick={() => this.handleOpenDeleteDialog(resto)}>
                                                     <Delete />
                                                 </IconButton>
                                             </TableCell>
@@ -239,11 +245,10 @@ class RestosAdminPage extends Component {
                         </Paper>
 
                         <Dialog open={this.state.openDeleteDialog} onClose={this.handleCloseDeleteDialog} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
-                            <DialogTitle id="alert-dialog-title">{"Supprimer le resto resto 1"}</DialogTitle>
+                            <DialogTitle id="alert-dialog-title">{deleteLabel}</DialogTitle>
                             <DialogContent>
                                 <DialogContentText id="alert-dialog-description">
-                                Let Google help apps determine location. This means sending anonymous location data to
-                                Google, even when no apps are running.
+                                    &Ecirc;tes-vous s&ucirc;re de vouloir supprimer le resto {resto_name}?
                                 </DialogContentText>
                             </DialogContent>
                             <DialogActions>
