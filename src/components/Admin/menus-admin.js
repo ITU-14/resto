@@ -141,7 +141,7 @@ class MenusAdminPage extends Component {
 
     componentWillUnmount() {
         this.props.firebase.plats().off();
-        // this.props.firebase.typePlats().off();
+        this.props.firebase.typePlats().off();
     }
 
     onChange = (event) => {
@@ -217,8 +217,7 @@ class MenusAdminPage extends Component {
                             <DialogTitle id="alert-dialog-title">{"Supprimer le resto resto 1"}</DialogTitle>
                             <DialogContent>
                                 <DialogContentText id="alert-dialog-description">
-                                Let Google help apps determine location. This means sending anonymous location data to
-                                Google, even when no apps are running.
+                                
                                 </DialogContentText>
                             </DialogContent>
                             <DialogActions>
