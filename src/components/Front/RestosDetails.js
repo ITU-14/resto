@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { compose } from 'recompose';
-import { withStyles, Paper, Card, Typography, Button,TextField, CardMedia, CardContent, CardActions } from '@material-ui/core';
-import { Search, Map } from '@material-ui/icons';
+import { withStyles, Paper, Card, Typography, Button, CardMedia, CardContent, CardActions } from '@material-ui/core';
+import {  Map } from '@material-ui/icons';
 import { withFirebase } from '../Firebase';
 import { Table, TableRow, TableFooter, TablePagination } from '@material-ui/core';
 
@@ -158,41 +158,16 @@ class RestosDetails extends Component {
     }
 
     render() {
-        const { classes } = this.props;
-        const { menus, page, rowsPerPage, id_resto } = this.state;
-
+        const { classes, resto_id_sent } = this.props;
+        const { menus, page, rowsPerPage } = this.state;
+        let menuList = menus.filter(menu => {
+            if(menu.resto_id === resto_id_sent)
+                return menu;
+            return null;
+        });
         return (
             <Paper className={classes.paper}>
-
-                <form className={classes.container}>
-                    <TextField
-                        id="nomResto"
-                        label="Id Resto"
-                        type="text"
-                        name="id_resto"
-                        variant="outlined"
-                        className={classes.textField1}
-                        value={id_resto}
-                        onChange={this.onChange}
-                    />
-
-                   
-                    <Button
-                        variant="contained"
-                        type="button"
-                        color="primary"
-                        className={classes.textField}
-                        onClick={this.filterList}
-                    >
-                        <Search />
-                        <Typography className={classes.searchText}>
-                            Rechercher
-                        </Typography>
-
-                    </Button>
-                </form>
-
-                {menus.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(menu => (
+                {menuList.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(menu => (
                     <Card className={classes.card} key={menu.id}>
                         <CardMedia
                             className={classes.cover}
@@ -228,7 +203,7 @@ class RestosDetails extends Component {
                             <TablePagination
                                 rowsPerPageOptions={[5, 10, 25]}
                                 colSpan={3}
-                                count={menus.length}
+                                count={menuList.length}
                                 rowsPerPage={rowsPerPage}
                                 page={page}
                                 SelectProps={{ native: true }}

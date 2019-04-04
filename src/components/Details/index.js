@@ -20,6 +20,7 @@ const styles = theme => ({
 class DetailsResto extends Component {
 
     render() {
+        const { idresto } = this.props.match.params;
         const {classes} = this.props;
         return (
             <div className={classes.root}>
@@ -27,7 +28,7 @@ class DetailsResto extends Component {
                 <MenuAppBar />
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
-                    <RestosDetails />
+                    <RestosDetails resto_id_sent={idresto} />
                 </main>
                 <UserOrders />
             </div>
