@@ -178,7 +178,7 @@ class RestosAdminPage extends Component {
     render() {
         // const {users, loading} = this.state;
         const {classes} = this.props;
-        const {restos, page, rowsPerPage, resto_name, description, typeCuisine, address, phoneNumber, editLabel, editButton} = this.state;
+        const {restos, page, rowsPerPage, resto_name, description, typeCuisine, address, phoneNumber, editLabel, editButton, deleteLabel} = this.state;
         return (
             <div className={classes.root}>
                 <CssBaseline />       
@@ -340,14 +340,5 @@ class RestosAdminPage extends Component {
         )
     }
 }
-/*
-const restosList = ({users}) => (
-    <ul>
-        <li>ok</li>
-    </ul>
-);*/
-/* eslint-disable */
 const condition = authUser => authUser && authUser.roles.includes(ROLES.ADMIN);
-
-/* eslint-enable */
 export default compose(withFirebase, withAuthorization(condition), withStyles(styles))(RestosAdminPage);

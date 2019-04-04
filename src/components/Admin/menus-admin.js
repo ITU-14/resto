@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {compose} from 'recompose';
 
-import { withStyles, CssBaseline, IconButton, Paper, Table, TableHead, TableCell, TableRow, TableBody, TableFooter, TablePagination, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField, Select, MenuItem} from '@material-ui/core';
+import { withStyles, CssBaseline, IconButton, Paper, Table, TableHead, TableCell, TableRow, TableBody, TableFooter, TablePagination, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField, Select, MenuItem, Avatar} from '@material-ui/core';
 import { Add, Edit, Delete } from '@material-ui/icons';
 
 import {withFirebase} from '../Firebase';
@@ -56,7 +56,12 @@ const styles = theme => ({
     },
     selectEmpty: {
         marginTop: theme.spacing.unit * 2,
-    }
+    },
+    bigAvatar: {
+        margin: 10,
+        width: 60,
+        height: 60,
+    },
 });
 
 const INITIALSTATE = {
@@ -111,17 +116,17 @@ class MenusAdminPage extends Component {
 
     componentDidMount() {
         this.setState({loading: true});
-        /*this.props.firebase.plats().on('value', snapshot => {
+        this.props.firebase.plats().on('value', snapshot => {
             const platObjects = snapshot.val();
             const platsList = Object.keys(platObjects).map(key => ({
                 ...platObjects[key],
                 id: key
             }));
             this.setState({
-                // plats: platsList,
+                plats: platsList,
                 loading: false
             })
-        });*/
+        });
         this.props.firebase.typePlats().on('value', snapshot => {
             const categories = snapshot.val();
             const categoryList = Object.keys(categories).map(key => ({
@@ -136,14 +141,12 @@ class MenusAdminPage extends Component {
 
     componentWillUnmount() {
         this.props.firebase.plats().off();
-        this.props.firebase.typePlats().off();
+        // this.props.firebase.typePlats().off();
     }
 
     onChange = (event) => {
         this.setState({ [event.target.name]: event.target.value });
     }
-
-    
 
     render() {
         const {plats, page, rowsPerPage, typePlats, nom, type, description, prix} = this.state;
@@ -172,12 +175,14 @@ class MenusAdminPage extends Component {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    
+                                    {plats.slice(page*rowsPerPage, (page*rowsPerPage) + rowsPerPage).map(plat => (
                                         <TableRow key={1}>
-                                            <TableCell>Photo</TableCell>
-                                            <TableCell>Nom du plat</TableCell>
-                                            <TableCell>Dessert</TableCell>
-                                            <TableCell align="right">3.12</TableCell>
+                                            <TableCell>
+                                                <Avatar alt={plat.nom_plat} src={plat.photo} className={classes.bigAvatar} />
+                                            </TableCell>
+                                            <TableCell>{plat.nom_plat}</TableCell>
+                                            <TableCell>{plat.type_plat}</TableCell>
+                                            <TableCell align="right">{plat.prix}</TableCell>
                                             <TableCell>
                                                 <IconButton size="small" color="primary" aria-label="Modifier" className={classes.margin}>
                                                     <Edit />
@@ -188,7 +193,7 @@ class MenusAdminPage extends Component {
                                                 </IconButton>
                                             </TableCell>
                                         </TableRow>
-                                    
+                                    ))} 
                                 </TableBody>
                                 <TableFooter>
                                     <TableRow>

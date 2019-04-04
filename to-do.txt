@@ -99,15 +99,11 @@ B.O
 
 TO DO
 - Populate database generate data
-
-
 - Render image
-
 - CRUD module for resto
 	- create
 	- Update
 	- Delete
-
 Display
 B.O
 - Details page resto
@@ -115,7 +111,6 @@ B.O
 
 F.O
 - Search restos
-
 - Details restos
 	
 Fonctionnalités
@@ -123,5 +118,5 @@ Fonctionnalités
 - Recherche resto
 - 
 
-20190314T114131Z
+- 
 

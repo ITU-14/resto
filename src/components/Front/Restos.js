@@ -229,7 +229,8 @@ class Restos extends Component {
                     <Card className={classes.card} key={resto.id}>
                         <CardMedia
                             className={classes.cover}
-                            image="/assets/img/joystick_318-1404.jpg"
+                            // image="/assets/img/joystick_318-1404.jpg"
+                            image={resto.photo}
                             title="Live from space album cover"
                         />
                         <CardContent className={classes.content} >
