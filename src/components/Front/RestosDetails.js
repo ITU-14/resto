@@ -3,6 +3,8 @@ import { compose } from 'recompose';
 import { withStyles, Paper, Card, Typography, Button, CardMedia, CardContent, CardActions } from '@material-ui/core';
 import { Map } from '@material-ui/icons';
 import { withFirebase } from '../Firebase';
+import { Table, TableRow, TableFooter, TablePagination } from '@material-ui/core';
+
 const styles = theme => ({
     paper: {
         width: '100%',
@@ -99,6 +101,38 @@ class RestosDetails extends Component {
 
     }
 
+    componentWillUnmount() {
+        this.props.firebase.restos().off();
+    }
+
+    handleOpenDeleteDialog = () => {
+        this.setState({ openDeleteDialog: true });
+    }
+
+    handleOpenEditDialog = () => {
+        this.setState({ openEditDialog: true });
+    }
+
+    handleCloseEditDialog = () => {
+        this.setState({ openEditDialog: false });
+    }
+
+    handleCloseDeleteDialog = () => {
+        this.setState({ openDeleteDialog: false });
+    }
+
+    handleChangePage = (event, page) => {
+        this.setState({ page });
+    }
+
+    handleChangeRowsPerPage = (event) => {
+        this.setState({ page: 0, rowsPerPage: event.target.value });
+    }
+
+    onChange = (event) => {
+        this.setState({ [event.target.name]: event.target.value });
+    }
+
     render() {
         const { classes } = this.props;
         const { menus, page, rowsPerPage, searchName, searchTypeCuisine } = this.state;
@@ -135,6 +169,23 @@ class RestosDetails extends Component {
                         </CardActions>
                     </Card>
                 ))}
+                  <Table className={classes.table}>
+                    <TableFooter>
+                        <TableRow>
+                            <TablePagination
+                                rowsPerPageOptions={[5, 10, 25]}
+                                colSpan={3}
+                                count={menus.length}
+                                rowsPerPage={rowsPerPage}
+                                page={page}
+                                SelectProps={{ native: true }}
+                                onChangePage={this.handleChangePage}
+                                onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                                labelDisplayedRows={({ from, to, count }) => `${from} - ${to} sur ${count} restos`}
+                                labelRowsPerPage="Lignes par page" />
+                        </TableRow>
+                    </TableFooter>
+                </Table>
             </Paper>
         );
     }
