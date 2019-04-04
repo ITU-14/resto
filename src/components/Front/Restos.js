@@ -3,7 +3,7 @@ import { compose } from 'recompose';
 import { withStyles, Paper, Card, Typography, TextField, Button, CardMedia, CardContent, CardActions } from '@material-ui/core';
 import { Search, Map } from '@material-ui/icons';
 import { Table, TableRow, TableFooter, TablePagination } from '@material-ui/core';
-
+import { Link } from 'react-router-dom';
 import { withFirebase } from '../Firebase';
 
 const styles = theme => ({
@@ -248,6 +248,9 @@ class Restos extends Component {
                             </Typography>
                         </CardContent>
                         <CardActions className={classes.cardButton}>
+
+                        <Link to={`/fiche-resto/${resto.id}`} class="btn btn-success primary">Voir menu </Link>&nbsp;
+          
                             <Button color="primary">
                                 <Map />
                                 Voir la carte

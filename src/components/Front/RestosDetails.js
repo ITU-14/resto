@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { compose } from 'recompose';
-import { withStyles, Paper, Card, Typography, Button, CardMedia, CardContent, CardActions } from '@material-ui/core';
-import { Map } from '@material-ui/icons';
+import { withStyles, Paper, Card, Typography, Button,TextField, CardMedia, CardContent, CardActions } from '@material-ui/core';
+import { Search, Map } from '@material-ui/icons';
 import { withFirebase } from '../Firebase';
 import { Table, TableRow, TableFooter, TablePagination } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 const styles = theme => ({
     paper: {
@@ -78,7 +79,8 @@ class RestosDetails extends Component {
             test: true,
             menus: [],
             page: 0,
-            rowsPerPage: 5
+            rowsPerPage: 5,
+            id_resto: ''
 
         }
     }
@@ -98,6 +100,29 @@ class RestosDetails extends Component {
             });
         });
 
+
+    }
+
+    filterList = () => {
+
+        const { id_resto } = this.state;
+        this.props.firebase.menus().on('value', snapshot => {
+            const menuObject = snapshot.val();
+            const menuList = Object.keys(menuObject).map(key => ({
+                ...menuObject[key],
+                id: key
+            }));
+
+            const listeMenu = [];
+            menuList.forEach(menu => {
+                if (menu.resto_id.indexOf(id_resto) > -1)
+                    listeMenu.push(menu);
+            });
+            this.setState({
+                menus: listeMenu,
+                loading: false
+            });
+        });
 
     }
 
@@ -135,12 +160,41 @@ class RestosDetails extends Component {
 
     render() {
         const { classes } = this.props;
-        const { menus, page, rowsPerPage, searchName, searchTypeCuisine } = this.state;
+        const { menus, page, rowsPerPage, id_resto } = this.state;
 
         return (
             <Paper className={classes.paper}>
+
+                <form className={classes.container}>
+                    <TextField
+                        id="nomResto"
+                        label="Id Resto"
+                        type="text"
+                        name="id_resto"
+                        variant="outlined"
+                        className={classes.textField1}
+                        value={id_resto}
+                        onChange={this.onChange}
+                    />
+
+                   
+                    <Button
+                        variant="contained"
+                        type="button"
+                        color="primary"
+                        className={classes.textField}
+                        onClick={this.filterList}
+                    >
+                        <Search />
+                        <Typography className={classes.searchText}>
+                            Rechercher
+                        </Typography>
+
+                    </Button>
+                </form>
+
                 {menus.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(menu => (
-                    <Card className={classes.card}>
+                    <Card className={classes.card} key={menu.id}>
                         <CardMedia
                             className={classes.cover}
                             image="/assets/img/joystick_318-1404.jpg"
@@ -149,17 +203,17 @@ class RestosDetails extends Component {
 
                         <CardContent className={classes.content}>
                             <Typography component="h5" variant="h5">
-                            {menu.nom_menu}
-                        </Typography>
+                                {menu.nom_menu}
+                            </Typography>
                             <Typography variant="subtitle1" color="textSecondary">
-                            {menu.prix_menu}
-                        </Typography>
+                                {menu.prix_menu}
+                            </Typography>
                             <Typography variant="subtitle2" color="textSecondary">
-                            {menu.resto_id}
-                        </Typography>
+                                {menu.resto_id}
+                            </Typography>
                             <Typography variant="subtitle2" color="textSecondary">
-                                +230 5874 9695
-                        </Typography>
+                                id :  {menu.id}
+                            </Typography>
                         </CardContent>
                         <CardActions className={classes.cardButton}>
                             <Button color="primary">
@@ -169,7 +223,7 @@ class RestosDetails extends Component {
                         </CardActions>
                     </Card>
                 ))}
-                  <Table className={classes.table}>
+                <Table className={classes.table}>
                     <TableFooter>
                         <TableRow>
                             <TablePagination
