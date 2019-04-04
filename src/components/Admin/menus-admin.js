@@ -111,7 +111,7 @@ class MenusAdminPage extends Component {
     }
 
     handleChangeRowsPerPage = (event) => {
-        this.setState({page: 0, rowsPerPage: event.target.value});
+        this.setState({rowsPerPage: event.target.value});
     }
 
     componentDidMount() {
@@ -206,7 +206,7 @@ class MenusAdminPage extends Component {
                                             SelectProps={{native: true}} 
                                             onChangePage={this.handleChangePage} 
                                             onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                            labelDisplayedRows={({from, to, count}) => `${from} - ${to} sur ${count} restos`} 
+                                            labelDisplayedRows={({from, to, count}) => `${from} - ${to} sur ${count} plats`} 
                                             labelRowsPerPage="Lignes par page" />
                                     </TableRow>
                                 </TableFooter>
