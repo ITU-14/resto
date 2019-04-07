@@ -118,5 +118,10 @@ Fonctionnalités
 - Recherche resto
 - 
 
-- 
-
+- edit quantité in liste commande
+- Add left Menu
+	- Menu
+	- Hors d'oeuvre
+	- Plat
+	- Dessert
+- CRUD BO

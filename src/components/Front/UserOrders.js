@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Drawer, Divider, Card, CardContent, Typography, CardActions, Button, withStyles, Avatar } from '@material-ui/core';
+import { Drawer, Divider, Card, CardContent, Typography, CardActions, Button, withStyles, Avatar, FormControl, InputLabel, Select, FilledInput } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import { compose } from 'recompose';
 import classNames from 'classnames';
@@ -63,11 +63,19 @@ const styles = theme => ({
     validbutton: {
         margin: theme.spacing.unit,
         width: '45%'
-    }
+    },
+    formControl: {
+        // margin: theme.spacing.unit,
+        // minWidth: 120,
+    },
 });
 
 class UserOrders extends Component {
-    
+
+    handleChange = name => event => {
+        this.setState({ [name]: event.target.value });
+    }
+
     render() {
         const {classes} = this.props;
         const command = true;
@@ -111,12 +119,25 @@ class UserOrders extends Component {
                         <Typography variant="subtitle1" color="textSecondary">
                             Plat
                         </Typography>
-                        <Typography variant="subtitle2" color="textSecondary">
-                            Quantit&eacute;: 3
-                        </Typography>
+                        
                         <Typography variant="subtitle2" color="textSecondary">
                             Prix unitaire: 150 Rs
                         </Typography>
+
+                        <FormControl variant="filled" className={classes.formControl}>
+                            <InputLabel htmlFor="filled-age-native-simple">Quantit&eacute;</InputLabel>
+                            <Select
+                                native
+                                value={1}
+                                onChange={this.handleChange('age')}
+                                input={<FilledInput name="age" id="filled-age-native-simple" />}
+                            >
+                                <option value={1}>1</option>
+                                <option value={2}>2</option>
+                                <option value={3}>3</option>
+                            </Select>
+                        </FormControl>
+                        
                         <CardActions className={classes.cardButton}>
                             <Button color="secondary">
                                 <Delete/>

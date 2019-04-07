@@ -12,7 +12,6 @@ class Sidebar extends Component {
         this.props.history.push(path);
     }
 
-
     render() {
         return (
             <List>
