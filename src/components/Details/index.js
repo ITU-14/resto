@@ -4,6 +4,7 @@ import { compose } from 'recompose';
 import { withStyles, CssBaseline} from '@material-ui/core';
 import UserOrders from '../Front/UserOrders';
 import RestosDetails from '../Front/RestosDetails';
+import { withAuthentication } from '../Session';
 
 const styles = theme => ({
     root: {
@@ -25,7 +26,7 @@ class DetailsResto extends Component {
         return (
             <div className={classes.root}>
                 <CssBaseline />
-                <MenuAppBar />
+                <MenuAppBar drawer={true} />
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
                     <RestosDetails resto_id_sent={idresto} />
@@ -36,4 +37,12 @@ class DetailsResto extends Component {
     }
 }
 
-export default compose(withStyles(styles))(DetailsResto);
+/*const DetailsResto = () => (
+    <div>
+        
+            <DetailsRestoPage/>        
+        
+    </div>
+);*/
+
+export default compose(withStyles(styles), withAuthentication)(DetailsResto);

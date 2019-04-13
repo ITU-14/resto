@@ -111,10 +111,6 @@ class Restos extends Component {
     }
 
     filterList = () => {
-        //console.log("tonga ato"+e.target.value);
-        //this.setState({search : e.target.value});
-
-        //this.setState({ loading: true });
         const { searchName , searchTypeCuisine} = this.state;
         
 

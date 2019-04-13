@@ -23,7 +23,7 @@ class HomePageResto extends Component {
         return (
             <div className={classes.root}>
                 <CssBaseline />
-                <MenuAppBar />
+                <MenuAppBar drawer={false} />
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
                     <Restos />

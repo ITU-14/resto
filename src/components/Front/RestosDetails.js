@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { withStyles, Paper, Card, Typography, Button, CardMedia, CardContent, CardActions } from '@material-ui/core';
 import {  Map } from '@material-ui/icons';
 import { withFirebase } from '../Firebase';
+import * as ROUTES from '../../constants/routes';
+import { withAuthentication } from '../Session';
 import { Table, TableRow, TableFooter, TablePagination } from '@material-ui/core';
 
 const styles = theme => ({
@@ -79,8 +82,8 @@ class RestosDetails extends Component {
             menus: [],
             page: 0,
             rowsPerPage: 5,
-            id_resto: ''
-
+            id_resto: '',
+            authUser: JSON.parse(localStorage.getItem('authUser'))
         }
     }
 
@@ -157,6 +160,17 @@ class RestosDetails extends Component {
         this.setState({ [event.target.name]: event.target.value });
     }
 
+    addCommande = (event) => {
+        /* eslint-disable */
+        const user = JSON.parse(localStorage.getItem('authUser'));
+        console.log(user);
+        if(!user) {
+            this.props.history.push(ROUTES.SIGN_IN);
+        }
+        // 
+        /* eslint-enable */
+    }
+
     render() {
         const { classes, resto_id_sent } = this.props;
         const { menus, page, rowsPerPage } = this.state;
@@ -190,7 +204,7 @@ class RestosDetails extends Component {
                             </Typography>
                         </CardContent>
                         <CardActions className={classes.cardButton}>
-                            <Button color="primary">
+                            <Button color="primary" onClick={this.addCommande}>
                                 <Map />
                                 Commander
                         </Button>
@@ -219,4 +233,4 @@ class RestosDetails extends Component {
     }
 }
 
-export default compose(withFirebase, withStyles(styles))(RestosDetails);
+export default compose(withFirebase, withRouter, withAuthentication, withStyles(styles))(RestosDetails);
