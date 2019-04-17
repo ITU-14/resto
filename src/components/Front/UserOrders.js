@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Drawer, Divider, Card, CardContent, Typography, CardActions, Button, withStyles, Avatar, FormControl, InputLabel, Select, FilledInput } from '@material-ui/core';
+import { Drawer, Divider, Card, CardContent, Typography, CardActions, Button, withStyles, Avatar, FormControl, Select } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import { compose } from 'recompose';
 import classNames from 'classnames';
@@ -87,20 +87,20 @@ class UserOrders extends Component {
     render() {
         const {classes, orders} = this.props;
         const command = orders.commandes.length > 0;
-        /* eslint-disable */
-        console.log("COMMANDE:::::",command);
-        /* eslint-enable */
-        // const size = this.props > 0 ? this.state.size
+        const options = [];
+        for(let k = 0; k < 30;k++) {
+            options[k] = k+1;
+        }
         const cards = (
             <div>
                 {orders.commandes.map(order => (
-                    <Card className={classes.card}>
+                    <Card className={classes.card} key={order.id}>
                         <div className={classes.cover}>
-                            <Avatar alt={order.nomPlat} src="/assets/img/joystick_318-1404.jpg" className={classes.bigAvatar} />
+                            <Avatar alt={order.nom} src="/assets/img/joystick_318-1404.jpg" className={classes.bigAvatar} />
                         </div>
                         <CardContent className={classes.content}>
                             <Typography component="h6" variant="h6">
-                                {order.nomPlat}
+                                {order.nom}
                             </Typography>
                             <Typography variant="subtitle1" color="textSecondary">
                                 {order.type}
@@ -111,21 +111,20 @@ class UserOrders extends Component {
                             </Typography>
 
                             <FormControl variant="filled" className={classes.formControl}>
-                                <InputLabel htmlFor="filled-age-native-simple">Quantit&eacute;</InputLabel>
-                                <Select
+			                    <Select
                                     native
-                                    value={1}
-                                    onChange={this.handleChange('age')}
-                                    input={<FilledInput name="age" id="filled-age-native-simple" />}
+                                    name={"order-".concat(order.id)}
+                                    value={order.quantity}
+                                    onChange={this.props.handleChangeQuantity}
                                 >
-                                    <option value={1}>1</option>
-                                    <option value={2}>2</option>
-                                    <option value={3}>3</option>
+                                    {options.map(option => (
+                                        <option value={option}>{option}</option>
+                                    ))}
                                 </Select>
-                            </FormControl>
+			                </FormControl>
                             
                             <CardActions className={classes.cardButton}>
-                                <Button color="secondary" onClick={() => this.props.handleRemoveOrder(order)}>
+                                <Button color="secondary" onClick={() => this.props.handleRemoveOrder(order.id)}>
                                     <Delete/>
                                     Annuler
                                 </Button>
@@ -133,7 +132,6 @@ class UserOrders extends Component {
                         </CardContent>
                     </Card>
                 ))}
-                
 
                 <Divider />
                 <Button variant="contained" color="secondary" className={classes.validbutton}>

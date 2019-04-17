@@ -81,10 +81,6 @@ const styles = theme => ({
     }
 });
 
-const INITIAL_COMMANDE = {
-    commandes: []
-}
-
 class RestosDetails extends Component {
     constructor(props) {
         super(props);
@@ -95,7 +91,10 @@ class RestosDetails extends Component {
             rowsPerPage: 5,
             id_resto: '',
             authUser: JSON.parse(localStorage.getItem('authUser')),
-            orders: INITIAL_COMMANDE
+            orders: {
+                user: JSON.parse(localStorage.getItem('authUser')),
+                commandes: []
+            }
         }
     }
 
@@ -171,44 +170,74 @@ class RestosDetails extends Component {
         this.setState({ [event.target.name]: event.target.value });
     }
 
-    handleRemoveOrder = (menu) => {
+    handleRemoveOrder = (menu_id) => {
         let orders = this.state.orders;
-        orders.commandes.pop();
+        orders.commandes = orders.commandes.filter(order => {
+            return (order.id.localeCompare(menu_id) !== 0);
+        });
         this.setState({
-            orders:orders
+            orders: orders
         });
     }
 
-    addCommande = (event, menu) => {
-        /* eslint-disable */
+    handleChangeQuantity = (event) => {
+        let orders = this.state.orders;
+        const id = event.target.name.split("-")[1];
+        const value = event.target.value;
+        
+        orders.commandes.forEach(order => {
+            if(order.id === id) {
+                order.quantity = value;
+                return;
+            }
+        });
+        orders.commandes = orders.commandes.filter(order => {
+            return (order.quantity > 0);
+        });
+        this.setState({
+            orders: orders
+        });
+    }
+
+    handleValidateOrders = () => {
+
+    }
+
+    addCommande = (menu) => {
         const user = JSON.parse(localStorage.getItem('authUser'));
         console.log(user);
         if(!user) {
             this.props.history.push(ROUTES.SIGN_IN);
         }
         let oldOrders = this.state.orders;
-        oldOrders.commandes.push({
-            id: 1,
-            nomPlat: "Poireau au poivre vert",
-            type: "Plat",
-            prixUnitaire: 150,
-            image: "/assets/img/joystick_318-1404.jpg"
+        let statusAdded = false;
+        oldOrders.commandes.forEach(order => {
+            if(order.id.localeCompare(menu._id) === 0) {
+                statusAdded = true;
+                order.quantity += 1;
+                return;
+            }
         });
-        // prders = orders.concat('commande1');
+        if(!statusAdded) {
+            oldOrders.commandes.push({
+                id: menu._id,
+                nom: menu.nom,
+                type: "Plat",
+                prixUnitaire: 150,
+                quantity: 1,
+                image: "/assets/img/joystick_318-1404.jpg"
+            });
+        }
         this.setState({
             orders: oldOrders
         });
-        // 
-        /* eslint-enable */
     }
 
     render() {
         const { classes, resto_id_sent } = this.props;
         const { menus, page, rowsPerPage } = this.state;
         let menuList = menus.filter(menu => {
-            if(menu.resto_id === resto_id_sent)
-                return menu;
-            return null;
+            return menu.resto_id === resto_id_sent;
         });
 
         
@@ -267,7 +296,10 @@ class RestosDetails extends Component {
                     </Paper>
                 </main>
                 
-                <UserOrders orders={this.state.orders} handleRemoveOrder={this.handleRemoveOrder} />
+                <UserOrders orders={this.state.orders} 
+                            handleRemoveOrder={this.handleRemoveOrder} 
+                            handleChangeQuantity={this.handleChangeQuantity} 
+                            handleValidateOrders={this.handleValidateOrders}/>
 
             </div>
         );
