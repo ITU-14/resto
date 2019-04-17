@@ -3,7 +3,7 @@ import MenuAppBar from '../Front/MenuAppBar';
 import Restos from '../Front/Restos';
 import { compose } from 'recompose';
 import { withStyles, CssBaseline} from '@material-ui/core';
-import UserOrders from '../Front/UserOrders';
+//  import UserOrders from '../Front/UserOrders';
 
 const styles = theme => ({
     root: {
@@ -28,7 +28,7 @@ class HomePageResto extends Component {
                     <div className={classes.toolbar} />
                     <Restos />
                 </main>
-                <UserOrders />
+                
             </div>
         );
     }

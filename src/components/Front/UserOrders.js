@@ -72,80 +72,68 @@ const styles = theme => ({
 
 class UserOrders extends Component {
 
+    
     handleChange = name => event => {
         this.setState({ [name]: event.target.value });
     }
 
-    render() {
-        const {classes} = this.props;
-        const command = true;
+    handleRemoveOrder = () => {
+        /* eslint-disable */
+        this.props.orders.menus.pop();
+        console.log(this.props.orders);
+        /* eslint-enable */
+    }
 
+    render() {
+        const {classes, orders} = this.props;
+        const command = orders.commandes.length > 0;
+        /* eslint-disable */
+        console.log("COMMANDE:::::",command);
+        /* eslint-enable */
+        // const size = this.props > 0 ? this.state.size
         const cards = (
             <div>
-                <Card className={classes.card}>
-                    <div className={classes.cover}>
-                        <Avatar alt="Nom plat" src="/assets/img/joystick_318-1404.jpg" className={classes.bigAvatar} />
-                    </div>
-                    <CardContent className={classes.content}>
-                        <Typography component="h6" variant="h6">
-                            Poireau au poivre vert
-                        </Typography>
-                        <Typography variant="subtitle1" color="textSecondary">
-                            Plat
-                        </Typography>
-                        <Typography variant="subtitle2" color="textSecondary">
-                            Quantit&eacute;: 3
-                        </Typography>
-                        <Typography variant="subtitle2" color="textSecondary">
-                            Prix unitaire: 150 Rs
-                        </Typography>
-                        <CardActions className={classes.cardButton}>
-                            <Button color="secondary">
-                                <Delete/>
-                                Annuler
-                            </Button>
-                        </CardActions>
-                    </CardContent>
-                </Card>
+                {orders.commandes.map(order => (
+                    <Card className={classes.card}>
+                        <div className={classes.cover}>
+                            <Avatar alt={order.nomPlat} src="/assets/img/joystick_318-1404.jpg" className={classes.bigAvatar} />
+                        </div>
+                        <CardContent className={classes.content}>
+                            <Typography component="h6" variant="h6">
+                                {order.nomPlat}
+                            </Typography>
+                            <Typography variant="subtitle1" color="textSecondary">
+                                {order.type}
+                            </Typography>
+                            
+                            <Typography variant="subtitle2" color="textSecondary">
+                                Prix unitaire: {order.prixUnitaire} Rs
+                            </Typography>
 
-                <Card className={classes.card}>
-                    <div className={classes.cover}>
-                        <Avatar alt="Nom plat" src="/assets/img/joystick_318-1404.jpg" className={classes.bigAvatar} />
-                    </div>
-                    <CardContent className={classes.content}>
-                        <Typography component="h6" variant="h6">
-                            Poireau au poivre vert
-                        </Typography>
-                        <Typography variant="subtitle1" color="textSecondary">
-                            Plat
-                        </Typography>
-                        
-                        <Typography variant="subtitle2" color="textSecondary">
-                            Prix unitaire: 150 Rs
-                        </Typography>
-
-                        <FormControl variant="filled" className={classes.formControl}>
-                            <InputLabel htmlFor="filled-age-native-simple">Quantit&eacute;</InputLabel>
-                            <Select
-                                native
-                                value={1}
-                                onChange={this.handleChange('age')}
-                                input={<FilledInput name="age" id="filled-age-native-simple" />}
-                            >
-                                <option value={1}>1</option>
-                                <option value={2}>2</option>
-                                <option value={3}>3</option>
-                            </Select>
-                        </FormControl>
-                        
-                        <CardActions className={classes.cardButton}>
-                            <Button color="secondary">
-                                <Delete/>
-                                Annuler
-                            </Button>
-                        </CardActions>
-                    </CardContent>
-                </Card>
+                            <FormControl variant="filled" className={classes.formControl}>
+                                <InputLabel htmlFor="filled-age-native-simple">Quantit&eacute;</InputLabel>
+                                <Select
+                                    native
+                                    value={1}
+                                    onChange={this.handleChange('age')}
+                                    input={<FilledInput name="age" id="filled-age-native-simple" />}
+                                >
+                                    <option value={1}>1</option>
+                                    <option value={2}>2</option>
+                                    <option value={3}>3</option>
+                                </Select>
+                            </FormControl>
+                            
+                            <CardActions className={classes.cardButton}>
+                                <Button color="secondary" onClick={() => this.props.handleRemoveOrder(order)}>
+                                    <Delete/>
+                                    Annuler
+                                </Button>
+                            </CardActions>
+                        </CardContent>
+                    </Card>
+                ))}
+                
 
                 <Divider />
                 <Button variant="contained" color="secondary" className={classes.validbutton}>
@@ -175,7 +163,7 @@ class UserOrders extends Component {
                     anchor="right"
                 >
                 <Typography component="h6" variant="h6" className={classNames(classes.toolbar, classes.toolbarText)}>
-                    Liste des commandes
+                    Liste des commandes ({this.props.orders.commandes.length})
                 </Typography>
                 <Divider />
                 {command ? cards : noCards}

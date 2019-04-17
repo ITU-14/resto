@@ -1,7 +1,7 @@
 import app from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
-
+import Rebase from 're-base';
 import * as ROLES from '../../constants/roles';
 
 const config = {
@@ -99,4 +99,9 @@ class Firebase {
 
 }
 
+const rebase = Rebase.createClass(config);
+
 export default Firebase;
+
+export { rebase };
+

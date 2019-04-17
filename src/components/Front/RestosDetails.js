@@ -6,19 +6,20 @@ import {  Map } from '@material-ui/icons';
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
 import { withAuthentication } from '../Session';
+import UserOrders from '../Front/UserOrders';
 import { Table, TableRow, TableFooter, TablePagination } from '@material-ui/core';
 
 const styles = theme => ({
     paper: {
-        width: '100%',
+        // width: '100%',
         // flexShrink: 0,
-        //color: theme.palette.text.secondary,
+        // color: theme.palette.text.secondary,
         overflowX: 'auto',
         textAlign: 'center',
         paddingTop: theme.spacing.unit * 3,
         paddingBottom: theme.spacing.unit * 3
     },
-
+    toolbar: theme.mixins.toolbar,
     container: {
         display: 'flex',
         flexWrap: 'wrap',
@@ -65,6 +66,12 @@ const styles = theme => ({
     content: {
         flex: '1 0 auto'
     },
+    maincontent: {
+        flexGrow: 1,
+        backgroundColor: theme.palette.background.default,
+        width: '100%'
+        // padding: theme.spacing.unit * 3,
+    },
     cardButton: {
         marginLeft: 'auto'
     },
@@ -73,6 +80,10 @@ const styles = theme => ({
         paddingRight: theme.spacing.unit
     }
 });
+
+const INITIAL_COMMANDE = {
+    commandes: []
+}
 
 class RestosDetails extends Component {
     constructor(props) {
@@ -83,7 +94,8 @@ class RestosDetails extends Component {
             page: 0,
             rowsPerPage: 5,
             id_resto: '',
-            authUser: JSON.parse(localStorage.getItem('authUser'))
+            authUser: JSON.parse(localStorage.getItem('authUser')),
+            orders: INITIAL_COMMANDE
         }
     }
 
@@ -106,7 +118,6 @@ class RestosDetails extends Component {
     }
 
     filterList = () => {
-
         const { id_resto } = this.state;
         this.props.firebase.menus().on('value', snapshot => {
             const menuObject = snapshot.val();
@@ -160,13 +171,33 @@ class RestosDetails extends Component {
         this.setState({ [event.target.name]: event.target.value });
     }
 
-    addCommande = (event) => {
+    handleRemoveOrder = (menu) => {
+        let orders = this.state.orders;
+        orders.commandes.pop();
+        this.setState({
+            orders:orders
+        });
+    }
+
+    addCommande = (event, menu) => {
         /* eslint-disable */
         const user = JSON.parse(localStorage.getItem('authUser'));
         console.log(user);
         if(!user) {
             this.props.history.push(ROUTES.SIGN_IN);
         }
+        let oldOrders = this.state.orders;
+        oldOrders.commandes.push({
+            id: 1,
+            nomPlat: "Poireau au poivre vert",
+            type: "Plat",
+            prixUnitaire: 150,
+            image: "/assets/img/joystick_318-1404.jpg"
+        });
+        // prders = orders.concat('commande1');
+        this.setState({
+            orders: oldOrders
+        });
         // 
         /* eslint-enable */
     }
@@ -179,56 +210,66 @@ class RestosDetails extends Component {
                 return menu;
             return null;
         });
-        return (
-            <Paper className={classes.paper}>
-                {menuList.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(menu => (
-                    <Card className={classes.card} key={menu.id}>
-                        <CardMedia
-                            className={classes.cover}
-                            image="/assets/img/joystick_318-1404.jpg"
-                            title="Live from space album cover"
-                        />
 
-                        <CardContent className={classes.content}>
-                            <Typography component="h5" variant="h5">
-                                {menu.nom_menu}
-                            </Typography>
-                            <Typography variant="subtitle1" color="textSecondary">
-                                {menu.prix_menu}
-                            </Typography>
-                            <Typography variant="subtitle2" color="textSecondary">
-                                {menu.resto_id}
-                            </Typography>
-                            <Typography variant="subtitle2" color="textSecondary">
-                                id :  {menu.id}
-                            </Typography>
-                        </CardContent>
-                        <CardActions className={classes.cardButton}>
-                            <Button color="primary" onClick={this.addCommande}>
-                                <Map />
-                                Commander
-                        </Button>
-                        </CardActions>
-                    </Card>
-                ))}
-                <Table className={classes.table}>
-                    <TableFooter>
-                        <TableRow>
-                            <TablePagination
-                                rowsPerPageOptions={[5, 10, 25]}
-                                colSpan={3}
-                                count={menuList.length}
-                                rowsPerPage={rowsPerPage}
-                                page={page}
-                                SelectProps={{ native: true }}
-                                onChangePage={this.handleChangePage}
-                                onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                labelDisplayedRows={({ from, to, count }) => `${from} - ${to} sur ${count} restos`}
-                                labelRowsPerPage="Lignes par page" />
-                        </TableRow>
-                    </TableFooter>
-                </Table>
-            </Paper>
+        
+        return (
+            <div>
+                <main className={classes.maincontent}>
+                    <div className={classes.toolbar} />
+                    <Paper className={classes.paper}>
+                        {menuList.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(menu => (
+                            <Card className={classes.card} key={menu.id}>
+                                <CardMedia
+                                    className={classes.cover}
+                                    image="/assets/img/joystick_318-1404.jpg"
+                                    title="Live from space album cover"
+                                />
+
+                                <CardContent className={classes.content}>
+                                    <Typography component="h5" variant="h5">
+                                        {menu.nom_menu}
+                                    </Typography>
+                                    <Typography variant="subtitle1" color="textSecondary">
+                                        {menu.prix_menu}
+                                    </Typography>
+                                    <Typography variant="subtitle2" color="textSecondary">
+                                        {menu.resto_id}
+                                    </Typography>
+                                    <Typography variant="subtitle2" color="textSecondary">
+                                        id :  {menu.id}
+                                    </Typography>
+                                </CardContent>
+                                <CardActions className={classes.cardButton}>
+                                    <Button color="primary" onClick={() => this.addCommande(menu)}>
+                                        <Map />
+                                        Commander
+                                </Button>
+                                </CardActions>
+                            </Card>
+                        ))}
+                        <Table className={classes.table}>
+                            <TableFooter>
+                                <TableRow>
+                                    <TablePagination
+                                        rowsPerPageOptions={[5, 10, 25]}
+                                        colSpan={3}
+                                        count={menuList.length}
+                                        rowsPerPage={rowsPerPage}
+                                        page={page}
+                                        SelectProps={{ native: true }}
+                                        onChangePage={this.handleChangePage}
+                                        onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                                        labelDisplayedRows={({ from, to, count }) => `${from} - ${to} sur ${count} restos`}
+                                        labelRowsPerPage="Lignes par page" />
+                                </TableRow>
+                            </TableFooter>
+                        </Table>
+                    </Paper>
+                </main>
+                
+                <UserOrders orders={this.state.orders} handleRemoveOrder={this.handleRemoveOrder} />
+
+            </div>
         );
     }
 }

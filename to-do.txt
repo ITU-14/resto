@@ -1,4 +1,4 @@
-- Resto ########
+﻿- Resto ########
 	- nom
 	- description
 	- type de cuisine
@@ -114,9 +114,12 @@ F.O
 - Details restos
 	
 Fonctionnalités
+- Add commande to basket
+- Edit quantity in basket
+- Add resto title in menu page
 - CRUD Resto, Plat, Menu
 - Recherche resto
-- 
+
 
 - edit quantité in liste commande
 - Add left Menu
@@ -125,3 +128,6 @@ Fonctionnalités
 	- Plat
 	- Dessert
 - CRUD BO
+
+Project Console: https://console.firebase.google.com/project/resto-39060/overview
+Hosting URL: https://resto-39060.firebaseapp.com
