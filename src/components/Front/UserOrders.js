@@ -4,7 +4,7 @@ import { Delete } from '@material-ui/icons';
 import { compose } from 'recompose';
 import classNames from 'classnames';
 
-const drawerWidth = 400;
+const drawerWidth = '30%';
 
 const styles = theme => ({
     toolbar: theme.mixins.toolbar,
@@ -55,6 +55,9 @@ const styles = theme => ({
         width: 80,
         height: 80,
     },
+    commandName: {
+        // wordBreak: 'break-word'
+    },
     noCommande: {
         textAlign: 'center',
         // padding: `${theme.spacing.unit} ${theme.spacing.unit}`,
@@ -99,7 +102,7 @@ class UserOrders extends Component {
                             <Avatar alt={order.nom} src="/assets/img/joystick_318-1404.jpg" className={classes.bigAvatar} />
                         </div>
                         <CardContent className={classes.content}>
-                            <Typography component="h6" variant="h6">
+                            <Typography component="h6" variant="h6" className={classes.commandName}>
                                 {order.nom}
                             </Typography>
                             <Typography variant="subtitle1" color="textSecondary">
@@ -124,9 +127,8 @@ class UserOrders extends Component {
 			                </FormControl>
                             
                             <CardActions className={classes.cardButton}>
-                                <Button color="secondary" onClick={() => this.props.handleRemoveOrder(order.id)}>
+                                <Button color="secondary" title="Supprimer" onClick={() => this.props.handleRemoveOrder(order.id)}>
                                     <Delete/>
-                                    Annuler
                                 </Button>
                             </CardActions>
                         </CardContent>

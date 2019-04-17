@@ -19,6 +19,10 @@ const styles = theme => ({
         paddingTop: theme.spacing.unit * 3,
         paddingBottom: theme.spacing.unit * 3
     },
+    divContainer: {
+        width: '58%',
+        margin: '8px 7px'
+    },
     toolbar: theme.mixins.toolbar,
     container: {
         display: 'flex',
@@ -112,8 +116,6 @@ class RestosDetails extends Component {
                 loading: false
             });
         });
-
-
     }
 
     filterList = () => {
@@ -135,7 +137,6 @@ class RestosDetails extends Component {
                 loading: false
             });
         });
-
     }
 
     componentWillUnmount() {
@@ -221,7 +222,7 @@ class RestosDetails extends Component {
         if(!statusAdded) {
             oldOrders.commandes.push({
                 id: menu._id,
-                nom: menu.nom,
+                nom: "Test Nom menu lava",
                 type: "Plat",
                 prixUnitaire: 150,
                 quantity: 1,
@@ -242,7 +243,7 @@ class RestosDetails extends Component {
 
         
         return (
-            <div>
+            <div className={classes.divContainer}>
                 <main className={classes.maincontent}>
                     <div className={classes.toolbar} />
                     <Paper className={classes.paper}>
