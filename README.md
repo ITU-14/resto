@@ -1,7 +1,28 @@
-# resto
-Projet MBDS - REACT. <br/>
-LAI Christophe <br/>
+# Resto
+Projet MBDS - REACT. 
+LAI Christophe 
 NIRIJAONA Lala Ricoeur Khino
+
+## Description
+### Mini Projet - un gestionnaire de menus / cartes pour des restaurants
+>Objectifs : application Web permettant en mode utilisateur de chercher des restaurants, et une fois qu'on a trouvé un restauranrt, de consulter ses menus et sa carte. 
+
+### Fonctionnalites Front
+>Recherche Restaurant
+* Par : nom de restaurant
+* type de cuisine
+>Details restaurant qui nous donne :
+* Liste des Menu du restaurant
+* Liste plats
+>Commande un plat
+* Choisr un ou plusieur menu
+* Choisir plat
+* Modifier commande
+
+### Fonctionnalites Back Office
+>Creer des cartes
+>Creer Menu
+>Ajouter et modifier plat
 
 ## Installation du projet en local
 
