@@ -118,8 +118,9 @@ Fonctionnalités
 - Recherche resto
 - Add title in resto details page
 
-
-
+- dynamic data
+- save commande to database
+- liste plats par resto
 
 - Add left Menu
 	- Menu

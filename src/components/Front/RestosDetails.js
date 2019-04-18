@@ -51,6 +51,11 @@ const styles = theme => ({
         margin: `${theme.spacing.unit * 3}px auto`,
         left: '50%',
         position: 'absolute'
+    },
+    category: {
+        '&:first-letter': {
+            textTransform: 'Uppercase'
+        }
     }
 });
 
@@ -163,7 +168,7 @@ class RestosDetails extends Component {
         });
     }
 
-    addCommande = (menu) => {
+    addCommande = (menu, typeOrder) => {
         const user = JSON.parse(localStorage.getItem('authUser'));
         console.log(user);
         if(!user) {
@@ -181,11 +186,11 @@ class RestosDetails extends Component {
         if(!statusAdded) {
             oldOrders.commandes.push({
                 id: menu._id,
-                nom: "Test Nom menu lava",
-                type: "Plat",
-                prixUnitaire: 150,
+                nom: menu.nom,
+                type: typeOrder,
+                prixUnitaire: menu.prix_menu,
                 quantity: 1,
-                image: "/assets/img/joystick_318-1404.jpg"
+                photo: menu.photo
             });
         }
         this.setState({
@@ -197,6 +202,25 @@ class RestosDetails extends Component {
         this.setState({
             expanded: expanded ? panel : false
         });
+    }
+
+    renderContentMenu = (menu, className) => {
+        let contents = menu.contents;
+        let data = [];
+        contents.forEach(content => {
+            let dataContent = {label: content.typePlat, nom: ""};
+            content.listePlats.forEach(plat => {
+                dataContent.nom += plat.nom;
+            });
+            data.push(dataContent);
+        });
+        return (
+            <Typography color="textSecondary">
+                {data.map(content => (
+                    <p key={content.id}><b className={className}>{content.label}</b>: <i>{content.nom}</i></p>
+                ))}
+            </Typography>
+        );
     }
 
     render() {
@@ -219,7 +243,7 @@ class RestosDetails extends Component {
                                     onChange={this.handleExpand('menu')}>
                         <ExpansionPanelSummary  className={classes.headingContainer}
                                                 expandIcon={<ExpandMoreRounded />}>
-                            <Typography className={classes.heading}>Menus</Typography>
+                            <Typography className={classes.heading}>Menus {menuList.length > 0 && `(${menuList.length})`}</Typography>
                         </ExpansionPanelSummary>
                         
                             {loadingMenu && loader}
@@ -231,8 +255,8 @@ class RestosDetails extends Component {
                                             <Grid item>
                                                 <ButtonBase className={classes.media}>
                                                     <img className={classes.img} 
-                                                            alt={"complex"} 
-                                                            src={"/assets/img/joystick_318-1404.jpg"} />
+                                                            alt={menu.nom} 
+                                                            src={menu.photo} />
                                                 </ButtonBase>
                                             </Grid>
                                             <Grid item xs={12} sm container>
@@ -241,17 +265,11 @@ class RestosDetails extends Component {
                                                         <Typography variant="h5">
                                                             {menu.nom}
                                                         </Typography>
-                                                        <Typography color="textSecondary">
-                                                            Entrée: entry 01
-                                                            <br />
-                                                            Plat: plat 01
-                                                            <br/>
-                                                            Dessert: dessert 01
-                                                        </Typography>
+                                                        {this.renderContentMenu(menu, classes.category)}
                                                     </Grid>
 
                                                     <Grid item>
-                                                        <Button variant="outlined" color="primary" onClick={() => this.addCommande(menu)}>
+                                                        <Button color="primary" onClick={() => this.addCommande(menu, 'Menu')}>
                                                             <Map />
                                                             Commander
                                                         </Button>
@@ -261,7 +279,7 @@ class RestosDetails extends Component {
                                             
                                             <Grid item>
                                                 <Typography variant="h6">
-                                                Rs {menu.prix_menu}
+                                                Rs. {menu.prix_menu}
                                                 </Typography>
                                             </Grid>
                                         </Grid>

@@ -78,8 +78,8 @@ class UserOrders extends Component {
                                 <Grid item>
                                     <ButtonBase className={classes.media}>
                                         <img className={classes.img} 
-                                                alt={"complex"} 
-                                                src={"/assets/img/joystick_318-1404.jpg"} />
+                                                alt={order.nom} 
+                                                src={order.photo} />
                                     </ButtonBase>
                                 </Grid>
                                 <Grid item xs={12} sm container>
@@ -89,7 +89,7 @@ class UserOrders extends Component {
                                                 {order.nom}
                                             </Typography>
                                             <Typography variant="subtitle2" color="textSecondary">
-                                                Prix unitaire: Rs {order.prixUnitaire}
+                                                Prix unitaire: Rs. {order.prixUnitaire}
                                             </Typography>
                                             <FormControl variant="filled">
                                                 <Select
