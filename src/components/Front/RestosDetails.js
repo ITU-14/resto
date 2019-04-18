@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import { withStyles, Typography, ExpansionPanel, ExpansionPanelSummary, Grid, Button, Divider, ButtonBase } from '@material-ui/core';
+import { withStyles, Typography, ExpansionPanel, ExpansionPanelSummary, Grid, Button, Divider, ButtonBase, CircularProgress } from '@material-ui/core';
 import {   ExpandMoreRounded, Map } from '@material-ui/icons';
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
@@ -10,43 +10,14 @@ import UserOrders from '../Front/UserOrders';
 import { Table, TableRow, TableFooter, TablePagination } from '@material-ui/core';
 
 const styles = theme => ({
-    paper: {
-        // width: '100%',
-        // flexShrink: 0,
-        // color: theme.palette.text.secondary,
-        overflowX: 'auto',
-        textAlign: 'center',
-        paddingTop: theme.spacing.unit * 3,
-        paddingBottom: theme.spacing.unit * 3
-    },
     divContainer: {
-        width: '58%',
-        margin: '8px 7px'
+        width: '65%',
+        margin: `${theme.spacing.unit}px ${theme.spacing.unit * 3}px`
     },
     section1: {
         margin: `${theme.spacing.unit * 3}px ${theme.spacing.unit * 2}px`,
     },
     toolbar: theme.mixins.toolbar,
-    container: {
-        display: 'flex',
-        flexWrap: 'wrap',
-        width: '68%',
-        marginLeft: 'auto',
-        marginRight: 'auto',
-        marginBottom: theme.spacing.unit * 3,
-        paddingLeft: theme.spacing.unit * 8,
-        paddingRight: theme.spacing.unit * 3
-    },
-    textField1: {
-        marginRight: theme.spacing.unit,
-    },
-    textField: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
-    },
-    cardContainer: {
-        width: '100%'
-    },
     media: {
         height: 140,
         width: 140
@@ -57,28 +28,13 @@ const styles = theme => ({
         maxWidth: '100%',
         maxHeight: '100%'
     },
-    details: {
-        display: 'flex',
-        flexDirection: 'column'
-    },
-    content: {
-        flex: '1 0 auto'
-    },
     maincontent: {
         flexGrow: 1,
         backgroundColor: theme.palette.background.default,
         width: '100%'
-        // padding: theme.spacing.unit * 3,
     },
     item: {
         margin: `${theme.spacing.unit}px`,
-    },
-    cardButton: {
-        marginLeft: 'auto'
-    },
-    carteIcon: {
-        paddingLeft: theme.spacing.unit,
-        paddingRight: theme.spacing.unit
     },
     heading: {
         fontSize: theme.typography.pxToRem(15),
@@ -87,6 +43,14 @@ const styles = theme => ({
     headingContainer: {
         backgroundColor: 'rgba(0,0,0,.03)',
         borderBottom: '1px solid #fafafa'
+    },
+    progressContainer: {
+        height: `${theme.spacing.unit * 10}px`
+    },
+    progress: {
+        margin: `${theme.spacing.unit * 3}px auto`,
+        left: '50%',
+        position: 'absolute'
     }
 });
 
@@ -94,6 +58,7 @@ class RestosDetails extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            loadingMenu: false,
             expanded: 'menu',
             menus: [],
             page: 0,
@@ -108,7 +73,7 @@ class RestosDetails extends Component {
     }
 
     componentDidMount() {
-        this.setState({ loading: true });
+        this.setState({ loadingMenu: true });
         this.props.firebase.menus().on('value', snapshot => {
             const menuObject = snapshot.val();
             const menuList = Object.keys(menuObject).map(key => ({
@@ -118,7 +83,7 @@ class RestosDetails extends Component {
 
             this.setState({
                 menus: menuList,
-                loading: false
+                loadingMenu: false
             });
         });
     }
@@ -139,7 +104,7 @@ class RestosDetails extends Component {
             });
             this.setState({
                 menus: listeMenu,
-                loading: false
+                loadingMenu: false
             });
         });
     }
@@ -170,7 +135,7 @@ class RestosDetails extends Component {
     handleChangeQuantity = (event) => {
         let orders = this.state.orders;
         const id = event.target.name.split("-")[1];
-        const value = event.target.value;
+        const value = parseInt(event.target.value, 10);
         
         orders.commandes.forEach(order => {
             if(order.id === id) {
@@ -236,12 +201,15 @@ class RestosDetails extends Component {
 
     render() {
         const { classes, resto_id_sent } = this.props;
-        const { menus, page, rowsPerPage, expanded } = this.state;
+        const { menus, page, rowsPerPage, expanded, loadingMenu } = this.state;
         let menuList = menus.filter(menu => {
             return menu.resto_id === resto_id_sent;
         });
 
-        
+        const loader = <div className={classes.progressContainer}>
+            <CircularProgress className={classes.progress} />
+        </div>
+
         return (
             <div className={classes.divContainer}>
                 <main className={classes.maincontent}>
@@ -254,9 +222,10 @@ class RestosDetails extends Component {
                             <Typography className={classes.heading}>Menus</Typography>
                         </ExpansionPanelSummary>
                         
+                            {loadingMenu && loader}
                             {menuList.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(menu => (
 
-                                <div className={classes.item}>
+                                <div className={classes.item} key={`menu-${menu.id}`}>
                                     <div className={classes.section1}>
                                         <Grid container spacing={16}>
                                             <Grid item>
@@ -270,15 +239,19 @@ class RestosDetails extends Component {
                                                 <Grid item xs container direction="column" spacing={16}>
                                                     <Grid item xs>
                                                         <Typography variant="h5">
-                                                            {menu.nom_menu}
+                                                            {menu.nom}
                                                         </Typography>
                                                         <Typography color="textSecondary">
-                                                            
+                                                            Entrée: entry 01
+                                                            <br />
+                                                            Plat: plat 01
+                                                            <br/>
+                                                            Dessert: dessert 01
                                                         </Typography>
                                                     </Grid>
 
                                                     <Grid item>
-                                                        <Button variant="outlined" color="primary">
+                                                        <Button variant="outlined" color="primary" onClick={() => this.addCommande(menu)}>
                                                             <Map />
                                                             Commander
                                                         </Button>
@@ -296,7 +269,7 @@ class RestosDetails extends Component {
                                     <Divider />
                                 </div>
                             ))}
-                            <Table className={classes.table}>
+                            {!loadingMenu && <Table className={classes.table}>
                                 <TableFooter>
                                     <TableRow>
                                         <TablePagination
@@ -312,7 +285,7 @@ class RestosDetails extends Component {
                                             labelRowsPerPage="Lignes par page" />
                                     </TableRow>
                                 </TableFooter>
-                            </Table>
+                            </Table>}
                     </ExpansionPanel>
                         
                     

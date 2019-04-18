@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Drawer, Divider, Card, CardContent, Typography, CardActions, Button, withStyles, Avatar, FormControl, Select } from '@material-ui/core';
+import { Drawer, Divider, Typography, Button, withStyles, FormControl, Select, Grid, ButtonBase } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import { compose } from 'recompose';
 import classNames from 'classnames';
@@ -19,72 +19,47 @@ const styles = theme => ({
     drawerPaper: {
         width: drawerWidth,
     },
-    card: {
-        width: '100%',
-        // maxWidth: 345,
-        display: 'flex',
-        marginBottom: theme.spacing.unit 
+    item: {
+        margin: `${theme.spacing.unit}px`,
     },
     media: {
-        height: 140,
+        height: 75,
+        width: 75
     },
-    cover: {
-        width: 90,
-        height: 'auto',
-        paddingTop: theme.spacing.unit *2,
-        paddingLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit  
-    },
-    details: {
-        display: 'flex',
-        flexDirection: 'column'
-    },
-    content: {
-        flex: '1 0 auto',
-        // paddingBottom: '0px !important'
-    },
-    cardButton: {
-        float: 'right'
-    },
-    carteIcon: {
-        paddingLeft: theme.spacing.unit,
-        paddingRight: theme.spacing.unit
-    },
-    bigAvatar: {
-        margin: 10,
-        width: 80,
-        height: 80,
-    },
-    commandName: {
-        // wordBreak: 'break-word'
+    img: {
+        margin: 'auto',
+        display: 'block',
+        maxWidth: '100%',
+        maxHeight: '100%'
     },
     noCommande: {
         textAlign: 'center',
-        // padding: `${theme.spacing.unit} ${theme.spacing.unit}`,
         paddingTop: theme.spacing.unit * 2
     },
     validbutton: {
         margin: theme.spacing.unit,
         width: '45%'
     },
-    formControl: {
-        // margin: theme.spacing.unit,
-        // minWidth: 120,
-    },
+    section1: {
+        margin: `${theme.spacing.unit * 3}px ${theme.spacing.unit * 2}px`,
+    }
 });
 
 class UserOrders extends Component {
-
     
     handleChange = name => event => {
         this.setState({ [name]: event.target.value });
     }
 
-    handleRemoveOrder = () => {
-        /* eslint-disable */
-        this.props.orders.menus.pop();
-        console.log(this.props.orders);
-        /* eslint-enable */
+    calculatePrix = () => {
+        const orders = this.props.orders;
+        let somme = 0;
+        let quantity = 0;
+        orders.commandes.forEach(order => {
+            somme = parseFloat(somme) + parseFloat(order.prixUnitaire * order.quantity);
+            quantity = parseFloat(quantity) + parseFloat(order.quantity);
+        });
+        return { somme: somme.toFixed(2), quantity: quantity};
     }
 
     render() {
@@ -97,49 +72,63 @@ class UserOrders extends Component {
         const cards = (
             <div>
                 {orders.commandes.map(order => (
-                    <Card className={classes.card} key={order.id}>
-                        <div className={classes.cover}>
-                            <Avatar alt={order.nom} src="/assets/img/joystick_318-1404.jpg" className={classes.bigAvatar} />
+                    <div className={classes.item} key={`order-${order.id}`}>
+                        <div className={classes.section1}>
+                            <Grid container spacing={16}>
+                                <Grid item>
+                                    <ButtonBase className={classes.media}>
+                                        <img className={classes.img} 
+                                                alt={"complex"} 
+                                                src={"/assets/img/joystick_318-1404.jpg"} />
+                                    </ButtonBase>
+                                </Grid>
+                                <Grid item xs={12} sm container>
+                                    <Grid item xs container direction="column" spacing={16}>
+                                        <Grid item xs>
+                                            <Typography variant="h6">
+                                                {order.nom}
+                                            </Typography>
+                                            <Typography variant="subtitle2" color="textSecondary">
+                                                Prix unitaire: Rs {order.prixUnitaire}
+                                            </Typography>
+                                            <FormControl variant="filled">
+                                                <Select
+                                                    native
+                                                    name={"order-".concat(order.id)}
+                                                    value={order.quantity}
+                                                    onChange={this.props.handleChangeQuantity}
+                                                >
+                                                    {options.map(option => (
+                                                        <option value={option} key={`option-${order.id}-${option}`}>{option}</option>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                                
+                                <Grid item>
+                                    <Button color="secondary" title="Supprimer" onClick={() => this.props.handleRemoveOrder(order.id)}>
+                                        <Delete />
+                                    </Button>
+                                </Grid>
+                            </Grid>
                         </div>
-                        <CardContent className={classes.content}>
-                            <Typography component="h6" variant="h6" className={classes.commandName}>
-                                {order.nom}
-                            </Typography>
-                            <Typography variant="subtitle1" color="textSecondary">
-                                {order.type}
-                            </Typography>
-                            
-                            <Typography variant="subtitle2" color="textSecondary">
-                                Prix unitaire: {order.prixUnitaire} Rs
-                            </Typography>
-
-                            <FormControl variant="filled" className={classes.formControl}>
-			                    <Select
-                                    native
-                                    name={"order-".concat(order.id)}
-                                    value={order.quantity}
-                                    onChange={this.props.handleChangeQuantity}
-                                >
-                                    {options.map(option => (
-                                        <option value={option}>{option}</option>
-                                    ))}
-                                </Select>
-			                </FormControl>
-                            
-                            <CardActions className={classes.cardButton}>
-                                <Button color="secondary" title="Supprimer" onClick={() => this.props.handleRemoveOrder(order.id)}>
-                                    <Delete/>
-                                </Button>
-                            </CardActions>
-                        </CardContent>
-                    </Card>
+                        <Divider />
+                    </div>
                 ))}
 
                 <Divider />
-                <Button variant="contained" color="secondary" className={classes.validbutton} onClick={this.props.handleCancelOrders}>
+                <Button variant="contained" 
+                        color="secondary" 
+                        className={classes.validbutton} 
+                        onClick={this.props.handleCancelOrders}>
                     Annuler
                 </Button>
-                <Button variant="contained" color="primary" className={classes.validbutton} onClick={this.props.handleValidateOrders}>
+                <Button variant="contained" 
+                        color="primary" 
+                        className={classes.validbutton} 
+                        onClick={this.props.handleValidateOrders}>
                     Valider
                 </Button>
             </div>
@@ -163,7 +152,7 @@ class UserOrders extends Component {
                     anchor="right"
                 >
                 <Typography component="h6" variant="h6" className={classNames(classes.toolbar, classes.toolbarText)}>
-                    Liste des commandes ({this.props.orders.commandes.length})
+                    Commandes {this.props.orders.commandes.length> 0 && `(${this.calculatePrix().quantity}) - Rs. ${this.calculatePrix().somme}`}
                 </Typography>
                 <Divider />
                 {command ? cards : noCards}
