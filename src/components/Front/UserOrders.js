@@ -136,10 +136,10 @@ class UserOrders extends Component {
                 ))}
 
                 <Divider />
-                <Button variant="contained" color="secondary" className={classes.validbutton}>
+                <Button variant="contained" color="secondary" className={classes.validbutton} onClick={this.props.handleCancelOrders}>
                     Annuler
                 </Button>
-                <Button variant="contained" color="primary" className={classes.validbutton}>
+                <Button variant="contained" color="primary" className={classes.validbutton} onClick={this.props.handleValidateOrders}>
                     Valider
                 </Button>
             </div>

@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { AppBar, Toolbar, IconButton, Typography, withStyles, MenuItem, Menu, Button, Drawer, Divider } from '@material-ui/core';
-import { AccountCircle, ChevronLeftSharp } from '@material-ui/icons';
+import { AppBar, Toolbar, IconButton, Typography, withStyles, MenuItem, Menu, Button } from '@material-ui/core';
+import { AccountCircle } from '@material-ui/icons';
 import { compose } from 'recompose';
 import { withFirebase } from '../Firebase';
 import { AuthUserContext } from '../Session';
-import classNames from 'classnames';
 import * as ROUTES from '../../constants/routes';
-import SidebarCategory from './sidebar-category';
 
 const drawerWidth = 400;
 
@@ -84,11 +82,11 @@ class MenuAppBar extends Component {
     }
 
     render() {
-        const { classes, drawer } = this.props;
+        const { classes } = this.props;
         const { anchorEl } = this.state;
         const open = Boolean(anchorEl);
 
-        let drawerContent = drawer ? 
+        /*let drawerContent = drawer ? 
         <Drawer variant="permanent" classes={{paper: classNames(classes.drawerPaper, !this.state.open && classes.drawerPaperClose)}} open={this.state.open}>
             <div className={classes.toolbarIcon}>
                 <IconButton onClick={this.handleDrawerClose}>
@@ -97,7 +95,7 @@ class MenuAppBar extends Component {
             </div>
             <Divider />
             <SidebarCategory selectedIndexInList={this.props.selectedIndexInList} />
-        </Drawer> : "";
+        </Drawer> : "";*/
         
 
         return (
@@ -140,7 +138,7 @@ class MenuAppBar extends Component {
                     
                     </Toolbar>
                 </AppBar>
-                {drawerContent}
+                
             </div>
         );
     }

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import { withStyles, Paper, Card, Typography, Button, CardMedia, CardContent, CardActions } from '@material-ui/core';
-import {  Map } from '@material-ui/icons';
+import { withStyles, Typography, ExpansionPanel, ExpansionPanelSummary, Grid, Button, Divider, ButtonBase } from '@material-ui/core';
+import {   ExpandMoreRounded, Map } from '@material-ui/icons';
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
 import { withAuthentication } from '../Session';
@@ -23,6 +23,9 @@ const styles = theme => ({
         width: '58%',
         margin: '8px 7px'
     },
+    section1: {
+        margin: `${theme.spacing.unit * 3}px ${theme.spacing.unit * 2}px`,
+    },
     toolbar: theme.mixins.toolbar,
     container: {
         display: 'flex',
@@ -41,27 +44,18 @@ const styles = theme => ({
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit,
     },
-    card: {
-        width: '53%',
-        marginLeft: 'auto',
-        marginRight: 'auto',
-        // maxWidth: 345,
-        display: 'flex'
+    cardContainer: {
+        width: '100%'
     },
     media: {
         height: 140,
+        width: 140
     },
-    searchText: {
-        marginLeft: '7px',
-        color: '#FFF'
-    },
-    cover: {
-        width: 150,
-        height: 'auto',
-        paddingTop: theme.spacing.unit,
-        paddingLeft: theme.spacing.unit,
-        paddingBottom: theme.spacing.unit,
-        paddingRight: theme.spacing.unit
+    img: {
+        margin: 'auto',
+        display: 'block',
+        maxWidth: '100%',
+        maxHeight: '100%'
     },
     details: {
         display: 'flex',
@@ -76,12 +70,23 @@ const styles = theme => ({
         width: '100%'
         // padding: theme.spacing.unit * 3,
     },
+    item: {
+        margin: `${theme.spacing.unit}px`,
+    },
     cardButton: {
         marginLeft: 'auto'
     },
     carteIcon: {
         paddingLeft: theme.spacing.unit,
         paddingRight: theme.spacing.unit
+    },
+    heading: {
+        fontSize: theme.typography.pxToRem(15),
+        fontWeight: theme.typography.fontWeightRegular,
+    },
+    headingContainer: {
+        backgroundColor: 'rgba(0,0,0,.03)',
+        borderBottom: '1px solid #fafafa'
     }
 });
 
@@ -89,7 +94,7 @@ class RestosDetails extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            test: true,
+            expanded: 'menu',
             menus: [],
             page: 0,
             rowsPerPage: 5,
@@ -143,21 +148,6 @@ class RestosDetails extends Component {
         this.props.firebase.restos().off();
     }
 
-    handleOpenDeleteDialog = () => {
-        this.setState({ openDeleteDialog: true });
-    }
-
-    handleOpenEditDialog = () => {
-        this.setState({ openEditDialog: true });
-    }
-
-    handleCloseEditDialog = () => {
-        this.setState({ openEditDialog: false });
-    }
-
-    handleCloseDeleteDialog = () => {
-        this.setState({ openDeleteDialog: false });
-    }
 
     handleChangePage = (event, page) => {
         this.setState({ page });
@@ -165,10 +155,6 @@ class RestosDetails extends Component {
 
     handleChangeRowsPerPage = (event) => {
         this.setState({ page: 0, rowsPerPage: event.target.value });
-    }
-
-    onChange = (event) => {
-        this.setState({ [event.target.name]: event.target.value });
     }
 
     handleRemoveOrder = (menu_id) => {
@@ -204,6 +190,14 @@ class RestosDetails extends Component {
 
     }
 
+    handleCancelOrders = () => {
+        let orders = this.state.orders;
+        orders.commandes = [];
+        this.setState({
+            orders: orders
+        });
+    }
+
     addCommande = (menu) => {
         const user = JSON.parse(localStorage.getItem('authUser'));
         console.log(user);
@@ -234,9 +228,15 @@ class RestosDetails extends Component {
         });
     }
 
+    handleExpand = panel => (event, expanded) => {
+        this.setState({
+            expanded: expanded ? panel : false
+        });
+    }
+
     render() {
         const { classes, resto_id_sent } = this.props;
-        const { menus, page, rowsPerPage } = this.state;
+        const { menus, page, rowsPerPage, expanded } = this.state;
         let menuList = menus.filter(menu => {
             return menu.resto_id === resto_id_sent;
         });
@@ -246,61 +246,83 @@ class RestosDetails extends Component {
             <div className={classes.divContainer}>
                 <main className={classes.maincontent}>
                     <div className={classes.toolbar} />
-                    <Paper className={classes.paper}>
-                        {menuList.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(menu => (
-                            <Card className={classes.card} key={menu.id}>
-                                <CardMedia
-                                    className={classes.cover}
-                                    image="/assets/img/joystick_318-1404.jpg"
-                                    title="Live from space album cover"
-                                />
 
-                                <CardContent className={classes.content}>
-                                    <Typography component="h5" variant="h5">
-                                        {menu.nom_menu}
-                                    </Typography>
-                                    <Typography variant="subtitle1" color="textSecondary">
-                                        {menu.prix_menu}
-                                    </Typography>
-                                    <Typography variant="subtitle2" color="textSecondary">
-                                        {menu.resto_id}
-                                    </Typography>
-                                    <Typography variant="subtitle2" color="textSecondary">
-                                        id :  {menu.id}
-                                    </Typography>
-                                </CardContent>
-                                <CardActions className={classes.cardButton}>
-                                    <Button color="primary" onClick={() => this.addCommande(menu)}>
-                                        <Map />
-                                        Commander
-                                </Button>
-                                </CardActions>
-                            </Card>
-                        ))}
-                        <Table className={classes.table}>
-                            <TableFooter>
-                                <TableRow>
-                                    <TablePagination
-                                        rowsPerPageOptions={[5, 10, 25]}
-                                        colSpan={3}
-                                        count={menuList.length}
-                                        rowsPerPage={rowsPerPage}
-                                        page={page}
-                                        SelectProps={{ native: true }}
-                                        onChangePage={this.handleChangePage}
-                                        onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                        labelDisplayedRows={({ from, to, count }) => `${from} - ${to} sur ${count} restos`}
-                                        labelRowsPerPage="Lignes par page" />
-                                </TableRow>
-                            </TableFooter>
-                        </Table>
-                    </Paper>
+                    <ExpansionPanel expanded={expanded === 'menu'}
+                                    onChange={this.handleExpand('menu')}>
+                        <ExpansionPanelSummary  className={classes.headingContainer}
+                                                expandIcon={<ExpandMoreRounded />}>
+                            <Typography className={classes.heading}>Menus</Typography>
+                        </ExpansionPanelSummary>
+                        
+                            {menuList.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(menu => (
+
+                                <div className={classes.item}>
+                                    <div className={classes.section1}>
+                                        <Grid container spacing={16}>
+                                            <Grid item>
+                                                <ButtonBase className={classes.media}>
+                                                    <img className={classes.img} 
+                                                            alt={"complex"} 
+                                                            src={"/assets/img/joystick_318-1404.jpg"} />
+                                                </ButtonBase>
+                                            </Grid>
+                                            <Grid item xs={12} sm container>
+                                                <Grid item xs container direction="column" spacing={16}>
+                                                    <Grid item xs>
+                                                        <Typography variant="h5">
+                                                            {menu.nom_menu}
+                                                        </Typography>
+                                                        <Typography color="textSecondary">
+                                                            
+                                                        </Typography>
+                                                    </Grid>
+
+                                                    <Grid item>
+                                                        <Button variant="outlined" color="primary">
+                                                            <Map />
+                                                            Commander
+                                                        </Button>
+                                                    </Grid>
+                                                </Grid>
+                                            </Grid>
+                                            
+                                            <Grid item>
+                                                <Typography variant="h6">
+                                                Rs {menu.prix_menu}
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                    </div>
+                                    <Divider />
+                                </div>
+                            ))}
+                            <Table className={classes.table}>
+                                <TableFooter>
+                                    <TableRow>
+                                        <TablePagination
+                                            rowsPerPageOptions={[5, 10, 25]}
+                                            colSpan={3}
+                                            count={menuList.length}
+                                            rowsPerPage={rowsPerPage}
+                                            page={page}
+                                            SelectProps={{ native: true }}
+                                            onChangePage={this.handleChangePage}
+                                            onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                                            labelDisplayedRows={({ from, to, count }) => `${from} - ${to} sur ${count} restos`}
+                                            labelRowsPerPage="Lignes par page" />
+                                    </TableRow>
+                                </TableFooter>
+                            </Table>
+                    </ExpansionPanel>
+                        
+                    
                 </main>
                 
                 <UserOrders orders={this.state.orders} 
                             handleRemoveOrder={this.handleRemoveOrder} 
                             handleChangeQuantity={this.handleChangeQuantity} 
-                            handleValidateOrders={this.handleValidateOrders}/>
+                            handleValidateOrders={this.handleValidateOrders}
+                            handleCancelOrders={this.handleCancelOrders}/>
 
             </div>
         );

@@ -63,7 +63,6 @@ exemple
 
 - Commande
 	- plats[]
-	- menus[{},{}]
 	- user
 	- prix total
 	
@@ -114,20 +113,25 @@ F.O
 - Details restos
 	
 Fonctionnalités
-- Add commande to basket
-- Edit quantity in basket
-- Add resto title in menu page
+
 - CRUD Resto, Plat, Menu
 - Recherche resto
+- Add title in resto details page
 
 
-- edit quantité in liste commande
+
+
 - Add left Menu
 	- Menu
 	- Hors d'oeuvre
 	- Plat
 	- Dessert
+
 - CRUD BO
+- valider commande si plus
+
+
+https://medium.freecodecamp.org/get-pro-with-react-setstate-in-10-minutes-d38251d1c781
 
 Project Console: https://console.firebase.google.com/project/resto-39060/overview
 Hosting URL: https://resto-39060.firebaseapp.com
