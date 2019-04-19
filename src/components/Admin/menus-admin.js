@@ -79,11 +79,11 @@ class MenusAdminPage extends Component {
         this.state = {
             loading: false,
             open: true,
-            selectedIndexInList: 0,
+            selectedIndexInList: 2,
             openDeleteDialog: false,
             openEditDialog: false,
             page: 0,
-            plats: [],
+            menus: [],
             typePlats: [],
             rowsPerPage: 5,
             ...INITIALSTATE
@@ -116,14 +116,14 @@ class MenusAdminPage extends Component {
 
     componentDidMount() {
         this.setState({loading: true});
-        this.props.firebase.plats().on('value', snapshot => {
+        this.props.firebase.menus().on('value', snapshot => {
             const platObjects = snapshot.val();
             const platsList = Object.keys(platObjects).map(key => ({
                 ...platObjects[key],
                 id: key
             }));
             this.setState({
-                plats: platsList,
+                menus: platsList,
                 loading: false
             });
         });
@@ -140,7 +140,7 @@ class MenusAdminPage extends Component {
     }
 
     componentWillUnmount() {
-        this.props.firebase.plats().off();
+        this.props.firebase.menus().off();
         this.props.firebase.typePlats().off();
     }
 
@@ -149,7 +149,7 @@ class MenusAdminPage extends Component {
     }
 
     render() {
-        const {plats, page, rowsPerPage, typePlats, nom, type, description, prix} = this.state;
+        const {menus, page, rowsPerPage, typePlats, nom, type, description, prix} = this.state;
         const {classes} = this.props;
         return (
             <div className={classes.root}>
@@ -169,20 +169,18 @@ class MenusAdminPage extends Component {
                                     <TableRow>
                                         <TableCell component="th">Photo</TableCell>
                                         <TableCell component="th">Nom</TableCell>
-                                        <TableCell component="th">Type</TableCell>
                                         <TableCell component="th">Prix (en Rs.)</TableCell>
                                         <TableCell component="th">Options</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {plats.slice(page*rowsPerPage, (page*rowsPerPage) + rowsPerPage).map(plat => (
+                                    {menus.slice(page*rowsPerPage, (page*rowsPerPage) + rowsPerPage).map(plat => (
                                         <TableRow key={1}>
                                             <TableCell>
                                                 <Avatar alt={plat.nom_plat} src={plat.photo} className={classes.bigAvatar} />
                                             </TableCell>
-                                            <TableCell>{plat.nom_plat}</TableCell>
-                                            <TableCell>{plat.type_plat}</TableCell>
-                                            <TableCell align="right">{plat.prix}</TableCell>
+                                            <TableCell>{plat.nom}</TableCell>
+                                            <TableCell >{plat.prix}</TableCell>
                                             <TableCell>
                                                 <IconButton size="small" color="primary" aria-label="Modifier" className={classes.margin}>
                                                     <Edit />
@@ -200,7 +198,7 @@ class MenusAdminPage extends Component {
                                     <TablePagination 
                                             rowsPerPageOptions={[5, 10, 25]}
                                             colSpan={3} 
-                                            count={plats.length} 
+                                            count={menus.length} 
                                             rowsPerPage={rowsPerPage} 
                                             page={page} 
                                             SelectProps={{native: true}} 

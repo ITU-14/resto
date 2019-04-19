@@ -79,7 +79,7 @@ class CardsAdminPage extends Component {
         this.state = {
             loading: false,
             open: true,
-            selectedIndexInList: 1,
+            selectedIndexInList: 0,
             openDeleteDialog: false,
             openEditDialog: false,
             page: 0,
