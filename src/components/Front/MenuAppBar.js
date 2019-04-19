@@ -100,7 +100,7 @@ class MenuAppBar extends Component {
                     <Toolbar>
                     
                     <Typography variant="h6" color="inherit" className={classes.grow} onClick={this.handleHomePage}>
-                        <span className={classes.redirect}>My resto</span>    
+                        <span className={classes.redirect}>Au resto</span>    
                     </Typography>
                     
                     <AuthUserContext.Consumer>

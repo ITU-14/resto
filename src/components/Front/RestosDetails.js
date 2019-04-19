@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import { withStyles, Typography, ExpansionPanel, ExpansionPanelSummary, Grid, Button, Divider, ButtonBase, CircularProgress } from '@material-ui/core';
+import { withStyles, Typography, ExpansionPanel, ExpansionPanelSummary, Grid, Button, Divider, ButtonBase, CircularProgress, Snackbar } from '@material-ui/core';
 import { ExpandMoreRounded, Map } from '@material-ui/icons';
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
 import { withAuthentication } from '../Session';
 import UserOrders from '../Front/UserOrders';
+import SnackbarContentMessage from './SnackbarContentMessage';
 
 const styles = theme => ({
     divContainer: {
@@ -170,9 +171,12 @@ class RestosDetails extends Component {
     handleValidateOrders = () => {
         const orders = this.state.orders;
         this.props.firebase.orders().push(orders);
-
         orders.commandes = [];
         this.setState({orders: orders, showModal: true});
+    }
+
+    handleCloseDialog = () => {
+        this.setState({showModal: false})
     }
 
     handleCancelOrders = () => {
@@ -283,7 +287,7 @@ class RestosDetails extends Component {
 
     render() {
         const { classes } = this.props;
-        const { menus, typePlats, cartes, expanded, loadingMenu, loadingCategory, loadingCard } = this.state;
+        const { menus, typePlats, cartes, expanded, loadingMenu, loadingCategory, loadingCard, showModal} = this.state;
 
         const loader = <div className={classes.progressContainer}>
             <CircularProgress className={classes.progress} />
@@ -365,6 +369,20 @@ class RestosDetails extends Component {
                     
                 </main>
                 
+                <Snackbar anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                        }}
+                        open={showModal}
+                        autoHideDuration={8000}
+                        onClose={this.handleCloseDialog}
+                >
+                <SnackbarContentMessage
+                    onClose={this.handleCloseDialog}
+                    message="OK, nous preparons votre commande!"
+                />
+                </Snackbar>
+
                 <UserOrders orders={this.state.orders} 
                             handleRemoveOrder={this.handleRemoveOrder} 
                             handleChangeQuantity={this.handleChangeQuantity} 
