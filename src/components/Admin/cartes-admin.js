@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {compose} from 'recompose';
 
-import { withStyles, CssBaseline, IconButton, Paper, Table, TableHead, TableCell, TableRow, TableBody, TableFooter, TablePagination, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions} from '@material-ui/core';
+import { withStyles, CssBaseline, IconButton, Paper, Table, TableHead, TableCell, TableRow, TableBody, TableFooter, TablePagination, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField, Select, MenuItem, Avatar} from '@material-ui/core';
 import { Add, Edit, Delete } from '@material-ui/icons';
 
 import {withFirebase} from '../Firebase';
@@ -53,8 +53,24 @@ const styles = theme => ({
     },
     margin: {
         margin: theme.spacing.unit
+    },
+    selectEmpty: {
+        marginTop: theme.spacing.unit * 2,
+    },
+    bigAvatar: {
+        margin: 10,
+        width: 60,
+        height: 60
     }
 });
+
+const INITIALSTATE = {
+    nom: '',
+    type: '',
+    description: '',
+    photo: '',
+    prix: 0
+};
 
 class CardsAdminPage extends Component {
     constructor(props) {
@@ -63,10 +79,14 @@ class CardsAdminPage extends Component {
         this.state = {
             loading: false,
             open: true,
-            selectedIndexInList: 0,
+            selectedIndexInList: 1,
             openDeleteDialog: false,
+            openEditDialog: false,
             page: 0,
-            users: []
+            plats: [],
+            typePlats: [],
+            rowsPerPage: 5,
+            ...INITIALSTATE
         };
     }
 
@@ -78,76 +98,116 @@ class CardsAdminPage extends Component {
         this.setState({openDeleteDialog: false});
     }
 
+    handleOpenEditDialog = () => {
+        this.setState({openEditDialog: true});
+    }
+
+    handleCloseEditDialog = () => {
+        this.setState({openEditDialog: false});
+    }
+
     handleChangePage = (event, page) => {
         this.setState({page});
     }
 
+    handleChangeRowsPerPage = (event) => {
+        this.setState({rowsPerPage: event.target.value});
+    }
+
     componentDidMount() {
         this.setState({loading: true});
-        this.props.firebase.users().on('value', snapshot => {
-            const usersObject = snapshot.val();
-            const usersList = Object.keys(usersObject).map(key => ({
-                ...usersObject[key],
-                uid: key
+        this.props.firebase.plats().on('value', snapshot => {
+            const platObjects = snapshot.val();
+            const platsList = Object.keys(platObjects).map(key => ({
+                ...platObjects[key],
+                id: key
             }));
             this.setState({
-                users: usersList,
+                plats: platsList,
                 loading: false
+            });
+        });
+        this.props.firebase.typePlats().on('value', snapshot => {
+            const categories = snapshot.val();
+            const categoryList = Object.keys(categories).map(key => ({
+                ...categories[key],
+                id: key
+            }));
+            this.setState({
+                typePlats: categoryList
             })
         });
     }
 
     componentWillUnmount() {
-        this.props.firebase.users().off();
+        this.props.firebase.plats().off();
+        this.props.firebase.typePlats().off();
+    }
+
+    onChange = (event) => {
+        this.setState({ [event.target.name]: event.target.value });
     }
 
     render() {
-        // const {users, loading} = this.state;
+        const {plats, page, rowsPerPage, typePlats, nom, type, description, prix} = this.state;
         const {classes} = this.props;
         return (
             <div className={classes.root}>
                 <CssBaseline />       
-                <AppbarAdmin selectedIndexInList={1} />         
+                <AppbarAdmin selectedIndexInList={2} />         
                 <main className={classes.content}>
                     <div className={classes.appBarSpacer}/>
 
                     <div className={classes.tableContainer}>
-                        <Button variant="contained" className={classes.buttonAdd}>
+                        <Button variant="contained" className={classes.buttonAdd} onClick={this.handleOpenEditDialog}>
                             Ajouter
-                            {/* This Button uses a Font Icon, see the installation instructions in the docs. */}
                             <Add className={classes.rightIcon} />
                         </Button>
                         <Paper className={classes.paperTable}>
                             <Table className={classes.table}>
                                 <TableHead>
                                     <TableRow>
+                                        <TableCell component="th">Photo</TableCell>
                                         <TableCell component="th">Nom</TableCell>
-                                        <TableCell>Type de cuisine</TableCell>
-                                        <TableCell>Adresse</TableCell>
-                                        <TableCell>Photo</TableCell>
-                                        <TableCell>Options</TableCell>
+                                        <TableCell component="th">Type</TableCell>
+                                        <TableCell component="th">Prix (en Rs.)</TableCell>
+                                        <TableCell component="th">Options</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    <TableRow key={1}>
-                                        <TableCell>Grill</TableCell>
-                                        <TableCell>Cuisine chinoise</TableCell>
-                                        <TableCell>St.Jean Road</TableCell>
-                                        <TableCell>Photo</TableCell>
-                                        <TableCell>
-                                            <IconButton size="small" color="primary" aria-label="Modifier" className={classes.margin}>
-                                                <Edit />
-                                            </IconButton>
-                                            
-                                            <IconButton color='secondary' aria-label="Supprimer" className={classes.margin} onClick={this.handleOpenDeleteDialog}>
-                                                <Delete />
-                                            </IconButton>
-                                        </TableCell>
-                                    </TableRow>
+                                    {plats.slice(page*rowsPerPage, (page*rowsPerPage) + rowsPerPage).map(plat => (
+                                        <TableRow key={1}>
+                                            <TableCell>
+                                                <Avatar alt={plat.nom} src={plat.photo} className={classes.bigAvatar} />
+                                            </TableCell>
+                                            <TableCell>{plat.nom}</TableCell>
+                                            <TableCell>{plat.type_plat}</TableCell>
+                                            <TableCell>{plat.prix}</TableCell>
+                                            <TableCell>
+                                                <IconButton size="small" color="primary" aria-label="Modifier" className={classes.margin}>
+                                                    <Edit />
+                                                </IconButton>
+                                                
+                                                <IconButton color='secondary' aria-label="Supprimer" className={classes.margin} onClick={this.handleOpenDeleteDialog}>
+                                                    <Delete />
+                                                </IconButton>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))} 
                                 </TableBody>
                                 <TableFooter>
                                     <TableRow>
-                                        <TablePagination colSpan={3} count={12} rowsPerPage={10} page={1} SelectProps={{native: true}} onChangePage={this.handleChangePage} />
+                                    <TablePagination 
+                                            rowsPerPageOptions={[5, 10, 25]}
+                                            colSpan={3} 
+                                            count={plats.length} 
+                                            rowsPerPage={rowsPerPage} 
+                                            page={page} 
+                                            SelectProps={{native: true}} 
+                                            onChangePage={this.handleChangePage} 
+                                            onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                                            labelDisplayedRows={({from, to, count}) => `${from} - ${to} sur ${count} plats`} 
+                                            labelRowsPerPage="Lignes par page" />
                                     </TableRow>
                                 </TableFooter>
                             </Table>
@@ -157,9 +217,38 @@ class CardsAdminPage extends Component {
                             <DialogTitle id="alert-dialog-title">{"Supprimer le resto resto 1"}</DialogTitle>
                             <DialogContent>
                                 <DialogContentText id="alert-dialog-description">
-                                Let Google help apps determine location. This means sending anonymous location data to
-                                Google, even when no apps are running.
+                                
                                 </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={this.handleClose} color="default">
+                                Annuler
+                                </Button>
+
+                                <Button onClick={this.handleClose} color="secondary" autoFocus>
+                                Supprimer
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
+
+                        <Dialog open={this.state.openEditDialog} 
+                                onClose={this.handleCloseEditDialog} 
+                                aria-labelledby="form-dialog-title" 
+                                aria-describedby="form-dialog-description">
+                            <DialogTitle id="form-dialog-title">Ajouter un plat</DialogTitle>
+                            <DialogContent>
+                                <TextField id="nom" label="Nom" type="text" name="nom" variant="outlined" value={nom} onChange={this.onChange} fullWidth />
+                                <Select value={type} 
+                                        onChange={this.onChange}
+                                        variant="outlined"
+                                        fullWidth>
+                                    {typePlats.map(typePlat => (
+                                        <MenuItem key={type.id} value={type.id}>{typePlat.nom}</MenuItem>
+                                    ))}
+                                </Select>
+                                <TextField id="nom" label="Nom" type="text" name="nom" variant="outlined" value={nom} onChange={this.onChange} fullWidth />
+                                <TextField id="description" label="Description" type="text" name="description" variant="outlined" value={description} onChange={this.onChange} fullWidth />
+                                <TextField id="prix" label="prix" type="text" name="description" variant="outlined" value={prix} onChange={this.onChange} fullWidth />
                             </DialogContent>
                             <DialogActions>
                                 <Button onClick={this.handleClose} color="default">
@@ -177,5 +266,7 @@ class CardsAdminPage extends Component {
         )
     }
 }
+
+// const condition = authUser => authUser && authUser.roles.includes(ROLES.ADMIN);
 
 export default compose(withFirebase, withStyles(styles))(CardsAdminPage);
