@@ -158,7 +158,7 @@ class Restos extends Component {
 
         return (
             <Paper className={classes.paper}>
-                <Typography component="h2" variant="h5" className={classes.searchTitle}  >
+                <Typography component="h2" variant="h5">
                     Recherche de restos
                 </Typography>
 
