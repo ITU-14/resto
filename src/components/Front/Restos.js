@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { compose } from 'recompose';
-import { withStyles, Paper, Card, Typography, TextField, Button, CardMedia, CardContent, CardActions } from '@material-ui/core';
+import { withStyles, Paper, Card, Typography, TextField, Button, CardMedia, CardContent, CardActions, CircularProgress } from '@material-ui/core';
 import { Search, Map } from '@material-ui/icons';
 import { Table, TableRow, TableFooter, TablePagination } from '@material-ui/core';
 import { Link } from 'react-router-dom';
@@ -16,7 +16,14 @@ const styles = theme => ({
         paddingTop: theme.spacing.unit * 3,
         paddingBottom: theme.spacing.unit * 3
     },
-
+    progressContainer: {
+        height: `${theme.spacing.unit * 10}px`
+    },
+    progress: {
+        margin: `${theme.spacing.unit * 3}px auto`,
+        left: '50%',
+        position: 'absolute'
+    },
     container: {
         display: 'flex',
         flexWrap: 'wrap',
@@ -87,10 +94,6 @@ class Restos extends Component {
         super(props);
         this.state = {
             loading: false,
-            open: true,
-            selectedIndexInList: 0,
-            openDeleteDialog: false,
-            openEditDialog: false,
             page: 0,
             restos: [],
             rowsPerPage: 10,
@@ -98,6 +101,7 @@ class Restos extends Component {
             searchTypeCuisine: ''
         }
     }
+
     componentDidMount() {
         this.setState({ loading: true });
         this.props.firebase.restos().on('value', snapshot => {
@@ -112,14 +116,11 @@ class Restos extends Component {
                 loading: false
             });
         });
-
-
     }
 
     filterList = () => {
         const { searchName , searchTypeCuisine} = this.state;
         
-
         this.props.firebase.restos().on('value', snapshot => {
             const restosObject = snapshot.val();
             const restosList = Object.keys(restosObject).map(key => ({
@@ -129,10 +130,8 @@ class Restos extends Component {
 
             const listeResto = [];
             restosList.forEach(resto => {
-                if (resto.nom_resto.indexOf(searchName) > -1 && resto.type_cuisine.indexOf(searchTypeCuisine) > -1 )
+                if (resto.nom_resto.toLowerCase().indexOf(searchName.toLowerCase()) > -1 && resto.type_cuisine.toLowerCase().indexOf(searchTypeCuisine.toLowerCase()) > -1 )
                     listeResto.push(resto);
-           //     if (resto.nom_resto.indexOf(searchTypeCuisine) > -1)
-            //        listeResto.push(resto);
             });
             this.setState({
                 restos: listeResto,
@@ -146,41 +145,25 @@ class Restos extends Component {
         this.props.firebase.restos().off();
     }
 
-    handleOpenDeleteDialog = () => {
-        this.setState({ openDeleteDialog: true });
-    }
-
-    handleOpenEditDialog = () => {
-        this.setState({ openEditDialog: true });
-    }
-
-    handleCloseEditDialog = () => {
-        this.setState({ openEditDialog: false });
-    }
-
-    handleCloseDeleteDialog = () => {
-        this.setState({ openDeleteDialog: false });
-    }
-
     handleChangePage = (event, page) => {
         this.setState({ page });
-    }
-
-    handleChangeRowsPerPage = (event) => {
-        this.setState({ page: 0, rowsPerPage: event.target.value });
     }
 
     onChange = (event) => {
         this.setState({ [event.target.name]: event.target.value });
     }
 
-    onDropImage = () => {
-
-    }
-
     render() {
         const { classes } = this.props;
-        const { restos, page, rowsPerPage, searchName, searchTypeCuisine } = this.state;
+        const { restos, page, rowsPerPage, searchName, searchTypeCuisine, loading } = this.state;
+
+        const loader = <div className={classes.progressContainer}>
+            <CircularProgress className={classes.progress} />
+        </div>
+
+        const noResult = <div className={classes.progressContainer}>
+            Aucun resultat
+        </div>
 
         return (
             <Paper className={classes.paper}>
@@ -227,7 +210,8 @@ class Restos extends Component {
                     </Button>
                 </form>
 
-                {restos.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(resto => (
+                {loading && loader}
+                {!loading && restos.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(resto => (
                     <Card className={classes.card} key={resto._id}>
                         <CardMedia
                             className={classes.cover}
@@ -261,7 +245,7 @@ class Restos extends Component {
                     </Card>
                 ))}
 
-                <Table className={classes.table}>
+                {(!loading && restos.length > 0) && <Table className={classes.table}>
                     <TableFooter>
                         <TableRow>
                             <TablePagination
@@ -272,13 +256,15 @@ class Restos extends Component {
                                 rowsPerPage={rowsPerPage}
                                 page={page}
                                 SelectProps={{ native: true }}
-                                onChangePage={this.handleChangePage}
-                                onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                labelDisplayedRows={({ from, to, count }) => `${from} - ${to} sur ${count} restos`}
+                                onChangePage={this.handleChangePage}     
+                                labelDisplayedRows={({ from, to, count }) => `Resto ${from} - ${to} sur ${count} restos (page ${page+1})`}
                                 labelRowsPerPage="Lignes par page" />
                         </TableRow>
                     </TableFooter>
-                </Table>
+                </Table>}
+
+                {!loading && restos.length === 0 && noResult}
+                
             </Paper>
         );
     }

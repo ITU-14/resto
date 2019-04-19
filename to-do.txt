@@ -144,8 +144,11 @@ Hosting URL: https://resto-39060.firebaseapp.com
 
 
 
+- ovaina photo fotsn le photo_plat ao amn plat
 
-- Ovaina prix fotsn ny anaran le field prix_menu ao amn table menu
-- Ovaina _id le id ao amn table resto
+- design resto
+- add commande to firebase
+- add dialog on add commande successfull
+- CRUD B.O
 
 
