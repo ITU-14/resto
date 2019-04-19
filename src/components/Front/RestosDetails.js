@@ -64,6 +64,7 @@ class RestosDetails extends Component {
         this.state = {
             loadingMenu: false,
             loadingCard: false,
+            showModal: false,
             expanded: 'menu',
             menus: [],
             cartes: {plats: [], resto_id: ""},
@@ -167,8 +168,11 @@ class RestosDetails extends Component {
     }
 
     handleValidateOrders = () => {
-        const order = this.state.orders;
-        this.props.firebase.orders().push(order);     
+        const orders = this.state.orders;
+        this.props.firebase.orders().push(orders);
+
+        orders.commandes = [];
+        this.setState({orders: orders, showModal: true});
     }
 
     handleCancelOrders = () => {
