@@ -222,7 +222,7 @@ class Restos extends Component {
                 </form>
 
                 {restos.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(resto => (
-                    <Card className={classes.card} key={resto.id}>
+                    <Card className={classes.card} key={resto._id}>
                         <CardMedia
                             className={classes.cover}
                             // image="/assets/img/joystick_318-1404.jpg"
@@ -245,7 +245,7 @@ class Restos extends Component {
                         </CardContent>
                         <CardActions className={classes.cardButton}>
 
-                        <Link to={`/fiche-resto/${resto.id}`} color="primary">
+                        <Link to={`/fiche-resto/${resto._id}`} color="primary">
                             <Button color="primary">
                                 <Map />
                                 Voir la carte

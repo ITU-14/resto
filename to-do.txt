@@ -118,7 +118,7 @@ Fonctionnalités
 - Recherche resto
 - Add title in resto details page
 
-- dynamic data
+
 - save commande to database
 - liste plats par resto
 
@@ -132,7 +132,20 @@ Fonctionnalités
 - valider commande si plus
 
 
+- Creer carte
+384 Plats
+50 restos
+30
+
 https://medium.freecodecamp.org/get-pro-with-react-setstate-in-10-minutes-d38251d1c781
 
 Project Console: https://console.firebase.google.com/project/resto-39060/overview
 Hosting URL: https://resto-39060.firebaseapp.com
+
+
+
+
+- Ovaina prix fotsn ny anaran le field prix_menu ao amn table menu
+- Ovaina _id le id ao amn table resto
+
+

@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { withStyles, Typography, ExpansionPanel, ExpansionPanelSummary, Grid, Button, Divider, ButtonBase, CircularProgress } from '@material-ui/core';
-import {   ExpandMoreRounded, Map } from '@material-ui/icons';
+import { ExpandMoreRounded, Map } from '@material-ui/icons';
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
 import { withAuthentication } from '../Session';
 import UserOrders from '../Front/UserOrders';
-import { Table, TableRow, TableFooter, TablePagination } from '@material-ui/core';
 
 const styles = theme => ({
     divContainer: {
@@ -64,12 +63,13 @@ class RestosDetails extends Component {
         super(props);
         this.state = {
             loadingMenu: false,
+            loadingCard: false,
             expanded: 'menu',
             menus: [],
+            cartes: {plats: [], resto_id: ""},
+            typePlats: [],
             page: 0,
             rowsPerPage: 5,
-            id_resto: '',
-            authUser: JSON.parse(localStorage.getItem('authUser')),
             orders: {
                 user: JSON.parse(localStorage.getItem('authUser')),
                 commandes: []
@@ -78,8 +78,14 @@ class RestosDetails extends Component {
     }
 
     componentDidMount() {
+        this.loadMenus();
+        this.loadTypePlats();
+        this.loadCards();
+    }
+
+    loadMenus() {
         this.setState({ loadingMenu: true });
-        this.props.firebase.menus().on('value', snapshot => {
+        this.props.firebase.menus().orderByChild('resto_id').equalTo(this.props.resto_id_sent).on('value', snapshot => {
             const menuObject = snapshot.val();
             const menuList = Object.keys(menuObject).map(key => ({
                 ...menuObject[key],
@@ -93,39 +99,46 @@ class RestosDetails extends Component {
         });
     }
 
-    filterList = () => {
-        const { id_resto } = this.state;
-        this.props.firebase.menus().on('value', snapshot => {
-            const menuObject = snapshot.val();
-            const menuList = Object.keys(menuObject).map(key => ({
-                ...menuObject[key],
+    loadTypePlats() {
+        this.setState({ loadingCategory: true });
+        this.props.firebase.typePlats().on('value', snapshot => {
+            const categoryObject = snapshot.val();
+
+            const categoryList = Object.keys(categoryObject).map(key => ({
+                ...categoryObject[key],
                 id: key
             }));
-
-            const listeMenu = [];
-            menuList.forEach(menu => {
-                if (menu.resto_id.indexOf(id_resto) > -1)
-                    listeMenu.push(menu);
-            });
+            console.log(categoryList);
             this.setState({
-                menus: listeMenu,
-                loadingMenu: false
+                typePlats: categoryList,
+                loadingCategory: false
+            });
+        });
+    }
+
+    loadCards() {
+        this.setState({ loadingCard: true });
+        this.props.firebase.cartes().orderByChild('resto_id').equalTo(this.props.resto_id_sent).on('value', snapshot => {
+            const cardsObject = snapshot.val();
+            const cardsList = Object.keys(cardsObject).map(key => ({
+                ...cardsObject[key],
+                id: key
+            }));
+            console.log(cardsList);
+            this.setState({
+                cartes: (cardsList.length > 0) ? cardsList[0] : {plats: [], resto_id: ""},
+                loadingCard: false
             });
         });
     }
 
     componentWillUnmount() {
         this.props.firebase.restos().off();
+        this.props.firebase.menus().off();
+        this.props.firebase.cartes().off();
+        this.props.firebase.typePlats().off();
     }
 
-
-    handleChangePage = (event, page) => {
-        this.setState({ page });
-    }
-
-    handleChangeRowsPerPage = (event) => {
-        this.setState({ page: 0, rowsPerPage: event.target.value });
-    }
 
     handleRemoveOrder = (menu_id) => {
         let orders = this.state.orders;
@@ -170,7 +183,6 @@ class RestosDetails extends Component {
 
     addCommande = (menu, typeOrder) => {
         const user = JSON.parse(localStorage.getItem('authUser'));
-        console.log(user);
         if(!user) {
             this.props.history.push(ROUTES.SIGN_IN);
         }
@@ -188,9 +200,9 @@ class RestosDetails extends Component {
                 id: menu._id,
                 nom: menu.nom,
                 type: typeOrder,
-                prixUnitaire: menu.prix_menu,
+                prixUnitaire: menu.prix,
                 quantity: 1,
-                photo: menu.photo
+                photo: menu.photo ? menu.photo : menu.photo_plat
             });
         }
         this.setState({
@@ -217,22 +229,67 @@ class RestosDetails extends Component {
         return (
             <Typography color="textSecondary">
                 {data.map(content => (
-                    <p key={content.id}><b className={className}>{content.label}</b>: <i>{content.nom}</i></p>
+                    <span key={content.label.concat(menu._id)}><b className={className}>{content.label}</b>: <i>{content.nom}</i><br/></span>
                 ))}
             </Typography>
         );
     }
 
+    renderPlatItem(plat, classes) {
+        return (
+            <div className={classes.item} key={`plat-${plat.id}`}>
+                <div className={classes.section1}>
+                    <Grid container spacing={16}>
+                        <Grid item>
+                            <ButtonBase className={classes.media}>
+                                <img className={classes.img} 
+                                        alt={plat.nom} 
+                                        src={plat.photo_plat} />
+                            </ButtonBase>
+                        </Grid>
+                        <Grid item xs={12} sm container>
+                            <Grid item xs container direction="column" spacing={16}>
+                                <Grid item xs>
+                                    <Typography variant="h5">
+                                        {plat.nom}
+                                    </Typography>
+                                    <Typography color="textSecondary">
+                                        {plat.description_plat}
+                                    </Typography>
+                                </Grid>
+
+                                <Grid item>
+                                    <Button color="primary" onClick={() => this.addCommande(plat, 'Plat')}>
+                                        <Map />
+                                        Commander
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        
+                        <Grid item>
+                            <Typography variant="h6">
+                            Rs. {plat.prix}
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                </div>
+                <Divider />
+            </div>
+        );
+    }
+
     render() {
-        const { classes, resto_id_sent } = this.props;
-        const { menus, page, rowsPerPage, expanded, loadingMenu } = this.state;
-        let menuList = menus.filter(menu => {
-            return menu.resto_id === resto_id_sent;
-        });
+        /* eslint-disable */
+        const { classes } = this.props;
+        const { menus, typePlats, cartes, expanded, loadingMenu, loadingCategory, loadingCard } = this.state;
+
+        console.log(cartes);
 
         const loader = <div className={classes.progressContainer}>
             <CircularProgress className={classes.progress} />
         </div>
+        /* eslint-enable */        
 
         return (
             <div className={classes.divContainer}>
@@ -243,69 +300,75 @@ class RestosDetails extends Component {
                                     onChange={this.handleExpand('menu')}>
                         <ExpansionPanelSummary  className={classes.headingContainer}
                                                 expandIcon={<ExpandMoreRounded />}>
-                            <Typography className={classes.heading}>Menus {menuList.length > 0 && `(${menuList.length})`}</Typography>
+                            <Typography className={classes.heading}>Menus {menus.length > 0 && `(${menus.length})`}</Typography>
                         </ExpansionPanelSummary>
                         
-                            {loadingMenu && loader}
-                            {menuList.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(menu => (
+                        {loadingMenu && loader}
+                        {menus.map(menu => (
 
-                                <div className={classes.item} key={`menu-${menu.id}`}>
-                                    <div className={classes.section1}>
-                                        <Grid container spacing={16}>
-                                            <Grid item>
-                                                <ButtonBase className={classes.media}>
-                                                    <img className={classes.img} 
-                                                            alt={menu.nom} 
-                                                            src={menu.photo} />
-                                                </ButtonBase>
-                                            </Grid>
-                                            <Grid item xs={12} sm container>
-                                                <Grid item xs container direction="column" spacing={16}>
-                                                    <Grid item xs>
-                                                        <Typography variant="h5">
-                                                            {menu.nom}
-                                                        </Typography>
-                                                        {this.renderContentMenu(menu, classes.category)}
-                                                    </Grid>
+                            <div className={classes.item} key={`menu-${menu.id}`}>
+                                <div className={classes.section1}>
+                                    <Grid container spacing={16}>
+                                        <Grid item>
+                                            <ButtonBase className={classes.media}>
+                                                <img className={classes.img} 
+                                                        alt={menu.nom} 
+                                                        src={menu.photo} />
+                                            </ButtonBase>
+                                        </Grid>
+                                        <Grid item xs={12} sm container>
+                                            <Grid item xs container direction="column" spacing={16}>
+                                                <Grid item xs>
+                                                    <Typography variant="h5">
+                                                        {menu.nom}
+                                                    </Typography>
+                                                    {this.renderContentMenu(menu, classes.category)}
+                                                </Grid>
 
-                                                    <Grid item>
-                                                        <Button color="primary" onClick={() => this.addCommande(menu, 'Menu')}>
-                                                            <Map />
-                                                            Commander
-                                                        </Button>
-                                                    </Grid>
+                                                <Grid item>
+                                                    <Button color="primary" onClick={() => this.addCommande(menu, 'Menu')}>
+                                                        <Map />
+                                                        Commander
+                                                    </Button>
                                                 </Grid>
                                             </Grid>
-                                            
-                                            <Grid item>
-                                                <Typography variant="h6">
-                                                Rs. {menu.prix_menu}
-                                                </Typography>
-                                            </Grid>
                                         </Grid>
-                                    </div>
-                                    <Divider />
+                                        
+                                        <Grid item>
+                                            <Typography variant="h6">
+                                            Rs. {menu.prix}
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
                                 </div>
-                            ))}
-                            {!loadingMenu && <Table className={classes.table}>
-                                <TableFooter>
-                                    <TableRow>
-                                        <TablePagination
-                                            rowsPerPageOptions={[5, 10, 25]}
-                                            colSpan={3}
-                                            count={menuList.length}
-                                            rowsPerPage={rowsPerPage}
-                                            page={page}
-                                            SelectProps={{ native: true }}
-                                            onChangePage={this.handleChangePage}
-                                            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                            labelDisplayedRows={({ from, to, count }) => `${from} - ${to} sur ${count} restos`}
-                                            labelRowsPerPage="Lignes par page" />
-                                    </TableRow>
-                                </TableFooter>
-                            </Table>}
-                    </ExpansionPanel>
+                                <Divider />
+                            </div>
+                        ))}
                         
+                    </ExpansionPanel>
+
+                    {loadingCategory && loader}     
+                    {typePlats.map(category => (
+                        <ExpansionPanel expanded={expanded === 'plat-details-'.concat(category.id)}
+                                        onChange={this.handleExpand('plat-details-'.concat(category.id))}
+                                        key={"typePlat".concat(category.id)}>
+                            <ExpansionPanelSummary  className={classes.headingContainer}
+                                                    expandIcon={<ExpandMoreRounded />}>
+                                <Typography className={classes.heading}>{category.nom}</Typography>
+                            </ExpansionPanelSummary>
+                            
+                            {loadingCard && loader}
+                            {cartes.plats.filter(platCarte => {return platCarte.type_plat.toLowerCase().localeCompare(category.nom.toLowerCase())===0 }).map(plat => (
+                                this.renderPlatItem(plat, classes)
+                            ))}
+                            
+                        </ExpansionPanel>
+                    ))}
+                    
+                    
+                    
+
+
                     
                 </main>
                 
