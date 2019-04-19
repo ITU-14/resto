@@ -9,10 +9,10 @@ import { withFirebase } from '../Firebase';
 const styles = theme => ({
     paper: {
         width: '100%',
-        // flexShrink: 0,
-        //color: theme.palette.text.secondary,
         overflowX: 'auto',
         textAlign: 'center',
+        marginLeft: 'auto',
+        marginRight: 'auto',
         paddingTop: theme.spacing.unit * 3,
         paddingBottom: theme.spacing.unit * 3
     },
@@ -25,9 +25,7 @@ const styles = theme => ({
         position: 'absolute'
     },
     container: {
-        display: 'flex',
-        flexWrap: 'wrap',
-        width: '68%',
+        width: '100%',
         marginLeft: 'auto',
         marginRight: 'auto',
         marginBottom: theme.spacing.unit * 3,
@@ -41,17 +39,18 @@ const styles = theme => ({
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit,
     },
+    buttonSearch: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+        height: '55px'
+    },
     card: {
         width: '53%',
         marginLeft: 'auto',
         marginRight: 'auto',
-        // maxWidth: 345,
         display: 'flex',
         marginBottom: theme.spacing.unit,
         marginTop: theme.spacing.unit
-    },
-    media: {
-        height: 140,
     },
     searchText: {
         marginLeft: '7px',
@@ -65,19 +64,11 @@ const styles = theme => ({
         paddingBottom: theme.spacing.unit,
         paddingRight: theme.spacing.unit
     },
-    details: {
-        display: 'flex',
-        flexDirection: 'column'
-    },
     content: {
         flex: '1 0 auto'
     },
     cardButton: {
         marginLeft: 'auto'
-    },
-    carteIcon: {
-        paddingLeft: theme.spacing.unit,
-        paddingRight: theme.spacing.unit
     },
     paginationColor: {
         color: '#3f51b5',
@@ -199,7 +190,7 @@ class Restos extends Component {
                         variant="contained"
                         type="button"
                         color="primary"
-                        className={classes.textField}
+                        className={classes.buttonSearch}
                         onClick={this.filterList}
                     >
                         <Search />
@@ -215,7 +206,6 @@ class Restos extends Component {
                     <Card className={classes.card} key={resto._id}>
                         <CardMedia
                             className={classes.cover}
-                            // image="/assets/img/joystick_318-1404.jpg"
                             image={resto.photo}
                             title="Live from space album cover"
                         />
