@@ -91,7 +91,6 @@ class RestosDetails extends Component {
                 ...menuObject[key],
                 id: key
             }));
-
             this.setState({
                 menus: menuList,
                 loadingMenu: false
@@ -108,7 +107,6 @@ class RestosDetails extends Component {
                 ...categoryObject[key],
                 id: key
             }));
-            console.log(categoryList);
             this.setState({
                 typePlats: categoryList,
                 loadingCategory: false
@@ -124,7 +122,6 @@ class RestosDetails extends Component {
                 ...cardsObject[key],
                 id: key
             }));
-            console.log(cardsList);
             this.setState({
                 cartes: (cardsList.length > 0) ? cardsList[0] : {plats: [], resto_id: ""},
                 loadingCard: false
@@ -137,8 +134,8 @@ class RestosDetails extends Component {
         this.props.firebase.menus().off();
         this.props.firebase.cartes().off();
         this.props.firebase.typePlats().off();
+        this.props.firebase.orders().off();
     }
-
 
     handleRemoveOrder = (menu_id) => {
         let orders = this.state.orders;
@@ -170,7 +167,8 @@ class RestosDetails extends Component {
     }
 
     handleValidateOrders = () => {
-
+        const order = this.state.orders;
+        this.props.firebase.orders().push(order);     
     }
 
     handleCancelOrders = () => {
@@ -237,7 +235,7 @@ class RestosDetails extends Component {
 
     renderPlatItem(plat, classes) {
         return (
-            <div className={classes.item} key={`plat-${plat.id}`}>
+            <div className={classes.item} key={`plat-${plat._id}`}>
                 <div className={classes.section1}>
                     <Grid container spacing={16}>
                         <Grid item>
@@ -280,24 +278,20 @@ class RestosDetails extends Component {
     }
 
     render() {
-        /* eslint-disable */
         const { classes } = this.props;
         const { menus, typePlats, cartes, expanded, loadingMenu, loadingCategory, loadingCard } = this.state;
-
-        console.log(cartes);
 
         const loader = <div className={classes.progressContainer}>
             <CircularProgress className={classes.progress} />
         </div>
-        /* eslint-enable */        
-
         return (
             <div className={classes.divContainer}>
                 <main className={classes.maincontent}>
                     <div className={classes.toolbar} />
 
                     <ExpansionPanel expanded={expanded === 'menu'}
-                                    onChange={this.handleExpand('menu')}>
+                                    onChange={this.handleExpand('menu')}
+                                    id={'menu'}>
                         <ExpansionPanelSummary  className={classes.headingContainer}
                                                 expandIcon={<ExpandMoreRounded />}>
                             <Typography className={classes.heading}>Menus {menus.length > 0 && `(${menus.length})`}</Typography>
@@ -348,10 +342,10 @@ class RestosDetails extends Component {
                     </ExpansionPanel>
 
                     {loadingCategory && loader}     
-                    {typePlats.map(category => (
+                    {!loadingCategory && typePlats.map(category => (
                         <ExpansionPanel expanded={expanded === 'plat-details-'.concat(category.id)}
                                         onChange={this.handleExpand('plat-details-'.concat(category.id))}
-                                        key={"typePlat".concat(category.id)}>
+                                        key={`typePlat-`.concat(category.id)}>
                             <ExpansionPanelSummary  className={classes.headingContainer}
                                                     expandIcon={<ExpandMoreRounded />}>
                                 <Typography className={classes.heading}>{category.nom}</Typography>
@@ -364,11 +358,6 @@ class RestosDetails extends Component {
                             
                         </ExpansionPanel>
                     ))}
-                    
-                    
-                    
-
-
                     
                 </main>
                 

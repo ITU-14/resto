@@ -97,6 +97,8 @@ class Firebase {
     /* get list of type plat */
     typePlats = () => this.db.ref('typePlat');
 
+    orders = () => this.db.ref('commande');
+
 }
 
 const rebase = Rebase.createClass(config);

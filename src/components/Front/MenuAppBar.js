@@ -47,6 +47,9 @@ const styles = theme => ({
     divContainer: {
         backgroundColor: '#FFF',
         borderRight: '1px solid rgba(0, 0, 0, 0.12)'
+    },
+    redirect: {
+        cursor: 'pointer'
     }
 });
 
@@ -69,6 +72,10 @@ class MenuAppBar extends Component {
         this.setState({ anchorEl: null });
     };
 
+    handleHomePage = () => {
+        this.props.history.push(ROUTES.LANDING);
+    }
+
     handleLogin = () => {
         this.props.history.push(ROUTES.SIGN_IN);
     }
@@ -85,26 +92,17 @@ class MenuAppBar extends Component {
         const { classes } = this.props;
         const { anchorEl } = this.state;
         const open = Boolean(anchorEl);
-
-        /*let drawerContent = drawer ? 
-        <Drawer variant="permanent" classes={{paper: classNames(classes.drawerPaper, !this.state.open && classes.drawerPaperClose)}} open={this.state.open}>
-            <div className={classes.toolbarIcon}>
-                <IconButton onClick={this.handleDrawerClose}>
-                    <ChevronLeftSharp />
-                </IconButton>
-            </div>
-            <Divider />
-            <SidebarCategory selectedIndexInList={this.props.selectedIndexInList} />
-        </Drawer> : "";*/
         
 
         return (
             <div className={classes.divContainer}>
                 <AppBar position="fixed" className={classes.appbar}>
                     <Toolbar>
-                    <Typography variant="h6" color="inherit" className={classes.grow}>
-                        My resto
+                    
+                    <Typography variant="h6" color="inherit" className={classes.grow} onClick={this.handleHomePage}>
+                        <span className={classes.redirect}>My resto</span>    
                     </Typography>
+                    
                     <AuthUserContext.Consumer>
                         {authUser => authUser ? <div>
                         <IconButton

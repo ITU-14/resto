@@ -71,6 +71,13 @@ const styles = theme => ({
     carteIcon: {
         paddingLeft: theme.spacing.unit,
         paddingRight: theme.spacing.unit
+    },
+    paginationColor: {
+        color: '#3f51b5',
+        fontWeight: '12em'
+    },
+    table: {
+        backgroundColor: "#fafafa"
     }
 });
 
@@ -86,8 +93,7 @@ class Restos extends Component {
             openEditDialog: false,
             page: 0,
             restos: [],
-            rowsPerPage: 5,
-
+            rowsPerPage: 10,
             searchName: '',
             searchTypeCuisine: ''
         }
@@ -259,7 +265,8 @@ class Restos extends Component {
                     <TableFooter>
                         <TableRow>
                             <TablePagination
-                                rowsPerPageOptions={[5, 10, 25]}
+                                className={classes.paginationColor}
+                                rowsPerPageOptions={[rowsPerPage]}
                                 colSpan={3}
                                 count={restos.length}
                                 rowsPerPage={rowsPerPage}
