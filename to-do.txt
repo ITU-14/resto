@@ -119,20 +119,11 @@ Fonctionnalités
 - Add title in resto details page
 
 
-- save commande to database
-- liste plats par resto
 
-- Add left Menu
-	- Menu
-	- Hors d'oeuvre
-	- Plat
-	- Dessert
 
-- CRUD BO
 - valider commande si plus
 
 
-- Creer carte
 384 Plats
 50 restos
 30
@@ -155,10 +146,6 @@ Hosting URL: https://resto-39060.firebaseapp.com
     }
   }
 }
-
-
-
-- Deploy
 
 
 - B.O

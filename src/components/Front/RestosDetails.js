@@ -356,7 +356,7 @@ class RestosDetails extends Component {
                                         key={`typePlat-`.concat(category.id)}>
                             <ExpansionPanelSummary  className={classes.headingContainer}
                                                     expandIcon={<ExpandMoreRounded />}>
-                                <Typography className={classes.heading}>{category.nom}</Typography>
+                                <Typography className={classes.heading}>{category.nom} (Veuillez cliquer cette section pour le voir svp!)</Typography>
                             </ExpansionPanelSummary>
                             
                             {loadingCard && loader}
