@@ -130,7 +130,7 @@ class Restos extends Component {
 
             const listeResto = [];
             restosList.forEach(resto => {
-                if (resto.nom_resto.indexOf(searchName) > -1 && resto.type_cuisine.toLowerCase().indexOf(searchTypeCuisine.toLowerCase()) > -1 )
+                if (resto.nom_resto.toLowerCase().indexOf(searchName.toLowerCase()) > -1 && resto.type_cuisine.toLowerCase().indexOf(searchTypeCuisine.toLowerCase()) > -1 )
                     listeResto.push(resto);
             });
             this.setState({
@@ -159,6 +159,10 @@ class Restos extends Component {
 
         const loader = <div className={classes.progressContainer}>
             <CircularProgress className={classes.progress} />
+        </div>
+
+        const noResult = <div className={classes.progressContainer}>
+            Aucun resultat
         </div>
 
         return (
@@ -241,7 +245,7 @@ class Restos extends Component {
                     </Card>
                 ))}
 
-                <Table className={classes.table}>
+                {(!loading && restos.length > 0) && <Table className={classes.table}>
                     <TableFooter>
                         <TableRow>
                             <TablePagination
@@ -253,11 +257,14 @@ class Restos extends Component {
                                 page={page}
                                 SelectProps={{ native: true }}
                                 onChangePage={this.handleChangePage}     
-                                labelDisplayedRows={({ from, to, count }) => `${from} - ${to} sur ${count} restos`}
+                                labelDisplayedRows={({ from, to, count }) => `Resto ${from} - ${to} sur ${count} restos (page ${page+1})`}
                                 labelRowsPerPage="Lignes par page" />
                         </TableRow>
                     </TableFooter>
-                </Table>
+                </Table>}
+
+                {!loading && restos.length === 0 && noResult}
+                
             </Paper>
         );
     }
