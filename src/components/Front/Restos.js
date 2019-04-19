@@ -87,10 +87,6 @@ class Restos extends Component {
         super(props);
         this.state = {
             loading: false,
-            open: true,
-            selectedIndexInList: 0,
-            openDeleteDialog: false,
-            openEditDialog: false,
             page: 0,
             restos: [],
             rowsPerPage: 10,
@@ -98,6 +94,7 @@ class Restos extends Component {
             searchTypeCuisine: ''
         }
     }
+
     componentDidMount() {
         this.setState({ loading: true });
         this.props.firebase.restos().on('value', snapshot => {
@@ -112,14 +109,11 @@ class Restos extends Component {
                 loading: false
             });
         });
-
-
     }
 
     filterList = () => {
         const { searchName , searchTypeCuisine} = this.state;
         
-
         this.props.firebase.restos().on('value', snapshot => {
             const restosObject = snapshot.val();
             const restosList = Object.keys(restosObject).map(key => ({
@@ -131,8 +125,6 @@ class Restos extends Component {
             restosList.forEach(resto => {
                 if (resto.nom_resto.indexOf(searchName) > -1 && resto.type_cuisine.indexOf(searchTypeCuisine) > -1 )
                     listeResto.push(resto);
-           //     if (resto.nom_resto.indexOf(searchTypeCuisine) > -1)
-            //        listeResto.push(resto);
             });
             this.setState({
                 restos: listeResto,
@@ -146,36 +138,12 @@ class Restos extends Component {
         this.props.firebase.restos().off();
     }
 
-    handleOpenDeleteDialog = () => {
-        this.setState({ openDeleteDialog: true });
-    }
-
-    handleOpenEditDialog = () => {
-        this.setState({ openEditDialog: true });
-    }
-
-    handleCloseEditDialog = () => {
-        this.setState({ openEditDialog: false });
-    }
-
-    handleCloseDeleteDialog = () => {
-        this.setState({ openDeleteDialog: false });
-    }
-
     handleChangePage = (event, page) => {
         this.setState({ page });
     }
 
-    handleChangeRowsPerPage = (event) => {
-        this.setState({ page: 0, rowsPerPage: event.target.value });
-    }
-
     onChange = (event) => {
         this.setState({ [event.target.name]: event.target.value });
-    }
-
-    onDropImage = () => {
-
     }
 
     render() {
@@ -272,8 +240,7 @@ class Restos extends Component {
                                 rowsPerPage={rowsPerPage}
                                 page={page}
                                 SelectProps={{ native: true }}
-                                onChangePage={this.handleChangePage}
-                                onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                                onChangePage={this.handleChangePage}     
                                 labelDisplayedRows={({ from, to, count }) => `${from} - ${to} sur ${count} restos`}
                                 labelRowsPerPage="Lignes par page" />
                         </TableRow>
