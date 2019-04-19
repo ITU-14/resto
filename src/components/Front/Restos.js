@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { compose } from 'recompose';
-import { withStyles, Paper, Card, Typography, TextField, Button, CardMedia, CardContent, CardActions } from '@material-ui/core';
+import { withStyles, Paper, Card, Typography, TextField, Button, CardMedia, CardContent, CardActions, CircularProgress } from '@material-ui/core';
 import { Search, Map } from '@material-ui/icons';
 import { Table, TableRow, TableFooter, TablePagination } from '@material-ui/core';
 import { Link } from 'react-router-dom';
@@ -16,7 +16,14 @@ const styles = theme => ({
         paddingTop: theme.spacing.unit * 3,
         paddingBottom: theme.spacing.unit * 3
     },
-
+    progressContainer: {
+        height: `${theme.spacing.unit * 10}px`
+    },
+    progress: {
+        margin: `${theme.spacing.unit * 3}px auto`,
+        left: '50%',
+        position: 'absolute'
+    },
     container: {
         display: 'flex',
         flexWrap: 'wrap',
@@ -123,7 +130,7 @@ class Restos extends Component {
 
             const listeResto = [];
             restosList.forEach(resto => {
-                if (resto.nom_resto.indexOf(searchName) > -1 && resto.type_cuisine.indexOf(searchTypeCuisine) > -1 )
+                if (resto.nom_resto.indexOf(searchName) > -1 && resto.type_cuisine.toLowerCase().indexOf(searchTypeCuisine.toLowerCase()) > -1 )
                     listeResto.push(resto);
             });
             this.setState({
@@ -148,7 +155,11 @@ class Restos extends Component {
 
     render() {
         const { classes } = this.props;
-        const { restos, page, rowsPerPage, searchName, searchTypeCuisine } = this.state;
+        const { restos, page, rowsPerPage, searchName, searchTypeCuisine, loading } = this.state;
+
+        const loader = <div className={classes.progressContainer}>
+            <CircularProgress className={classes.progress} />
+        </div>
 
         return (
             <Paper className={classes.paper}>
@@ -195,7 +206,8 @@ class Restos extends Component {
                     </Button>
                 </form>
 
-                {restos.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(resto => (
+                {loading && loader}
+                {!loading && restos.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(resto => (
                     <Card className={classes.card} key={resto._id}>
                         <CardMedia
                             className={classes.cover}
