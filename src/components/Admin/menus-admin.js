@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {compose} from 'recompose';
 
-import { withStyles, CssBaseline, IconButton, Paper, Table, TableHead, TableCell, TableRow, TableBody, TableFooter, TablePagination, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField, Select, MenuItem, Avatar} from '@material-ui/core';
-import { Add, Edit, Delete } from '@material-ui/icons';
+import { withStyles, CssBaseline, IconButton, Paper, Table, TableHead, TableCell, TableRow, TableBody, TableFooter, TablePagination, Button, Avatar, CircularProgress} from '@material-ui/core';
+import { Add, Edit } from '@material-ui/icons';
 
 import {withFirebase} from '../Firebase';
 import AppbarAdmin from './appbar-admin';
@@ -32,8 +32,6 @@ const styles = theme => ({
     },
     paperTable: {
         width: '100%',
-        // flexShrink: 0,
-        //color: theme.palette.text.secondary,
         overflowX: 'auto'
     },
     table: {
@@ -61,7 +59,15 @@ const styles = theme => ({
         margin: 10,
         width: 60,
         height: 60
-    }
+    },
+    progressContainer: {
+        height: `${theme.spacing.unit * 10}px`
+    },
+    progress: {
+        margin: `${theme.spacing.unit * 3}px auto`,
+        left: '50%',
+        position: 'absolute'
+    },
 });
 
 const INITIALSTATE = {
@@ -79,23 +85,12 @@ class MenusAdminPage extends Component {
         this.state = {
             loading: false,
             open: true,
-            selectedIndexInList: 2,
-            openDeleteDialog: false,
             openEditDialog: false,
             page: 0,
             menus: [],
-            typePlats: [],
-            rowsPerPage: 5,
+            rowsPerPage: 10,
             ...INITIALSTATE
         };
-    }
-
-    handleOpenDeleteDialog = () => {
-        this.setState({openDeleteDialog: true});
-    }
-
-    handleCloseDeleteDialog = () => {
-        this.setState({openDeleteDialog: false});
     }
 
     handleOpenEditDialog = () => {
@@ -108,10 +103,6 @@ class MenusAdminPage extends Component {
 
     handleChangePage = (event, page) => {
         this.setState({page});
-    }
-
-    handleChangeRowsPerPage = (event) => {
-        this.setState({rowsPerPage: event.target.value});
     }
 
     componentDidMount() {
@@ -127,21 +118,10 @@ class MenusAdminPage extends Component {
                 loading: false
             });
         });
-        this.props.firebase.typePlats().on('value', snapshot => {
-            const categories = snapshot.val();
-            const categoryList = Object.keys(categories).map(key => ({
-                ...categories[key],
-                id: key
-            }));
-            this.setState({
-                typePlats: categoryList
-            })
-        });
     }
 
     componentWillUnmount() {
         this.props.firebase.menus().off();
-        this.props.firebase.typePlats().off();
     }
 
     onChange = (event) => {
@@ -149,8 +129,11 @@ class MenusAdminPage extends Component {
     }
 
     render() {
-        const {menus, page, rowsPerPage, typePlats, nom, type, description, prix} = this.state;
+        const {menus, page, rowsPerPage, loading} = this.state;
         const {classes} = this.props;
+        const loader = <div className={classes.progressContainer}>
+            <CircularProgress className={classes.progress} />
+        </div>
         return (
             <div className={classes.root}>
                 <CssBaseline />       
@@ -164,7 +147,8 @@ class MenusAdminPage extends Component {
                             <Add className={classes.rightIcon} />
                         </Button>
                         <Paper className={classes.paperTable}>
-                            <Table className={classes.table}>
+                            {loading && loader}
+                            {!loading && <Table className={classes.table}>
                                 <TableHead>
                                     <TableRow>
                                         <TableCell component="th">Photo</TableCell>
@@ -175,20 +159,17 @@ class MenusAdminPage extends Component {
                                 </TableHead>
                                 <TableBody>
                                     {menus.slice(page*rowsPerPage, (page*rowsPerPage) + rowsPerPage).map(plat => (
-                                        <TableRow key={1}>
+                                        <TableRow key={plat.id}>
                                             <TableCell>
                                                 <Avatar alt={plat.nom_plat} src={plat.photo} className={classes.bigAvatar} />
                                             </TableCell>
                                             <TableCell>{plat.nom}</TableCell>
                                             <TableCell >{plat.prix}</TableCell>
                                             <TableCell>
-                                                <IconButton size="small" color="primary" aria-label="Modifier" className={classes.margin}>
+                                                <IconButton size="small" color="primary" aria-label="Modifier" title="Modifier" className={classes.margin}>
                                                     <Edit />
                                                 </IconButton>
                                                 
-                                                <IconButton color='secondary' aria-label="Supprimer" className={classes.margin} onClick={this.handleOpenDeleteDialog}>
-                                                    <Delete />
-                                                </IconButton>
                                             </TableCell>
                                         </TableRow>
                                     ))} 
@@ -196,68 +177,20 @@ class MenusAdminPage extends Component {
                                 <TableFooter>
                                     <TableRow>
                                     <TablePagination 
-                                            rowsPerPageOptions={[5, 10, 25]}
+                                            rowsPerPageOptions={[rowsPerPage]}
                                             colSpan={3} 
                                             count={menus.length} 
                                             rowsPerPage={rowsPerPage} 
                                             page={page} 
                                             SelectProps={{native: true}} 
                                             onChangePage={this.handleChangePage} 
-                                            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                            labelDisplayedRows={({from, to, count}) => `${from} - ${to} sur ${count} plats`} 
+                                            labelDisplayedRows={({from, to, count}) => `${from} - ${to} sur ${count} menus`} 
                                             labelRowsPerPage="Lignes par page" />
                                     </TableRow>
                                 </TableFooter>
-                            </Table>
+                            </Table>}
                         </Paper>
 
-                        <Dialog open={this.state.openDeleteDialog} onClose={this.handleCloseDeleteDialog} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
-                            <DialogTitle id="alert-dialog-title">{"Supprimer le resto resto 1"}</DialogTitle>
-                            <DialogContent>
-                                <DialogContentText id="alert-dialog-description">
-                                
-                                </DialogContentText>
-                            </DialogContent>
-                            <DialogActions>
-                                <Button onClick={this.handleClose} color="default">
-                                Annuler
-                                </Button>
-
-                                <Button onClick={this.handleClose} color="secondary" autoFocus>
-                                Supprimer
-                                </Button>
-                            </DialogActions>
-                        </Dialog>
-
-                        <Dialog open={this.state.openEditDialog} 
-                                onClose={this.handleCloseEditDialog} 
-                                aria-labelledby="form-dialog-title" 
-                                aria-describedby="form-dialog-description">
-                            <DialogTitle id="form-dialog-title">Ajouter un plat</DialogTitle>
-                            <DialogContent>
-                                <TextField id="nom" label="Nom" type="text" name="nom" variant="outlined" value={nom} onChange={this.onChange} fullWidth />
-                                <Select value={type} 
-                                        onChange={this.onChange}
-                                        variant="outlined"
-                                        fullWidth>
-                                    {typePlats.map(typePlat => (
-                                        <MenuItem key={type.id} value={type.id}>{typePlat.nom}</MenuItem>
-                                    ))}
-                                </Select>
-                                <TextField id="nom" label="Nom" type="text" name="nom" variant="outlined" value={nom} onChange={this.onChange} fullWidth />
-                                <TextField id="description" label="Description" type="text" name="description" variant="outlined" value={description} onChange={this.onChange} fullWidth />
-                                <TextField id="prix" label="prix" type="text" name="description" variant="outlined" value={prix} onChange={this.onChange} fullWidth />
-                            </DialogContent>
-                            <DialogActions>
-                                <Button onClick={this.handleClose} color="default">
-                                Annuler
-                                </Button>
-
-                                <Button onClick={this.handleClose} color="secondary" autoFocus>
-                                Supprimer
-                                </Button>
-                            </DialogActions>
-                        </Dialog>
                     </div>
                 </main>
             </div>

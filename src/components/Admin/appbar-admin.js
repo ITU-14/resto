@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { compose } from 'recompose';
 import classNames from 'classnames';
-import { withStyles, AppBar, Toolbar, IconButton, Typography, Badge, Drawer, Divider } from '@material-ui/core';
-import { Menu, NotificationsActive, ChevronLeftSharp } from '@material-ui/icons';
+import { withStyles, AppBar, Toolbar, IconButton, Typography, Drawer, Divider } from '@material-ui/core';
+import { Menu, ChevronLeftSharp } from '@material-ui/icons';
 import SidebarAdmin from './sidebar-admin';
 import SignOutButton from '../SignOut';
 
@@ -105,14 +105,8 @@ class AppBarAdmin extends Component {
                         </IconButton>
 
                         <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-                            Liste des restos
+                            Au resto - B.O
                         </Typography>
-
-                        <IconButton color="inherit">
-                            <Badge badgeContent={4} color="secondary">
-                                <NotificationsActive />
-                            </Badge>
-                        </IconButton>
 
                         <SignOutButton />
                     </Toolbar>

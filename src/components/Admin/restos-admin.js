@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {compose} from 'recompose';
 
-import { withStyles, CssBaseline, IconButton, Paper, Table, TableHead, TableCell, TableRow, TableBody, TableFooter, TablePagination, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField, Avatar} from '@material-ui/core';
-import { Add, Edit, Delete } from '@material-ui/icons';
+import { withStyles, CssBaseline, IconButton, Paper, Table, TableHead, TableCell, TableRow, TableBody, TableFooter, TablePagination, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Avatar, CircularProgress} from '@material-ui/core';
+import { Add, Edit } from '@material-ui/icons';
 
 import {withFirebase} from '../Firebase';
 import {withAuthorization} from '../Session';
@@ -34,8 +34,6 @@ const styles = theme => ({
     },
     paperTable: {
         width: '100%',
-        // flexShrink: 0,
-        //color: theme.palette.text.secondary,
         overflowX: 'auto'
     },
     table: {
@@ -68,6 +66,14 @@ const styles = theme => ({
         margin: theme.spacing.unit,
         height: "6em"
     },
+    progressContainer: {
+        height: `${theme.spacing.unit * 10}px`
+    },
+    progress: {
+        margin: `${theme.spacing.unit * 3}px auto`,
+        left: '50%',
+        position: 'absolute'
+    },
 });
 
 const INITIAL_STATE = {
@@ -89,12 +95,10 @@ class RestosAdminPage extends Component {
         this.state = {
             loading: false,
             open: true,
-            selectedIndexInList: 0,
-            openDeleteDialog: false,
             openEditDialog: false,
             page: 0,
             restos: [],
-            rowsPerPage: 5,
+            rowsPerPage: 10,
             ...INITIAL_STATE
         };
     }
@@ -116,15 +120,6 @@ class RestosAdminPage extends Component {
 
     componentWillUnmount() {
         this.props.firebase.restos().off();
-    }
-
-    handleOpenDeleteDialog = (resto) => {
-        this.setState({
-            openDeleteDialog: true,
-            deleteLabel: `Voulez-vous supprimer le resto ${resto.nom_resto}`,
-            resto_id: resto.id,
-            resto_name: resto.nom_resto
-        });
     }
 
     handleOpenCreateDialog = () => {
@@ -159,16 +154,9 @@ class RestosAdminPage extends Component {
         this.setState({openEditDialog: false});
     }
 
-    handleCloseDeleteDialog = () => {
-        this.setState({openDeleteDialog: false});
-    }
 
     handleChangePage = (event, page) => {
         this.setState({page});
-    }
-
-    handleChangeRowsPerPage = (event) => {
-        this.setState({page: 0, rowsPerPage: event.target.value});
     }
 
     onChange = (event) => {
@@ -178,7 +166,10 @@ class RestosAdminPage extends Component {
     render() {
         // const {users, loading} = this.state;
         const {classes} = this.props;
-        const {restos, page, rowsPerPage, resto_name, description, typeCuisine, address, phoneNumber, editLabel, editButton, deleteLabel} = this.state;
+        const {restos, page, rowsPerPage, resto_name, description, typeCuisine, address, phoneNumber, editLabel, editButton, loading} = this.state;
+        const loader = <div className={classes.progressContainer}>
+            <CircularProgress className={classes.progress} />
+        </div>
         return (
             <div className={classes.root}>
                 <CssBaseline />       
@@ -192,7 +183,8 @@ class RestosAdminPage extends Component {
                             <Add className={classes.rightIcon} />
                         </Button>
                         <Paper className={classes.paperTable}>
-                            <Table className={classes.table}>
+                            {loading && loader}
+                            {!loading && <Table className={classes.table}>
                                 <TableHead>
                                     <TableRow>
                                         <TableCell component="th">Nom</TableCell>
@@ -217,10 +209,6 @@ class RestosAdminPage extends Component {
                                                 <IconButton size="small" color="primary" aria-label="Modifier" className={classes.margin} onClick={() => this.handleOpenEditDialog(resto)}>
                                                     <Edit />
                                                 </IconButton>
-                                                
-                                                <IconButton color='secondary' aria-label="Supprimer" className={classes.margin} onClick={() => this.handleOpenDeleteDialog(resto)}>
-                                                    <Delete />
-                                                </IconButton>
                                             </TableCell>
                                         </TableRow>
                                     ))} 
@@ -229,38 +217,19 @@ class RestosAdminPage extends Component {
                                 <TableFooter>
                                     <TableRow>
                                         <TablePagination 
-                                            rowsPerPageOptions={[5, 10, 25]}
+                                            rowsPerPageOptions={[rowsPerPage]}
                                             colSpan={3} 
                                             count={restos.length} 
                                             rowsPerPage={rowsPerPage} 
                                             page={page} 
                                             SelectProps={{native: true}} 
-                                            onChangePage={this.handleChangePage} 
-                                            onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                                            onChangePage={this.handleChangePage}
                                             labelDisplayedRows={({from, to, count}) => `${from} - ${to} sur ${count} restos`} 
                                             labelRowsPerPage="Lignes par page" />
                                     </TableRow>
                                 </TableFooter>
-                            </Table>
+                            </Table>}
                         </Paper>
-
-                        <Dialog open={this.state.openDeleteDialog} onClose={this.handleCloseDeleteDialog} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
-                            <DialogTitle id="alert-dialog-title">{deleteLabel}</DialogTitle>
-                            <DialogContent>
-                                <DialogContentText id="alert-dialog-description">
-                                    &Ecirc;tes-vous s&ucirc;re de vouloir supprimer le resto {resto_name}?
-                                </DialogContentText>
-                            </DialogContent>
-                            <DialogActions>
-                                <Button onClick={this.handleClose} color="default">
-                                Annuler
-                                </Button>
-
-                                <Button onClick={this.handleClose} color="secondary" autoFocus>
-                                Supprimer
-                                </Button>
-                            </DialogActions>
-                        </Dialog>
 
                         <Dialog open={this.state.openEditDialog} onClose={this.handleCloseEditDialog} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
                             <DialogTitle id="alert-dialog-title">{editLabel}</DialogTitle>

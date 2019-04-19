@@ -143,9 +143,27 @@ Project Console: https://console.firebase.google.com/project/resto-39060/overvie
 Hosting URL: https://resto-39060.firebaseapp.com
 
 
-- add commande to firebase
-- add dialog on add commande successfull
+{
+  "rules": {
+    ".read": true,
+    ".write": true,
+    "menu": {
+      ".indexOn": ["resto_id"]
+    },
+    "carte": {
+      ".indexOn": ["resto_id"]
+    }
+  }
+}
+
+
+
+- Deploy
+
+
+- B.O
+	- CRUD
+
 - remove duplicate data from initdata
-- CRUD B.O
 
 

@@ -26,7 +26,7 @@ class Sidebar extends Component {
                     <ListItemIcon>
                         <Map />
                     </ListItemIcon>
-                    <ListItemText primary="Cartes"/>
+                    <ListItemText primary="Plats"/>
                 </ListItem>
 
                 <ListItem button selected={this.props.selectedIndexInList === 2} onClick={event => this.handleSelectListItem(event, ROUTES.ADMIN_MENUS)}>

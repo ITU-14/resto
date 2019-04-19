@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {compose} from 'recompose';
 
-import { withStyles, CssBaseline, IconButton, Paper, Table, TableHead, TableCell, TableRow, TableBody, TableFooter, TablePagination, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField, Select, MenuItem, Avatar} from '@material-ui/core';
-import { Add, Edit, Delete } from '@material-ui/icons';
+import { withStyles, CssBaseline, IconButton, Paper, Table, TableHead, TableCell, TableRow, TableBody, TableFooter, TablePagination, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Select, MenuItem, Avatar, CircularProgress} from '@material-ui/core';
+import { Add, Edit } from '@material-ui/icons';
 
 import {withFirebase} from '../Firebase';
 import AppbarAdmin from './appbar-admin';
@@ -32,8 +32,6 @@ const styles = theme => ({
     },
     paperTable: {
         width: '100%',
-        // flexShrink: 0,
-        //color: theme.palette.text.secondary,
         overflowX: 'auto'
     },
     table: {
@@ -61,7 +59,15 @@ const styles = theme => ({
         margin: 10,
         width: 60,
         height: 60
-    }
+    },
+    progressContainer: {
+        height: `${theme.spacing.unit * 10}px`
+    },
+    progress: {
+        margin: `${theme.spacing.unit * 3}px auto`,
+        left: '50%',
+        position: 'absolute'
+    },
 });
 
 const INITIALSTATE = {
@@ -79,23 +85,14 @@ class CardsAdminPage extends Component {
         this.state = {
             loading: false,
             open: true,
-            selectedIndexInList: 0,
             openDeleteDialog: false,
             openEditDialog: false,
             page: 0,
             plats: [],
             typePlats: [],
-            rowsPerPage: 5,
+            rowsPerPage: 10,
             ...INITIALSTATE
         };
-    }
-
-    handleOpenDeleteDialog = () => {
-        this.setState({openDeleteDialog: true});
-    }
-
-    handleCloseDeleteDialog = () => {
-        this.setState({openDeleteDialog: false});
     }
 
     handleOpenEditDialog = () => {
@@ -108,10 +105,6 @@ class CardsAdminPage extends Component {
 
     handleChangePage = (event, page) => {
         this.setState({page});
-    }
-
-    handleChangeRowsPerPage = (event) => {
-        this.setState({rowsPerPage: event.target.value});
     }
 
     componentDidMount() {
@@ -149,12 +142,15 @@ class CardsAdminPage extends Component {
     }
 
     render() {
-        const {plats, page, rowsPerPage, typePlats, nom, type, description, prix} = this.state;
+        const {plats, page, rowsPerPage, typePlats, nom, type, description, prix, loading} = this.state;
         const {classes} = this.props;
+        const loader = <div className={classes.progressContainer}>
+            <CircularProgress className={classes.progress} />
+        </div>
         return (
             <div className={classes.root}>
                 <CssBaseline />       
-                <AppbarAdmin selectedIndexInList={2} />         
+                <AppbarAdmin selectedIndexInList={1} />         
                 <main className={classes.content}>
                     <div className={classes.appBarSpacer}/>
 
@@ -164,7 +160,8 @@ class CardsAdminPage extends Component {
                             <Add className={classes.rightIcon} />
                         </Button>
                         <Paper className={classes.paperTable}>
-                            <Table className={classes.table}>
+                            {loading && loader}
+                            {!loading && <Table className={classes.table}>
                                 <TableHead>
                                     <TableRow>
                                         <TableCell component="th">Photo</TableCell>
@@ -175,10 +172,11 @@ class CardsAdminPage extends Component {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
+                                    
                                     {plats.slice(page*rowsPerPage, (page*rowsPerPage) + rowsPerPage).map(plat => (
-                                        <TableRow key={1}>
+                                        <TableRow key={plat.id}>
                                             <TableCell>
-                                                <Avatar alt={plat.nom} src={plat.photo} className={classes.bigAvatar} />
+                                                <Avatar alt={plat.nom} src={plat.photo_plat} className={classes.bigAvatar} />
                                             </TableCell>
                                             <TableCell>{plat.nom}</TableCell>
                                             <TableCell>{plat.type_plat}</TableCell>
@@ -187,10 +185,6 @@ class CardsAdminPage extends Component {
                                                 <IconButton size="small" color="primary" aria-label="Modifier" className={classes.margin}>
                                                     <Edit />
                                                 </IconButton>
-                                                
-                                                <IconButton color='secondary' aria-label="Supprimer" className={classes.margin} onClick={this.handleOpenDeleteDialog}>
-                                                    <Delete />
-                                                </IconButton>
                                             </TableCell>
                                         </TableRow>
                                     ))} 
@@ -198,38 +192,20 @@ class CardsAdminPage extends Component {
                                 <TableFooter>
                                     <TableRow>
                                     <TablePagination 
-                                            rowsPerPageOptions={[5, 10, 25]}
+                                            rowsPerPageOptions={[rowsPerPage]}
                                             colSpan={3} 
                                             count={plats.length} 
                                             rowsPerPage={rowsPerPage} 
                                             page={page} 
                                             SelectProps={{native: true}} 
                                             onChangePage={this.handleChangePage} 
-                                            onChangeRowsPerPage={this.handleChangeRowsPerPage}
                                             labelDisplayedRows={({from, to, count}) => `${from} - ${to} sur ${count} plats`} 
                                             labelRowsPerPage="Lignes par page" />
                                     </TableRow>
                                 </TableFooter>
-                            </Table>
+                            </Table> 
+                        }
                         </Paper>
-
-                        <Dialog open={this.state.openDeleteDialog} onClose={this.handleCloseDeleteDialog} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
-                            <DialogTitle id="alert-dialog-title">{"Supprimer le resto resto 1"}</DialogTitle>
-                            <DialogContent>
-                                <DialogContentText id="alert-dialog-description">
-                                
-                                </DialogContentText>
-                            </DialogContent>
-                            <DialogActions>
-                                <Button onClick={this.handleClose} color="default">
-                                Annuler
-                                </Button>
-
-                                <Button onClick={this.handleClose} color="secondary" autoFocus>
-                                Supprimer
-                                </Button>
-                            </DialogActions>
-                        </Dialog>
 
                         <Dialog open={this.state.openEditDialog} 
                                 onClose={this.handleCloseEditDialog} 
@@ -243,7 +219,7 @@ class CardsAdminPage extends Component {
                                         variant="outlined"
                                         fullWidth>
                                     {typePlats.map(typePlat => (
-                                        <MenuItem key={type.id} value={type.id}>{typePlat.nom}</MenuItem>
+                                        <MenuItem key={typePlat.id} value={type.id}>{typePlat.nom}</MenuItem>
                                     ))}
                                 </Select>
                                 <TextField id="nom" label="Nom" type="text" name="nom" variant="outlined" value={nom} onChange={this.onChange} fullWidth />
