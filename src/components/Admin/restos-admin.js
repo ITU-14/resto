@@ -150,6 +150,20 @@ class RestosAdminPage extends Component {
         });
     }
 
+    saveoredit = () => {
+        let newresto = {
+            adresse: "null", 
+            _id: "",
+            latitude: "null",
+            longitude: "null",
+            nom_resto: "null",
+            photo:"",
+            telephone:"",
+            type_cuisine:""
+        };
+        this.props.firebase.restos().push(newresto);
+    }
+
     handleCloseEditDialog = () => {
         this.setState({openEditDialog: false});
     }
