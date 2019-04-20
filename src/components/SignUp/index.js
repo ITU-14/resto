@@ -5,7 +5,7 @@ import { compose } from 'recompose';
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
 import * as ROLES from '../../constants/roles';
-import { CssBaseline, Paper, withStyles, Avatar, TextField, Button, Typography, FormControl, Divider} from '@material-ui/core';
+import { CssBaseline, Paper, withStyles, Avatar, TextField, Button, Typography, FormControl, Divider } from '@material-ui/core';
 import { LockOutlined } from '@material-ui/icons';
 
 const styles = theme => ({
@@ -15,9 +15,9 @@ const styles = theme => ({
         marginLeft: theme.spacing.unit * 3,
         marginRight: theme.spacing.unit * 3,
         [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
-        width: 400,
-        marginLeft: 'auto',
-        marginRight: 'auto',
+            width: 400,
+            marginLeft: 'auto',
+            marginRight: 'auto',
         },
     },
     paper: {
@@ -46,7 +46,7 @@ const styles = theme => ({
     section1: {
         marginBottom: `${theme.spacing.unit * 2}px`,
     },
-    link: { 
+    link: {
         textDecoration: 'none',
         color: '#2196F3'
     },
@@ -82,20 +82,20 @@ class SignUpFormBase extends Component {
     }
 
     onSubmit = (event) => {
-        const {username, email, passwordRegister, isAdmin} = this.state;
+        const { username, email, passwordRegister, isAdmin } = this.state;
         const roles = [];
-        if(isAdmin) roles.push(ROLES.ADMIN);
+        if (isAdmin) roles.push(ROLES.ADMIN);
         else roles.push(ROLES.USER);
         this.props.firebase
-        .registerWithEmailAndPassword(email, passwordRegister)
-        .then( authUser => {
-            return this.props.firebase.user(authUser.user.uid).set({username, email, roles});
-        }).then(() => {
-            this.setState({ ...INITIAL_STATE });
-            this.props.history.push(ROUTES.LANDING);
-        }).catch( error => {
-            this.setState({ error });
-        });
+            .registerWithEmailAndPassword(email, passwordRegister)
+            .then(authUser => {
+                return this.props.firebase.user(authUser.user.uid).set({ username, email, roles });
+            }).then(() => {
+                this.setState({ ...INITIAL_STATE });
+                this.props.history.push(ROUTES.LANDING);
+            }).catch(error => {
+                this.setState({ error });
+            });
         event.preventDefault();
     }
 
@@ -111,10 +111,10 @@ class SignUpFormBase extends Component {
             confirmPasswordRegister,
             errorRegister
         } = this.state;
-        const isInvalid = passwordRegister !== confirmPasswordRegister || 
-                            passwordRegister === '' ||
-                            email === '' ||
-                            username === '';
+        const isInvalid = passwordRegister !== confirmPasswordRegister ||
+            passwordRegister === '' ||
+            email === '' ||
+            username === '';
         const { classes } = this.props;
         return (
             <main className={classes.main}>
@@ -126,23 +126,23 @@ class SignUpFormBase extends Component {
                     <Typography component="h1" variant="h5">
                         Veuillez-vous inscrire
                     </Typography>
-                    {errorRegister && 
-                    <div className={classes.errorMessage}>
-                        <p>{errorRegister.message}</p>
-                    </div>
+                    {errorRegister &&
+                        <div className={classes.errorMessage}>
+                            <p>{errorRegister.message}</p>
+                        </div>
                     }
                     <form onSubmit={this.onSubmit} className={classes.form}>
-                        <div className={classes.section1}> 
+                        <div className={classes.section1}>
                             <FormControl margin="normal" required fullWidth>
                                 <TextField id="username" label="Votre nom d'utilisateur" type="text" name="username" variant="outlined" value={username} onChange={this.onChange} required />
                             </FormControl>
 
                             <FormControl margin="normal" required fullWidth>
-                                <TextField id="email" label="Votre adresse mail" type="text" name="email" variant="outlined" value={email} onChange={this.onChange} required/>
+                                <TextField id="email" label="Votre adresse mail" type="text" name="email" variant="outlined" value={email} onChange={this.onChange} required />
                             </FormControl>
 
                             <FormControl margin="normal" required fullWidth>
-                                <TextField id="password" label="Votre mot de passe" type="password" name="passwordRegister" variant="outlined" value={passwordRegister} onChange={this.onChange} required/>
+                                <TextField id="password" label="Votre mot de passe" type="password" name="passwordRegister" variant="outlined" value={passwordRegister} onChange={this.onChange} required />
                             </FormControl>
 
                             <FormControl margin="normal" required fullWidth>
@@ -151,7 +151,7 @@ class SignUpFormBase extends Component {
 
                             <Button disabled={isInvalid} type="submit" variant="contained" size="large" className={classes.submit} fullWidth>S'inscrire</Button>
                         </div>
-                        <Divider  />
+                        <Divider />
                         <p> Vous avez d&eacute;j&agrave; un compte? <Link to={ROUTES.SIGN_IN} className={classes.link}>Se connecter</Link> </p>
                     </form>
                 </Paper>
@@ -160,7 +160,7 @@ class SignUpFormBase extends Component {
     }
 }
 
-const SignUpForm = compose(withRouter,withFirebase, withStyles(styles))(SignUpFormBase);
+const SignUpForm = compose(withRouter, withFirebase, withStyles(styles))(SignUpFormBase);
 
 export default SignUpPage;
 
