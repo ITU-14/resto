@@ -150,7 +150,8 @@ class RestosAdminPage extends Component {
         });
     }
 
-    saveoredit = () => {
+    saveoredit = (resto) => {
+        
         let newresto = {
             adresse: resto.adresse,
             _id: '_' + Math.random().toString(36).substr(2, 9),
