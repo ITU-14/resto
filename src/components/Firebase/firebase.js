@@ -90,7 +90,7 @@ class Firebase {
     /* get menu by id */
     menu = menuid => this.db.ref(`menu/${menuid}`);
 
-    /* CARTES API */ 
+    /* CARTES API */
     /* get list of cartes */
     cartes = () => this.db.ref('carte');
 
@@ -104,7 +104,7 @@ class Firebase {
     /* get plat by id */
     plat = platid => this.db.ref(`plat/${platid}`);
 
-    
+
     /* TYPE PLAT API */
     /* get list of type plat */
     typePlats = () => this.db.ref('typePlat');
