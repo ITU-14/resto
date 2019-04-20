@@ -32,6 +32,10 @@
 Pour lancer lancer l'application en live.<br>
 Ouvrez [https://resto-39060.firebaseapp.com](https://resto-39060.firebaseapp.com) pour le voir dans votre navigateur.
 
+## Live Back Office
+
+Pour acceder au back office 
+Ouvrez [https://resto-39060.firebaseapp.com/login](https://resto-39060.firebaseapp.com/login) pour le voir dans votre navigateur.
 
 
 ## Installation du projet en local
