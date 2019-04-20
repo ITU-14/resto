@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import {compose} from 'recompose';
 
-import { withStyles, CssBaseline, IconButton, Paper, Table, TableHead, TableCell, TableRow, TableBody, TableFooter, TablePagination, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Select, MenuItem, Avatar, CircularProgress, Typography} from '@material-ui/core';
+import { withStyles, CssBaseline, IconButton, Paper, Table, TableHead, TableCell, TableRow, TableBody, TableFooter, TablePagination, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Avatar, CircularProgress, Typography, Snackbar, NativeSelect} from '@material-ui/core';
 import { Add, Edit } from '@material-ui/icons';
 
 import {withFirebase} from '../Firebase';
 import AppbarAdmin from './appbar-admin';
+import SnackbarContentMessage from '../Front/SnackbarContentMessage';
 
 const styles = theme => ({
     root: {
@@ -55,6 +56,13 @@ const styles = theme => ({
     selectEmpty: {
         marginTop: theme.spacing.unit * 2,
     },
+    textField: {
+        margin: theme.spacing.unit
+    },
+    textArea: {
+        margin: theme.spacing.unit,
+        height: "6em"
+    },
     bigAvatar: {
         margin: 10,
         width: 60,
@@ -71,11 +79,9 @@ const styles = theme => ({
 });
 
 const INITIALSTATE = {
-    nom: '',
-    type: '',
-    description: '',
-    photo: '',
-    prix: 0
+    editLabel: '',
+    editButton: '',
+    deleteLabel: ''
 };
 
 class CardsAdminPage extends Component {
@@ -84,19 +90,25 @@ class CardsAdminPage extends Component {
 
         this.state = {
             loading: false,
-            open: true,
-            openDeleteDialog: false,
+            loadingTypePlat: false,
+            showModal: false,
             openEditDialog: false,
             page: 0,
             plats: [],
             typePlats: [],
-            rowsPerPage: 10,
+            platToEdit: this.initPlat(),
+            rowsPerPage: 30,
             ...INITIALSTATE
         };
     }
 
-    handleOpenEditDialog = () => {
-        this.setState({openEditDialog: true});
+    handleOpenEditDialog = (plat) => {
+        this.setState({
+            openEditDialog: true,
+            platToEdit: plat,
+            editLabel: `Modifier plat: ${plat.nom}`,
+            editButton: 'Modifier'
+        });
     }
 
     handleCloseEditDialog = () => {
@@ -107,8 +119,19 @@ class CardsAdminPage extends Component {
         this.setState({page});
     }
 
+    initPlat() {
+        return {
+            _id: '', 
+            nom: '',
+            type_plat: '',
+            description_plat: '',
+            prix: 0,
+            photo_plat: '/assets/img/default-resto.png'
+        }
+    }
+
     componentDidMount() {
-        this.setState({loading: true});
+        this.setState({loading: true, loadingTypePlat: true});
         this.props.firebase.plats().on('value', snapshot => {
             const platObjects = snapshot.val();
             const platsList = Object.keys(platObjects).map(key => ({
@@ -127,9 +150,37 @@ class CardsAdminPage extends Component {
                 id: key
             }));
             this.setState({
-                typePlats: categoryList
+                typePlats: categoryList,
+                loadingTypePlat: false
             })
         });
+    }
+
+    handleOpenCreateDialog = () => {
+        const platNew = this.initPlat();
+        this.setState({
+            openEditDialog: true,
+            platToEdit: platNew,
+            editLabel: 'Ajouter un plat',
+            editButton: 'Valider'
+        });
+    }
+
+    saveOrEdit = () => {
+        const platToEdit = this.state.platToEdit;
+        const typePlats = this.state.typePlats;
+        if(platToEdit.type_plat.localeCompare("") === 0) {
+            platToEdit.type_plat = (typePlats.length > 0) ? typePlats[0].nom : "";
+        }
+        if(platToEdit._id.localeCompare("") === 0) {
+            platToEdit._id = '_'.concat(Math.random().toString(36).substr(2, 9));
+            this.props.firebase.plats().push(platToEdit);
+            this.setState({openEditDialog: false, showModal: true, messageSnackBar: "Plat créé avec succès! Elle se trouve à la dernière page"});
+        } else {
+            this.props.firebase.plat(platToEdit.id).update(platToEdit);
+            this.setState({openEditDialog: false, showModal: true, messageSnackBar: "Votre modification a été enregistré!"});
+        }
+        console.log(platToEdit)
     }
 
     componentWillUnmount() {
@@ -138,11 +189,13 @@ class CardsAdminPage extends Component {
     }
 
     onChange = (event) => {
-        this.setState({ [event.target.name]: event.target.value });
+        let platToEdit = this.state.platToEdit;
+        platToEdit[event.target.name] = event.target.value;
+        this.setState({ platToEdit: platToEdit });
     }
 
     render() {
-        const {plats, page, rowsPerPage, typePlats, nom, type, description, prix, loading} = this.state;
+        const {plats, page, rowsPerPage, typePlats, editLabel, editButton, loading, platToEdit, messageSnackBar, showModal, loadingTypePlat} = this.state;
         const {classes} = this.props;
         const loader = <div className={classes.progressContainer}>
             <CircularProgress className={classes.progress} />
@@ -158,7 +211,7 @@ class CardsAdminPage extends Component {
                         <Typography variant="h5">
                             Liste des plats (pagin&eacute;e)
                         </Typography>
-                        <Button variant="contained" className={classes.buttonAdd} onClick={this.handleOpenEditDialog}>
+                        <Button variant="contained" className={classes.buttonAdd}  onClick={this.handleOpenCreateDialog}>
                             Ajouter
                             <Add className={classes.rightIcon} />
                         </Button>
@@ -185,7 +238,7 @@ class CardsAdminPage extends Component {
                                             <TableCell>{plat.type_plat}</TableCell>
                                             <TableCell>{plat.prix}</TableCell>
                                             <TableCell>
-                                                <IconButton size="small" color="primary" aria-label="Modifier" className={classes.margin}>
+                                                <IconButton size="small" color="primary" aria-label="Modifier" className={classes.margin} onClick={() => this.handleOpenEditDialog(plat)}>
                                                     <Edit />
                                                 </IconButton>
                                             </TableCell>
@@ -210,35 +263,84 @@ class CardsAdminPage extends Component {
                         }
                         </Paper>
 
-                        <Dialog open={this.state.openEditDialog} 
-                                onClose={this.handleCloseEditDialog} 
-                                aria-labelledby="form-dialog-title" 
-                                aria-describedby="form-dialog-description">
-                            <DialogTitle id="form-dialog-title">Ajouter un plat</DialogTitle>
+                        <Dialog open={this.state.openEditDialog} onClose={this.handleCloseEditDialog} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
+                            <DialogTitle id="alert-dialog-title">{editLabel}</DialogTitle>
                             <DialogContent>
-                                <TextField id="nom" label="Nom" type="text" name="nom" variant="outlined" value={nom} onChange={this.onChange} fullWidth />
-                                <Select value={type} 
-                                        onChange={this.onChange}
-                                        variant="outlined"
-                                        fullWidth>
-                                    {typePlats.map(typePlat => (
-                                        <MenuItem key={typePlat.id} value={type.id}>{typePlat.nom}</MenuItem>
+                                <input type="hidden" name="_id" value={platToEdit._id} />
+                                <TextField
+                                    margin="normal"
+                                    label="Nom du Plat"
+                                    type="text"
+                                    name="nom"
+                                    fullWidth
+                                    className={classes.textField}
+                                    value={platToEdit.nom}
+                                    onChange={this.onChange}
+                                />
+
+                                <TextField
+                                    id="outlined-multiline-static"
+                                    label="Description"
+                                    margin="normal"
+                                    variant="outlined"
+                                    multiline
+                                    rows="4"
+                                    name="description_plat"
+                                    defaultValue={platToEdit.description_plat}
+                                    className={classes.textField}
+                                    onChange={this.onChange}
+                                    fullWidth
+                                />
+
+                                <TextField
+                                    margin="normal"
+                                    label="Prix"
+                                    type="text"
+                                    fullWidth
+                                    name="prix"
+                                    className={classes.textField}
+                                    value={platToEdit.prix}
+                                    onChange={this.onChange}
+                                />
+                                
+                                <NativeSelect
+                                    value={platToEdit.type_plat}
+                                    onChange={this.onChange}
+                                    name="type_plat"
+                                    className={classes.selectEmpty}
+                                    fullWidth
+                                    id="category"
+                                    disabled={loadingTypePlat}
+                                >
+                                    {typePlats.map(category => (
+                                        <option value={category.nom} key={category.id}>{category.nom}</option>    
                                     ))}
-                                </Select>
-                                <TextField id="nom" label="Nom" type="text" name="nom" variant="outlined" value={nom} onChange={this.onChange} fullWidth />
-                                <TextField id="description" label="Description" type="text" name="description" variant="outlined" value={description} onChange={this.onChange} fullWidth />
-                                <TextField id="prix" label="prix" type="text" name="description" variant="outlined" value={prix} onChange={this.onChange} fullWidth />
+                                </NativeSelect>
                             </DialogContent>
                             <DialogActions>
-                                <Button onClick={this.handleClose} color="default">
-                                Annuler
+                                <Button onClick={this.handleCloseEditDialog} color="default">
+                                    Annuler
                                 </Button>
 
-                                <Button onClick={this.handleClose} color="secondary" autoFocus>
-                                Supprimer
+                                <Button onClick={this.saveOrEdit} color="primary" autoFocus>
+                                    {editButton}
                                 </Button>
                             </DialogActions>
                         </Dialog>
+
+                        <Snackbar anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'left',
+                                }}
+                                open={showModal}
+                                autoHideDuration={8000}
+                                onClose={this.handleCloseDialog}
+                        >
+                            <SnackbarContentMessage
+                                onClose={this.handleCloseDialog}
+                                message={messageSnackBar}
+                            />
+                        </Snackbar>
                     </div>
                 </main>
             </div>
