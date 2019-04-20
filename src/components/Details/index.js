@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import MenuAppBar from '../Front/MenuAppBar';
 import { compose } from 'recompose';
-import { withStyles, CssBaseline} from '@material-ui/core';
+import { withStyles, CssBaseline } from '@material-ui/core';
 // import UserOrders from '../Front/UserOrders';
 import RestosDetails from '../Front/RestosDetails';
 import { withAuthentication } from '../Session';
@@ -22,7 +22,7 @@ class DetailsResto extends Component {
 
     render() {
         const { idresto } = this.props.match.params;
-        const {classes} = this.props;
+        const { classes } = this.props;
         return (
             <div className={classes.root}>
                 <CssBaseline />

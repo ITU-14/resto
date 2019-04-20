@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
-import {compose} from 'recompose';
+import React, { Component } from 'react';
+import { compose } from 'recompose';
 
-import { withStyles, CssBaseline, IconButton, Paper, Table, TableHead, TableCell, TableRow, TableBody, TableFooter, TablePagination, Button, Avatar, CircularProgress} from '@material-ui/core';
+import { withStyles, CssBaseline, IconButton, Paper, Table, TableHead, TableCell, TableRow, TableBody, TableFooter, TablePagination, Button, Avatar, CircularProgress } from '@material-ui/core';
 import { Add, Edit } from '@material-ui/icons';
 
-import {withFirebase} from '../Firebase';
+import { withFirebase } from '../Firebase';
 import AppbarAdmin from './appbar-admin';
 
 const styles = theme => ({
@@ -94,19 +94,19 @@ class MenusAdminPage extends Component {
     }
 
     handleOpenEditDialog = () => {
-        this.setState({openEditDialog: true});
+        this.setState({ openEditDialog: true });
     }
 
     handleCloseEditDialog = () => {
-        this.setState({openEditDialog: false});
+        this.setState({ openEditDialog: false });
     }
 
     handleChangePage = (event, page) => {
-        this.setState({page});
+        this.setState({ page });
     }
 
     componentDidMount() {
-        this.setState({loading: true});
+        this.setState({ loading: true });
         this.props.firebase.menus().on('value', snapshot => {
             const platObjects = snapshot.val();
             const platsList = Object.keys(platObjects).map(key => ({
@@ -129,17 +129,17 @@ class MenusAdminPage extends Component {
     }
 
     render() {
-        const {menus, page, rowsPerPage, loading} = this.state;
-        const {classes} = this.props;
+        const { menus, page, rowsPerPage, loading } = this.state;
+        const { classes } = this.props;
         const loader = <div className={classes.progressContainer}>
             <CircularProgress className={classes.progress} />
         </div>
         return (
             <div className={classes.root}>
-                <CssBaseline />       
-                <AppbarAdmin selectedIndexInList={2} />         
+                <CssBaseline />
+                <AppbarAdmin selectedIndexInList={2} />
                 <main className={classes.content}>
-                    <div className={classes.appBarSpacer}/>
+                    <div className={classes.appBarSpacer} />
 
                     <div className={classes.tableContainer}>
                         <Button variant="contained" className={classes.buttonAdd} onClick={this.handleOpenEditDialog}>
@@ -158,7 +158,7 @@ class MenusAdminPage extends Component {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {menus.slice(page*rowsPerPage, (page*rowsPerPage) + rowsPerPage).map(plat => (
+                                    {menus.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(plat => (
                                         <TableRow key={plat.id}>
                                             <TableCell>
                                                 <Avatar alt={plat.nom_plat} src={plat.photo} className={classes.bigAvatar} />
@@ -169,22 +169,22 @@ class MenusAdminPage extends Component {
                                                 <IconButton size="small" color="primary" aria-label="Modifier" title="Modifier" className={classes.margin}>
                                                     <Edit />
                                                 </IconButton>
-                                                
+
                                             </TableCell>
                                         </TableRow>
-                                    ))} 
+                                    ))}
                                 </TableBody>
                                 <TableFooter>
                                     <TableRow>
-                                    <TablePagination 
+                                        <TablePagination
                                             rowsPerPageOptions={[rowsPerPage]}
-                                            colSpan={3} 
-                                            count={menus.length} 
-                                            rowsPerPage={rowsPerPage} 
-                                            page={page} 
-                                            SelectProps={{native: true}} 
-                                            onChangePage={this.handleChangePage} 
-                                            labelDisplayedRows={({from, to, count}) => `${from} - ${to} sur ${count} menus`} 
+                                            colSpan={3}
+                                            count={menus.length}
+                                            rowsPerPage={rowsPerPage}
+                                            page={page}
+                                            SelectProps={{ native: true }}
+                                            onChangePage={this.handleChangePage}
+                                            labelDisplayedRows={({ from, to, count }) => `${from} - ${to} sur ${count} menus`}
                                             labelRowsPerPage="Lignes par page" />
                                     </TableRow>
                                 </TableFooter>

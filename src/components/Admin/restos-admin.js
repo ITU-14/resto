@@ -143,7 +143,7 @@ class RestosAdminPage extends Component {
     }
 
     handleCloseDialog = () => {
-        this.setState({showModal: false})
+        this.setState({ showModal: false })
     }
 
     handleOpenCreateDialog = () => {
@@ -167,13 +167,13 @@ class RestosAdminPage extends Component {
 
     saveoredit = () => {
         const restoToEdit = this.state.restoEdit;
-        if(restoToEdit._id.localeCompare("") === 0) {
+        if (restoToEdit._id.localeCompare("") === 0) {
             restoToEdit._id = '_'.concat(Math.random().toString(36).substr(2, 9));
             this.props.firebase.restos().push(restoToEdit);
-            this.setState({openEditDialog: false, showModal: true, messageSnackBar: "Resto ajouté avec succès! Elle se trouve à la dernière page"});
+            this.setState({ openEditDialog: false, showModal: true, messageSnackBar: "Resto ajouté avec succès! Elle se trouve à la dernière page" });
         } else {
             this.props.firebase.resto(restoToEdit.id).update(restoToEdit);
-            this.setState({openEditDialog: false, showModal: true, messageSnackBar: "Votre modification a été enregistré!"});
+            this.setState({ openEditDialog: false, showModal: true, messageSnackBar: "Votre modification a été enregistré!" });
         }
     }
 
@@ -195,7 +195,7 @@ class RestosAdminPage extends Component {
         // const {users, loading} = this.state;
         /* eslint-disable */
         const { classes } = this.props;
-        const { restos, page, rowsPerPage, editLabel, editButton, loading, restoEdit, messageSnackBar, showModal} = this.state;
+        const { restos, page, rowsPerPage, editLabel, editButton, loading, restoEdit, messageSnackBar, showModal } = this.state;
         const loader = <div className={classes.progressContainer}>
             <CircularProgress className={classes.progress} />
         </div>
@@ -323,12 +323,12 @@ class RestosAdminPage extends Component {
                         </Dialog>
 
                         <Snackbar anchorOrigin={{
-                                    vertical: 'bottom',
-                                    horizontal: 'left',
-                                }}
-                                open={showModal}
-                                autoHideDuration={8000}
-                                onClose={this.handleCloseDialog}
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                        }}
+                            open={showModal}
+                            autoHideDuration={8000}
+                            onClose={this.handleCloseDialog}
                         >
                             <SnackbarContentMessage
                                 onClose={this.handleCloseDialog}
