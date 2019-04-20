@@ -170,7 +170,7 @@ class RestosAdminPage extends Component {
         if(restoToEdit._id.localeCompare("") === 0) {
             restoToEdit._id = '_'.concat(Math.random().toString(36).substr(2, 9));
             this.props.firebase.restos().push(restoToEdit);
-            this.setState({openEditDialog: false, showModal: true, messageSnackBar: "Resto ajouté avec succès! Elle se trouve a la dernière page"});
+            this.setState({openEditDialog: false, showModal: true, messageSnackBar: "Resto ajouté avec succès! Elle se trouve à la dernière page"});
         } else {
             this.props.firebase.resto(restoToEdit.id).update(restoToEdit);
             this.setState({openEditDialog: false, showModal: true, messageSnackBar: "Votre modification a été enregistré!"});
@@ -330,10 +330,10 @@ class RestosAdminPage extends Component {
                                 autoHideDuration={8000}
                                 onClose={this.handleCloseDialog}
                         >
-                        <SnackbarContentMessage
-                            onClose={this.handleCloseDialog}
-                            message={messageSnackBar}
-                        />
+                            <SnackbarContentMessage
+                                onClose={this.handleCloseDialog}
+                                message={messageSnackBar}
+                            />
                         </Snackbar>
                     </div>
                 </main>

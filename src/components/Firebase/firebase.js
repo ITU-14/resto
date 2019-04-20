@@ -3,7 +3,7 @@ import 'firebase/auth';
 import 'firebase/database';
 import Rebase from 're-base';
 import * as ROLES from '../../constants/roles';
-/*
+
 var configProd = {
     apiKey: "AIzaSyA-aBcTG0XP_cvO_j_tAnX2txeosfCmcys",
     authDomain: "epurestaurants-7275c.firebaseapp.com",
@@ -12,8 +12,8 @@ var configProd = {
     storageBucket: "epurestaurants-7275c.appspot.com",
     messagingSenderId: "816937707537"
 };
-*/
 
+/*
 const configDev = {
     apiKey: "AIzaSyDE8lfFd8JZx4Wpdas0uUMYCsL0Pwo3sKY",
     authDomain: "resto-39060.firebaseapp.com",
@@ -22,8 +22,8 @@ const configDev = {
     storageBucket: "resto-39060.appspot.com",
     messagingSenderId: "1085917873603"
 };
-
-const config = configDev;
+*/
+const config = configProd;
 
 class Firebase {
     constructor() {
