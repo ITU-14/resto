@@ -77,12 +77,6 @@ const styles = theme => ({
 });
 
 const INITIAL_STATE = {
-    resto_id: '',
-    resto_name: '',
-    description: '',
-    typeCuisine: '',
-    address: '',
-    phoneNumber: '',
     editLabel: '',
     editButton: '',
     deleteLabel: ''
@@ -98,6 +92,16 @@ class RestosAdminPage extends Component {
             openEditDialog: false,
             page: 0,
             restos: [],
+            restoEdit: {
+                _id: '',
+                nom_resto: '',
+                type_cuisine: '',
+                adresse: '',
+                telephone: '',
+                longitude: '',
+                latitude: '',
+                photo: '/assets/img/default-resto.jpg'
+            },
             rowsPerPage: 10,
             ...INITIAL_STATE
         };
@@ -122,15 +126,24 @@ class RestosAdminPage extends Component {
         this.props.firebase.restos().off();
     }
 
+    initResto() {
+        return {
+            _id: '',
+            nom_resto: '',
+            type_cuisine: '',
+            adresse: '',
+            telephone: '',
+            longitude: '',
+            latitude: '',
+            photo: '/assets/img/default-resto.jpg'
+        }
+    }
+
     handleOpenCreateDialog = () => {
+        const restoNew = this.initResto();
         this.setState({
             openEditDialog: true,
-            resto_id: '',
-            resto_name: '',
-            description: '',
-            typeCuisine: '',
-            address: '',
-            phoneNumber: '',
+            restoEdit: restoNew,
             editLabel: 'Ajouter un resto',
             editButton: 'Valider'
         });
@@ -139,30 +152,22 @@ class RestosAdminPage extends Component {
     handleOpenEditDialog = (resto) => {
         this.setState({
             openEditDialog: true,
-            resto_id: resto.id,
-            resto_name: resto.nom_resto,
-            description: resto.description,
-            typeCuisine: resto.type_cuisine,
-            address: resto.adresse,
-            phoneNumber: resto.telephone,
+            restoEdit: resto,
             editLabel: `Modifier resto: ${resto.nom_resto}`,
             editButton: 'Modifier'
         });
     }
 
-    saveoredit = (resto) => {
-        
-        let newresto = {
-            adresse: document.getElementById("address").value,
-            _id: '_' + Math.random().toString(36).substr(2, 9),
-            latitude: "null",
-            longitude: "null",
-            nom_resto: document.getElementById("resto_name").value,
-            photo: "",
-            telephone: document.getElementById("phone").value,
-            type_cuisine: "resto.type_cuisine"
-        };
-        this.props.firebase.restos().push(newresto);
+    saveoredit = () => {
+        const restoToEdit = this.state.restoEdit;
+        if(restoToEdit._id.localeCompare("") === 0) {
+            restoToEdit._id = '_'.concat(Math.random().toString(36).substr(2, 9));
+            this.props.firebase.restos().push(restoToEdit);
+            this.setState({openEditDialog: false});
+        } else {
+            this.props.firebase.resto(restoToEdit.id).update(restoToEdit);
+            this.setState({openEditDialog: false});
+        }
     }
 
     handleCloseEditDialog = () => {
@@ -175,16 +180,20 @@ class RestosAdminPage extends Component {
     }
 
     onChange = (event) => {
-        this.setState({ [event.target.name]: event.target.value });
+        let restoToEdit = this.state.restoEdit;
+        restoToEdit[event.target.name] = event.target.value;
+        this.setState({ restoEdit: restoToEdit });
     }
 
     render() {
         // const {users, loading} = this.state;
+        /* eslint-disable */
         const { classes } = this.props;
-        const { restos, page, rowsPerPage, resto_name, description, typeCuisine, address, phoneNumber, editLabel, editButton, loading } = this.state;
+        const { restos, page, rowsPerPage, editLabel, editButton, loading, restoEdit } = this.state;
         const loader = <div className={classes.progressContainer}>
             <CircularProgress className={classes.progress} />
         </div>
+        /* eslint-enable */
         return (
             <div className={classes.root}>
                 <CssBaseline />
@@ -249,50 +258,47 @@ class RestosAdminPage extends Component {
                         <Dialog open={this.state.openEditDialog} onClose={this.handleCloseEditDialog} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
                             <DialogTitle id="alert-dialog-title">{editLabel}</DialogTitle>
                             <DialogContent>
+                                <input type="hidden" name="_id" value={restoEdit._id} />
                                 <TextField
                                     margin="normal"
-                                    id="resto_name"
                                     label="Nom du resto"
                                     type="text"
-                                    name="resto_name"
+                                    name="nom_resto"
                                     fullWidth
                                     className={classes.textField}
-                                    value={resto_name}
+                                    value={restoEdit.nom_resto}
                                     onChange={this.onChange}
                                 />
 
                                 <TextField
                                     margin="normal"
-                                    id="type-cuisine"
                                     label="Type de cuisine"
                                     type="text"
                                     fullWidth
-                                    name="type-de-cuisine"
+                                    name="type_cuisine"
                                     className={classes.textField}
-                                    value={typeCuisine}
+                                    value={restoEdit.type_cuisine}
                                     onChange={this.onChange}
                                 />
                                 <TextField
                                     margin="normal"
-                                    id="address"
                                     label="Adresse"
                                     type="text"
-                                    name="address"
+                                    name="adresse"
                                     fullWidth
                                     className={classes.textField}
-                                    value={address}
+                                    value={restoEdit.adresse}
                                     onChange={this.onChange}
                                 />
 
                                 <TextField
                                     margin="normal"
-                                    id="phone"
-                                    name="phone"
+                                    name="telephone"
                                     label="Numero de t&eacute;l&eacute;phone"
                                     type="text"
                                     fullWidth
                                     className={classes.textField}
-                                    value={phoneNumber}
+                                    value={restoEdit.telephone}
                                     onChange={this.onChange}
                                 />
                             </DialogContent>

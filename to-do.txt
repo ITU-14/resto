@@ -146,7 +146,15 @@ Hosting URL: https://resto-39060.firebaseapp.com
     }
   }
 }
-
+- URL Documentation in readme
+- Email user in readme
+- Description scenario dans readme
+- Change database connection to prod
+user.admin@mail.com 
+Testing123
+Effectuer une inscription
+user.test@mail.com
+Testing123
 
 - B.O
 	- CRUD
@@ -154,7 +162,7 @@ Hosting URL: https://resto-39060.firebaseapp.com
 - Inscription: à verifier
 	
 - Change database
-- remove duplicate data from initdata
+
 
 - 
 
