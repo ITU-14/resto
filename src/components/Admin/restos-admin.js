@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
-import {compose} from 'recompose';
+import React, { Component } from 'react';
+import { compose } from 'recompose';
 
-import { withStyles, CssBaseline, IconButton, Paper, Table, TableHead, TableCell, TableRow, TableBody, TableFooter, TablePagination, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Avatar, CircularProgress} from '@material-ui/core';
+import { withStyles, CssBaseline, IconButton, Paper, Table, TableHead, TableCell, TableRow, TableBody, TableFooter, TablePagination, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Avatar, CircularProgress } from '@material-ui/core';
 import { Add, Edit } from '@material-ui/icons';
 
-import {withFirebase} from '../Firebase';
-import {withAuthorization} from '../Session';
+import { withFirebase } from '../Firebase';
+import { withAuthorization } from '../Session';
 import AppbarAdmin from './appbar-admin';
 import * as ROLES from '../../constants/roles';
 
@@ -104,7 +104,7 @@ class RestosAdminPage extends Component {
     }
 
     componentDidMount() {
-        this.setState({loading: true});
+        this.setState({ loading: true });
         this.props.firebase.restos().on('value', snapshot => {
             const restosObject = snapshot.val();
             const restosList = Object.keys(restosObject).map(key => ({
@@ -124,7 +124,7 @@ class RestosAdminPage extends Component {
 
     handleOpenCreateDialog = () => {
         this.setState({
-            openEditDialog: true, 
+            openEditDialog: true,
             resto_id: '',
             resto_name: '',
             description: '',
@@ -138,7 +138,7 @@ class RestosAdminPage extends Component {
 
     handleOpenEditDialog = (resto) => {
         this.setState({
-            openEditDialog: true, 
+            openEditDialog: true,
             resto_id: resto.id,
             resto_name: resto.nom_resto,
             description: resto.description,
@@ -152,25 +152,25 @@ class RestosAdminPage extends Component {
 
     saveoredit = () => {
         let newresto = {
-            adresse: "null", 
-            _id: "",
+            adresse: resto.adresse,
+            _id: '_' + Math.random().toString(36).substr(2, 9),
             latitude: "null",
             longitude: "null",
-            nom_resto: "null",
-            photo:"",
-            telephone:"",
-            type_cuisine:""
+            nom_resto: resto.nom_resto,
+            photo: "",
+            telephone: resto.telephone,
+            type_cuisine: resto.type_cuisine
         };
         this.props.firebase.restos().push(newresto);
     }
 
     handleCloseEditDialog = () => {
-        this.setState({openEditDialog: false});
+        this.setState({ openEditDialog: false });
     }
 
 
     handleChangePage = (event, page) => {
-        this.setState({page});
+        this.setState({ page });
     }
 
     onChange = (event) => {
@@ -179,17 +179,17 @@ class RestosAdminPage extends Component {
 
     render() {
         // const {users, loading} = this.state;
-        const {classes} = this.props;
-        const {restos, page, rowsPerPage, resto_name, description, typeCuisine, address, phoneNumber, editLabel, editButton, loading} = this.state;
+        const { classes } = this.props;
+        const { restos, page, rowsPerPage, resto_name, description, typeCuisine, address, phoneNumber, editLabel, editButton, loading } = this.state;
         const loader = <div className={classes.progressContainer}>
             <CircularProgress className={classes.progress} />
         </div>
         return (
             <div className={classes.root}>
-                <CssBaseline />       
-                <AppbarAdmin selectedIndexInList={0} />         
+                <CssBaseline />
+                <AppbarAdmin selectedIndexInList={0} />
                 <main className={classes.content}>
-                    <div className={classes.appBarSpacer}/>
+                    <div className={classes.appBarSpacer} />
 
                     <div className={classes.tableContainer}>
                         <Button variant="contained" className={classes.buttonAdd} onClick={this.handleOpenCreateDialog}>
@@ -210,7 +210,7 @@ class RestosAdminPage extends Component {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {restos.slice(page*rowsPerPage, (page*rowsPerPage) + rowsPerPage).map(resto => (
+                                    {restos.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(resto => (
                                         <TableRow className={classes.row} key={resto.id}>
                                             <TableCell>{resto.nom_resto}</TableCell>
                                             <TableCell>{resto.type_cuisine}</TableCell>
@@ -225,20 +225,20 @@ class RestosAdminPage extends Component {
                                                 </IconButton>
                                             </TableCell>
                                         </TableRow>
-                                    ))} 
-                                    
+                                    ))}
+
                                 </TableBody>
                                 <TableFooter>
                                     <TableRow>
-                                        <TablePagination 
+                                        <TablePagination
                                             rowsPerPageOptions={[rowsPerPage]}
-                                            colSpan={3} 
-                                            count={restos.length} 
-                                            rowsPerPage={rowsPerPage} 
-                                            page={page} 
-                                            SelectProps={{native: true}} 
+                                            colSpan={3}
+                                            count={restos.length}
+                                            rowsPerPage={rowsPerPage}
+                                            page={page}
+                                            SelectProps={{ native: true }}
                                             onChangePage={this.handleChangePage}
-                                            labelDisplayedRows={({from, to, count}) => `${from} - ${to} sur ${count} restos`} 
+                                            labelDisplayedRows={({ from, to, count }) => `${from} - ${to} sur ${count} restos`}
                                             labelRowsPerPage="Lignes par page" />
                                     </TableRow>
                                 </TableFooter>
@@ -259,7 +259,7 @@ class RestosAdminPage extends Component {
                                     value={resto_name}
                                     onChange={this.onChange}
                                 />
-                               
+
                                 <TextField
                                     margin="normal"
                                     id="type-cuisine"
@@ -282,7 +282,7 @@ class RestosAdminPage extends Component {
                                     value={address}
                                     onChange={this.onChange}
                                 />
-                                
+
                                 <TextField
                                     margin="normal"
                                     id="phone"
@@ -297,11 +297,11 @@ class RestosAdminPage extends Component {
                             </DialogContent>
                             <DialogActions>
                                 <Button onClick={this.handleCloseEditDialog} color="default">
-                                Annuler
+                                    Annuler
                                 </Button>
 
                                 <Button onClick={this.saveoredit} color="primary" autoFocus>
-                                {editButton}
+                                    {editButton}
                                 </Button>
                             </DialogActions>
                         </Dialog>
