@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
-import {compose} from 'recompose';
+import React, { Component } from 'react';
+import { compose } from 'recompose';
 
-import { withStyles, CssBaseline, IconButton, Paper, Table, TableHead, TableCell, TableRow, TableBody, TableFooter, TablePagination, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Avatar, CircularProgress, Typography, Snackbar, NativeSelect} from '@material-ui/core';
+import { withStyles, CssBaseline, IconButton, Paper, Table, TableHead, TableCell, TableRow, TableBody, TableFooter, TablePagination, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Avatar, CircularProgress, Typography, Snackbar, NativeSelect } from '@material-ui/core';
 import { Add, Edit } from '@material-ui/icons';
 
-import {withFirebase} from '../Firebase';
+import { withFirebase } from '../Firebase';
 import AppbarAdmin from './appbar-admin';
 import SnackbarContentMessage from '../Front/SnackbarContentMessage';
 
@@ -112,16 +112,16 @@ class CardsAdminPage extends Component {
     }
 
     handleCloseEditDialog = () => {
-        this.setState({openEditDialog: false});
+        this.setState({ openEditDialog: false });
     }
 
     handleChangePage = (event, page) => {
-        this.setState({page});
+        this.setState({ page });
     }
 
     initPlat() {
         return {
-            _id: '', 
+            _id: '',
             nom: '',
             type_plat: '',
             description_plat: '',
@@ -131,7 +131,7 @@ class CardsAdminPage extends Component {
     }
 
     componentDidMount() {
-        this.setState({loading: true, loadingTypePlat: true});
+        this.setState({ loading: true, loadingTypePlat: true });
         this.props.firebase.plats().on('value', snapshot => {
             const platObjects = snapshot.val();
             const platsList = Object.keys(platObjects).map(key => ({
@@ -169,16 +169,16 @@ class CardsAdminPage extends Component {
     saveOrEdit = () => {
         const platToEdit = this.state.platToEdit;
         const typePlats = this.state.typePlats;
-        if(platToEdit.type_plat.localeCompare("") === 0) {
+        if (platToEdit.type_plat.localeCompare("") === 0) {
             platToEdit.type_plat = (typePlats.length > 0) ? typePlats[0].nom : "";
         }
-        if(platToEdit._id.localeCompare("") === 0) {
+        if (platToEdit._id.localeCompare("") === 0) {
             platToEdit._id = '_'.concat(Math.random().toString(36).substr(2, 9));
             this.props.firebase.plats().push(platToEdit);
-            this.setState({openEditDialog: false, showModal: true, messageSnackBar: "Plat créé avec succès! Elle se trouve à la dernière page"});
+            this.setState({ openEditDialog: false, showModal: true, messageSnackBar: "Plat créé avec succès! Elle se trouve à la dernière page" });
         } else {
             this.props.firebase.plat(platToEdit.id).update(platToEdit);
-            this.setState({openEditDialog: false, showModal: true, messageSnackBar: "Votre modification a été enregistré!"});
+            this.setState({ openEditDialog: false, showModal: true, messageSnackBar: "Votre modification a été enregistré!" });
         }
         console.log(platToEdit)
     }
@@ -195,23 +195,23 @@ class CardsAdminPage extends Component {
     }
 
     render() {
-        const {plats, page, rowsPerPage, typePlats, editLabel, editButton, loading, platToEdit, messageSnackBar, showModal, loadingTypePlat} = this.state;
-        const {classes} = this.props;
+        const { plats, page, rowsPerPage, typePlats, editLabel, editButton, loading, platToEdit, messageSnackBar, showModal, loadingTypePlat } = this.state;
+        const { classes } = this.props;
         const loader = <div className={classes.progressContainer}>
             <CircularProgress className={classes.progress} />
         </div>
         return (
             <div className={classes.root}>
-                <CssBaseline />       
-                <AppbarAdmin selectedIndexInList={1} />         
+                <CssBaseline />
+                <AppbarAdmin selectedIndexInList={1} />
                 <main className={classes.content}>
-                    <div className={classes.appBarSpacer}/>
+                    <div className={classes.appBarSpacer} />
 
                     <div className={classes.tableContainer}>
                         <Typography variant="h5">
                             Liste des plats (pagin&eacute;e)
                         </Typography>
-                        <Button variant="contained" className={classes.buttonAdd}  onClick={this.handleOpenCreateDialog}>
+                        <Button variant="contained" className={classes.buttonAdd} onClick={this.handleOpenCreateDialog}>
                             Ajouter
                             <Add className={classes.rightIcon} />
                         </Button>
@@ -228,8 +228,8 @@ class CardsAdminPage extends Component {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    
-                                    {plats.slice(page*rowsPerPage, (page*rowsPerPage) + rowsPerPage).map(plat => (
+
+                                    {plats.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(plat => (
                                         <TableRow key={plat.id}>
                                             <TableCell>
                                                 <Avatar alt={plat.nom} src={plat.photo_plat} className={classes.bigAvatar} />
@@ -243,24 +243,24 @@ class CardsAdminPage extends Component {
                                                 </IconButton>
                                             </TableCell>
                                         </TableRow>
-                                    ))} 
+                                    ))}
                                 </TableBody>
                                 <TableFooter>
                                     <TableRow>
-                                    <TablePagination 
+                                        <TablePagination
                                             rowsPerPageOptions={[rowsPerPage]}
-                                            colSpan={3} 
-                                            count={plats.length} 
-                                            rowsPerPage={rowsPerPage} 
-                                            page={page} 
-                                            SelectProps={{native: true}} 
-                                            onChangePage={this.handleChangePage} 
-                                            labelDisplayedRows={({from, to, count}) => `${from} - ${to} sur ${count} plats`} 
+                                            colSpan={3}
+                                            count={plats.length}
+                                            rowsPerPage={rowsPerPage}
+                                            page={page}
+                                            SelectProps={{ native: true }}
+                                            onChangePage={this.handleChangePage}
+                                            labelDisplayedRows={({ from, to, count }) => `${from} - ${to} sur ${count} plats`}
                                             labelRowsPerPage="Lignes par page" />
                                     </TableRow>
                                 </TableFooter>
-                            </Table> 
-                        }
+                            </Table>
+                            }
                         </Paper>
 
                         <Dialog open={this.state.openEditDialog} onClose={this.handleCloseEditDialog} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
@@ -302,7 +302,7 @@ class CardsAdminPage extends Component {
                                     value={platToEdit.prix}
                                     onChange={this.onChange}
                                 />
-                                
+
                                 <NativeSelect
                                     value={platToEdit.type_plat}
                                     onChange={this.onChange}
@@ -313,7 +313,7 @@ class CardsAdminPage extends Component {
                                     disabled={loadingTypePlat}
                                 >
                                     {typePlats.map(category => (
-                                        <option value={category.nom} key={category.id}>{category.nom}</option>    
+                                        <option value={category.nom} key={category.id}>{category.nom}</option>
                                     ))}
                                 </NativeSelect>
                             </DialogContent>
@@ -329,12 +329,12 @@ class CardsAdminPage extends Component {
                         </Dialog>
 
                         <Snackbar anchorOrigin={{
-                                    vertical: 'bottom',
-                                    horizontal: 'left',
-                                }}
-                                open={showModal}
-                                autoHideDuration={8000}
-                                onClose={this.handleCloseDialog}
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                        }}
+                            open={showModal}
+                            autoHideDuration={8000}
+                            onClose={this.handleCloseDialog}
                         >
                             <SnackbarContentMessage
                                 onClose={this.handleCloseDialog}
