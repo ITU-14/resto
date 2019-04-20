@@ -111,6 +111,10 @@ class SignUpFormBase extends Component {
             confirmPasswordRegister,
             errorRegister
         } = this.state;
+        const isInvalid = passwordRegister !== confirmPasswordRegister || 
+                            passwordRegister === '' ||
+                            email === '' ||
+                            username === '';
         const { classes } = this.props;
         return (
             <main className={classes.main}>
@@ -145,7 +149,7 @@ class SignUpFormBase extends Component {
                                 <TextField id="confirmPassword" label="Confirmer le mot de passe" type="password" name="confirmPasswordRegister" variant="outlined" value={confirmPasswordRegister} onChange={this.onChange} required />
                             </FormControl>
 
-                            <Button type="submit" variant="contained" size="large" className={classes.submit} fullWidth>S'inscrire</Button>
+                            <Button disabled={isInvalid} type="submit" variant="contained" size="large" className={classes.submit} fullWidth>S'inscrire</Button>
                         </div>
                         <Divider  />
                         <p> Vous avez d&eacute;j&agrave; un compte? <Link to={ROUTES.SIGN_IN} className={classes.link}>Se connecter</Link> </p>
