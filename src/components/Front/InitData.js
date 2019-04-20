@@ -14,7 +14,7 @@ class InitData extends Component {
     }
 
     componentDidMount() {
-        
+
         this.loadRestos();
         this.loadPlats();
     }
@@ -59,21 +59,21 @@ class InitData extends Component {
 
     randomIdx(size, min, max) {
         let indexes = [];
-        while(indexes.length < size) {
+        while (indexes.length < size) {
             let idx = this.getRandomIdx(min, max);
-            if(!indexes.includes(idx)) indexes.push(idx);
+            if (!indexes.includes(idx)) indexes.push(idx);
         }
         return indexes;
     }
 
     getRandomIdx(min, max) {
-        return Math.floor(Math.random() * (max - min) ) + min;
+        return Math.floor(Math.random() * (max - min)) + min;
     }
 
 
     createCarte(plats, restos) {
         // this.setState({ loading: true });
-        let carte = {resto_id: null, plats: []};
+        let carte = { resto_id: null, plats: [] };
         const k = 10;
         restos.forEach(resto => {
             carte.resto_id = resto._id;
@@ -82,7 +82,7 @@ class InitData extends Component {
             let randomIdxEntree = this.randomIdx(k, 172, 335);
             let randomIdxDessert = this.randomIdx(k, 336, 383);
             // random resistance 0 - 171 172
-            for(let i=0;i<k;i++) {
+            for (let i = 0; i < k; i++) {
                 // random resistance
                 carte.plats.push(plats[randomIdxResistance[i]]);
                 // random hors d'oeuvre
@@ -99,8 +99,8 @@ class InitData extends Component {
 
 
     render() {
-        const {restos, plats, loadingResto, loadingPlat} = this.state;
-        if(!loadingResto && !loadingPlat)
+        const { restos, plats, loadingResto, loadingPlat } = this.state;
+        if (!loadingResto && !loadingPlat)
             this.createCarte(plats, restos);
 
         return (
