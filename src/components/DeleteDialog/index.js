@@ -17,11 +17,11 @@ class DeleteDialog extends Component {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={this.handleCloseDeleteDialog} color="default">
-                    Annuler
+                        Annuler
                     </Button>
 
                     <Button onClick={this.handleCloseDeleteDialog} color="secondary" autoFocus>
-                    Supprimer
+                        Supprimer
                     </Button>
                 </DialogActions>
             </Dialog>
