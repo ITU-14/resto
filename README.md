@@ -24,6 +24,9 @@
 >Creer Menu
 >Ajouter et modifier plat
 
+### Securite Application
+>Pour pouvoir acceder dans le back office l'utilisateur qui s'authentifie doit posseder le roles d'administrateur.
+
 ## Live Site
 
 Pour lancer lancer l'application en live.<br>
