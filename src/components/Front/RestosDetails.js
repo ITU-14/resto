@@ -68,7 +68,7 @@ class RestosDetails extends Component {
             showModal: false,
             expanded: 'menu',
             menus: [],
-            cartes: {plats: [], resto_id: ""},
+            cartes: { plats: [], resto_id: "" },
             typePlats: [],
             page: 0,
             rowsPerPage: 5,
@@ -125,7 +125,7 @@ class RestosDetails extends Component {
                 id: key
             }));
             this.setState({
-                cartes: (cardsList.length > 0) ? cardsList[0] : {plats: [], resto_id: ""},
+                cartes: (cardsList.length > 0) ? cardsList[0] : { plats: [], resto_id: "" },
                 loadingCard: false
             });
         });
@@ -153,9 +153,9 @@ class RestosDetails extends Component {
         let orders = this.state.orders;
         const id = event.target.name.split("-")[1];
         const value = parseInt(event.target.value, 10);
-        
+
         orders.commandes.forEach(order => {
-            if(order.id === id) {
+            if (order.id === id) {
                 order.quantity = value;
                 return;
             }
@@ -172,11 +172,11 @@ class RestosDetails extends Component {
         const orders = this.state.orders;
         this.props.firebase.orders().push(orders);
         orders.commandes = [];
-        this.setState({orders: orders, showModal: true});
+        this.setState({ orders: orders, showModal: true });
     }
 
     handleCloseDialog = () => {
-        this.setState({showModal: false})
+        this.setState({ showModal: false })
     }
 
     handleCancelOrders = () => {
@@ -189,19 +189,19 @@ class RestosDetails extends Component {
 
     addCommande = (menu, typeOrder) => {
         const user = JSON.parse(localStorage.getItem('authUser'));
-        if(!user) {
+        if (!user) {
             this.props.history.push(ROUTES.SIGN_IN);
         }
         let oldOrders = this.state.orders;
         let statusAdded = false;
         oldOrders.commandes.forEach(order => {
-            if(order.id.localeCompare(menu._id) === 0) {
+            if (order.id.localeCompare(menu._id) === 0) {
                 statusAdded = true;
                 order.quantity += 1;
                 return;
             }
         });
-        if(!statusAdded) {
+        if (!statusAdded) {
             oldOrders.commandes.push({
                 id: menu._id,
                 nom: menu.nom,
@@ -226,7 +226,7 @@ class RestosDetails extends Component {
         let contents = menu.contents;
         let data = [];
         contents.forEach(content => {
-            let dataContent = {label: content.typePlat, nom: ""};
+            let dataContent = { label: content.typePlat, nom: "" };
             content.listePlats.forEach(plat => {
                 dataContent.nom += plat.nom;
             });
@@ -235,7 +235,7 @@ class RestosDetails extends Component {
         return (
             <Typography color="textSecondary">
                 {data.map(content => (
-                    <span key={content.label.concat(menu._id)}><b className={className}>{content.label}</b>: <i>{content.nom}</i><br/></span>
+                    <span key={content.label.concat(menu._id)}><b className={className}>{content.label}</b>: <i>{content.nom}</i><br /></span>
                 ))}
             </Typography>
         );
@@ -248,9 +248,9 @@ class RestosDetails extends Component {
                     <Grid container spacing={16}>
                         <Grid item>
                             <ButtonBase className={classes.media}>
-                                <img className={classes.img} 
-                                        alt={plat.nom} 
-                                        src={plat.photo_plat} />
+                                <img className={classes.img}
+                                    alt={plat.nom}
+                                    src={plat.photo_plat} />
                             </ButtonBase>
                         </Grid>
                         <Grid item xs={12} sm container>
@@ -272,10 +272,10 @@ class RestosDetails extends Component {
                                 </Grid>
                             </Grid>
                         </Grid>
-                        
+
                         <Grid item>
                             <Typography variant="h6">
-                            Rs. {plat.prix}
+                                Rs. {plat.prix}
                             </Typography>
                         </Grid>
                     </Grid>
@@ -287,7 +287,7 @@ class RestosDetails extends Component {
 
     render() {
         const { classes } = this.props;
-        const { menus, typePlats, cartes, expanded, loadingMenu, loadingCategory, loadingCard, showModal} = this.state;
+        const { menus, typePlats, cartes, expanded, loadingMenu, loadingCategory, loadingCard, showModal } = this.state;
 
         const loader = <div className={classes.progressContainer}>
             <CircularProgress className={classes.progress} />
@@ -298,13 +298,13 @@ class RestosDetails extends Component {
                     <div className={classes.toolbar} />
 
                     <ExpansionPanel expanded={expanded === 'menu'}
-                                    onChange={this.handleExpand('menu')}
-                                    id={'menu'}>
-                        <ExpansionPanelSummary  className={classes.headingContainer}
-                                                expandIcon={<ExpandMoreRounded />}>
+                        onChange={this.handleExpand('menu')}
+                        id={'menu'}>
+                        <ExpansionPanelSummary className={classes.headingContainer}
+                            expandIcon={<ExpandMoreRounded />}>
                             <Typography className={classes.heading}>Menus {menus.length > 0 && `(${menus.length})`}</Typography>
                         </ExpansionPanelSummary>
-                        
+
                         {loadingMenu && loader}
                         {menus.map(menu => (
 
@@ -313,9 +313,9 @@ class RestosDetails extends Component {
                                     <Grid container spacing={16}>
                                         <Grid item>
                                             <ButtonBase className={classes.media}>
-                                                <img className={classes.img} 
-                                                        alt={menu.nom} 
-                                                        src={menu.photo} />
+                                                <img className={classes.img}
+                                                    alt={menu.nom}
+                                                    src={menu.photo} />
                                             </ButtonBase>
                                         </Grid>
                                         <Grid item xs={12} sm container>
@@ -335,10 +335,10 @@ class RestosDetails extends Component {
                                                 </Grid>
                                             </Grid>
                                         </Grid>
-                                        
+
                                         <Grid item>
                                             <Typography variant="h6">
-                                            Rs. {menu.prix}
+                                                Rs. {menu.prix}
                                             </Typography>
                                         </Grid>
                                     </Grid>
@@ -346,48 +346,48 @@ class RestosDetails extends Component {
                                 <Divider />
                             </div>
                         ))}
-                        
+
                     </ExpansionPanel>
 
-                    {loadingCategory && loader}     
+                    {loadingCategory && loader}
                     {!loadingCategory && typePlats.map(category => (
                         <ExpansionPanel expanded={expanded === 'plat-details-'.concat(category.id)}
-                                        onChange={this.handleExpand('plat-details-'.concat(category.id))}
-                                        key={`typePlat-`.concat(category.id)}>
-                            <ExpansionPanelSummary  className={classes.headingContainer}
-                                                    expandIcon={<ExpandMoreRounded />}>
+                            onChange={this.handleExpand('plat-details-'.concat(category.id))}
+                            key={`typePlat-`.concat(category.id)}>
+                            <ExpansionPanelSummary className={classes.headingContainer}
+                                expandIcon={<ExpandMoreRounded />}>
                                 <Typography className={classes.heading}>{category.nom} (Veuillez cliquer cette section pour le voir svp!)</Typography>
                             </ExpansionPanelSummary>
-                            
+
                             {loadingCard && loader}
-                            {cartes.plats.filter(platCarte => {return platCarte.type_plat.toLowerCase().localeCompare(category.nom.toLowerCase())===0 }).map(plat => (
+                            {cartes.plats.filter(platCarte => { return platCarte.type_plat.toLowerCase().localeCompare(category.nom.toLowerCase()) === 0 }).map(plat => (
                                 this.renderPlatItem(plat, classes)
                             ))}
-                            
+
                         </ExpansionPanel>
                     ))}
-                    
+
                 </main>
-                
+
                 <Snackbar anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'left',
-                        }}
-                        open={showModal}
-                        autoHideDuration={8000}
-                        onClose={this.handleCloseDialog}
-                >
-                <SnackbarContentMessage
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
+                    open={showModal}
+                    autoHideDuration={8000}
                     onClose={this.handleCloseDialog}
-                    message="OK, nous preparons votre commande!"
-                />
+                >
+                    <SnackbarContentMessage
+                        onClose={this.handleCloseDialog}
+                        message="OK, nous preparons votre commande!"
+                    />
                 </Snackbar>
 
-                <UserOrders orders={this.state.orders} 
-                            handleRemoveOrder={this.handleRemoveOrder} 
-                            handleChangeQuantity={this.handleChangeQuantity} 
-                            handleValidateOrders={this.handleValidateOrders}
-                            handleCancelOrders={this.handleCancelOrders}/>
+                <UserOrders orders={this.state.orders}
+                    handleRemoveOrder={this.handleRemoveOrder}
+                    handleChangeQuantity={this.handleChangeQuantity}
+                    handleValidateOrders={this.handleValidateOrders}
+                    handleCancelOrders={this.handleCancelOrders} />
 
             </div>
         );
