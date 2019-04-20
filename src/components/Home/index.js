@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Restos from '../Front/Restos';
 import { compose } from 'recompose';
-import { withStyles, CssBaseline} from '@material-ui/core';
+import { withStyles, CssBaseline } from '@material-ui/core';
 import MenuAppBarHomePage from '../Front/MenuAppBarHomePage';
 
 const styles = theme => ({
@@ -18,8 +18,8 @@ const styles = theme => ({
 class HomePageResto extends Component {
 
     render() {
-        const {classes} = this.props;
-        
+        const { classes } = this.props;
+
         return (
             <div className={classes.root}>
                 <CssBaseline />
@@ -28,7 +28,7 @@ class HomePageResto extends Component {
                     <div className={classes.toolbar} />
                     <Restos />
                 </main>
-                
+
             </div>
         );
     }
