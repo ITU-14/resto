@@ -8,6 +8,8 @@
 >Objectifs : application Web permettant en mode utilisateur de chercher des restaurants, et une fois qu'on a trouvé un restauranrt, de consulter ses menus et sa carte. 
 
 ### Fonctionnalites Front
+>Login
+>Inscription
 >Recherche Restaurant
 * Par : nom de restaurant
 * Par : type de cuisine
