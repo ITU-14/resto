@@ -10,7 +10,7 @@
 ### Fonctionnalites Front
 >Recherche Restaurant
 * Par : nom de restaurant
-* type de cuisine
+* Par : type de cuisine
 >Details restaurant qui nous donne :
 * Liste des Menu du restaurant
 * Liste plats
