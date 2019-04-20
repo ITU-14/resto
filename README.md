@@ -46,7 +46,7 @@ Après avoir cloner le dépot, dans le dossier que vous avez cloné, veuillez la
 
 Pour installer les packages nécessaire pour le projet
 
-### `npm start`
+### Lancer la commande `npm start`
 
 Pour lancer lancer l'application en locale.<br>
 Ouvrez [http://localhost:3000](http://localhost:3000) pour le voir dans votre navigateur.
