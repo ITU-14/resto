@@ -157,7 +157,7 @@ class RestosAdminPage extends Component {
             _id: '_' + Math.random().toString(36).substr(2, 9),
             latitude: "null",
             longitude: "null",
-            nom_resto: "resto.nom_resto",
+            nom_resto: document.getElementById("resto_name").value,
             photo: "",
             telephone: "resto.telephone",
             type_cuisine: "resto.type_cuisine"
