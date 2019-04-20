@@ -153,14 +153,14 @@ class RestosAdminPage extends Component {
     saveoredit = (resto) => {
         
         let newresto = {
-            adresse: resto.adresse,
+            adresse: document.getElementById("address").value,
             _id: '_' + Math.random().toString(36).substr(2, 9),
             latitude: "null",
             longitude: "null",
-            nom_resto: resto.nom_resto,
+            nom_resto: "resto.nom_resto",
             photo: "",
-            telephone: resto.telephone,
-            type_cuisine: resto.type_cuisine
+            telephone: "resto.telephone",
+            type_cuisine: "resto.type_cuisine"
         };
         this.props.firebase.restos().push(newresto);
     }
@@ -267,7 +267,7 @@ class RestosAdminPage extends Component {
                                     label="Type de cuisine"
                                     type="text"
                                     fullWidth
-                                    name="address"
+                                    name="type-de-cuisine"
                                     className={classes.textField}
                                     value={typeCuisine}
                                     onChange={this.onChange}
