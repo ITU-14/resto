@@ -286,7 +286,7 @@ class RestosAdminPage extends Component {
                                 Annuler
                                 </Button>
 
-                                <Button onClick={this.handleCloseEditDialog} color="primary" autoFocus>
+                                <Button onClick={this.saveoredit} color="primary" autoFocus>
                                 {editButton}
                                 </Button>
                             </DialogActions>
