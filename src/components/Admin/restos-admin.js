@@ -245,19 +245,7 @@ class RestosAdminPage extends Component {
                                     value={resto_name}
                                     onChange={this.onChange}
                                 />
-                                <TextField
-                                    id="description-resto"
-                                    label="Description"
-                                    type="text"
-                                    name="description"
-                                    multiline
-                                    rows="2"
-                                    margin="normal"
-                                    fullWidth
-                                    className={classes.textField}
-                                    value={description}
-                                    onChange={this.onChange}
-                                />
+                               
                                 <TextField
                                     margin="normal"
                                     id="type-cuisine"
