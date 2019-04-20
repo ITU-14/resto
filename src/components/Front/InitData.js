@@ -57,6 +57,15 @@ class InitData extends Component {
         });
     }
 
+    randomIdx(size, min, max) {
+        let indexes = [];
+        while(indexes.length < size) {
+            let idx = this.getRandomIdx(min, max);
+            if(!indexes.includes(idx)) indexes.push(idx);
+        }
+        return indexes;
+    }
+
     getRandomIdx(min, max) {
         return Math.floor(Math.random() * (max - min) ) + min;
     }
@@ -65,26 +74,21 @@ class InitData extends Component {
     createCarte(plats, restos) {
         // this.setState({ loading: true });
         let carte = {resto_id: null, plats: []};
-        
+        const k = 10;
         restos.forEach(resto => {
             carte.resto_id = resto._id;
             carte.plats = [];
+            let randomIdxResistance = this.randomIdx(k, 0, 171);
+            let randomIdxEntree = this.randomIdx(k, 172, 335);
+            let randomIdxDessert = this.randomIdx(k, 336, 383);
             // random resistance 0 - 171 172
-            for(let i=0;i<10;i++) {
+            for(let i=0;i<k;i++) {
                 // random resistance
-                let randomIdx = this.getRandomIdx(0, 171);
-                carte.plats.push(plats[randomIdx]);
-                //console.log("RDX 01::::", randomIdx);
+                carte.plats.push(plats[randomIdxResistance[i]]);
                 // random hors d'oeuvre
-                randomIdx = this.getRandomIdx(172, 335);
-                carte.plats.push(plats[randomIdx]);
-                // console.log("RDX 02::::", randomIdx);
-
+                carte.plats.push(plats[randomIdxEntree[i]]);
                 // random dessert
-                randomIdx = this.getRandomIdx(336, 383);
-                carte.plats.push(plats[randomIdx]);
-                // console.log("RDX 03::::", randomIdx);
-
+                carte.plats.push(plats[randomIdxDessert[i]]);
             }
             // save to firebase
             this.props.firebase.cartes().push(carte);
