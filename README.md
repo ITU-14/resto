@@ -42,7 +42,7 @@ Ouvrez [https://resto-39060.firebaseapp.com/login](https://resto-39060.firebasea
 
 Après avoir cloner le dépot, dans le dossier que vous avez cloné, veuillez lancer les commande suivantes successivement:
 
-### `npm install`
+### Lancer la commande `npm install`
 
 Pour installer les packages nécessaire pour le projet
 
