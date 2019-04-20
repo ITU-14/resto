@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { compose } from 'recompose';
 
-import { withStyles, CssBaseline, IconButton, Paper, Table, TableHead, TableCell, TableRow, TableBody, TableFooter, TablePagination, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Avatar, CircularProgress } from '@material-ui/core';
+import { withStyles, CssBaseline, IconButton, Paper, Table, TableHead, TableCell, TableRow, TableBody, TableFooter, TablePagination, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Avatar, CircularProgress, Snackbar } from '@material-ui/core';
 import { Add, Edit } from '@material-ui/icons';
 
 import { withFirebase } from '../Firebase';
 import { withAuthorization } from '../Session';
 import AppbarAdmin from './appbar-admin';
 import * as ROLES from '../../constants/roles';
+import SnackbarContentMessage from '../Front/SnackbarContentMessage';
 
 const styles = theme => ({
     root: {
@@ -100,8 +101,10 @@ class RestosAdminPage extends Component {
                 telephone: '',
                 longitude: '',
                 latitude: '',
-                photo: '/assets/img/default-resto.jpg'
+                photo: '/assets/img/default-resto.png'
             },
+            showModal: false,
+            messageSnackBar: '',
             rowsPerPage: 10,
             ...INITIAL_STATE
         };
@@ -135,8 +138,12 @@ class RestosAdminPage extends Component {
             telephone: '',
             longitude: '',
             latitude: '',
-            photo: '/assets/img/default-resto.jpg'
+            photo: '/assets/img/default-resto.png'
         }
+    }
+
+    handleCloseDialog = () => {
+        this.setState({showModal: false})
     }
 
     handleOpenCreateDialog = () => {
@@ -163,17 +170,16 @@ class RestosAdminPage extends Component {
         if(restoToEdit._id.localeCompare("") === 0) {
             restoToEdit._id = '_'.concat(Math.random().toString(36).substr(2, 9));
             this.props.firebase.restos().push(restoToEdit);
-            this.setState({openEditDialog: false});
+            this.setState({openEditDialog: false, showModal: true, messageSnackBar: "Resto ajouté avec succès! Elle se trouve a la dernière page"});
         } else {
             this.props.firebase.resto(restoToEdit.id).update(restoToEdit);
-            this.setState({openEditDialog: false});
+            this.setState({openEditDialog: false, showModal: true, messageSnackBar: "Votre modification a été enregistré!"});
         }
     }
 
     handleCloseEditDialog = () => {
         this.setState({ openEditDialog: false });
     }
-
 
     handleChangePage = (event, page) => {
         this.setState({ page });
@@ -189,7 +195,7 @@ class RestosAdminPage extends Component {
         // const {users, loading} = this.state;
         /* eslint-disable */
         const { classes } = this.props;
-        const { restos, page, rowsPerPage, editLabel, editButton, loading, restoEdit } = this.state;
+        const { restos, page, rowsPerPage, editLabel, editButton, loading, restoEdit, messageSnackBar, showModal} = this.state;
         const loader = <div className={classes.progressContainer}>
             <CircularProgress className={classes.progress} />
         </div>
@@ -312,6 +318,20 @@ class RestosAdminPage extends Component {
                                 </Button>
                             </DialogActions>
                         </Dialog>
+
+                        <Snackbar anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'left',
+                                }}
+                                open={showModal}
+                                autoHideDuration={8000}
+                                onClose={this.handleCloseDialog}
+                        >
+                        <SnackbarContentMessage
+                            onClose={this.handleCloseDialog}
+                            message={messageSnackBar}
+                        />
+                        </Snackbar>
                     </div>
                 </main>
             </div>
