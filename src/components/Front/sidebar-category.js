@@ -19,21 +19,21 @@ class SidebarCategory extends Component {
                     <ListItemIcon>
                         <Restaurant />
                     </ListItemIcon>
-                    <ListItemText primary="Restos"/>
+                    <ListItemText primary="Restos" />
                 </ListItem>
 
                 <ListItem button selected={this.props.selectedIndexInList === 1} onClick={event => this.handleSelectListItem(event, ROUTES.ADMIN_CARTES)}>
                     <ListItemIcon>
                         <Map />
                     </ListItemIcon>
-                    <ListItemText primary="Cartes"/>
+                    <ListItemText primary="Cartes" />
                 </ListItem>
 
                 <ListItem button selected={this.props.selectedIndexInList === 2} onClick={event => this.handleSelectListItem(event, ROUTES.ADMIN_MENUS)}>
                     <ListItemIcon>
                         <RestaurantMenuOutlined />
                     </ListItemIcon>
-                    <ListItemText primary="Menus"/>
+                    <ListItemText primary="Menus" />
                 </ListItem>
             </List>
         );
