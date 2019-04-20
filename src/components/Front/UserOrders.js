@@ -46,7 +46,7 @@ const styles = theme => ({
 });
 
 class UserOrders extends Component {
-    
+
     handleChange = name => event => {
         this.setState({ [name]: event.target.value });
     }
@@ -59,15 +59,15 @@ class UserOrders extends Component {
             somme = parseFloat(somme) + parseFloat(order.prixUnitaire * order.quantity);
             quantity = parseFloat(quantity) + parseFloat(order.quantity);
         });
-        return { somme: somme.toFixed(2), quantity: quantity};
+        return { somme: somme.toFixed(2), quantity: quantity };
     }
 
     render() {
-        const {classes, orders} = this.props;
+        const { classes, orders } = this.props;
         const command = orders.commandes.length > 0;
         const options = [];
-        for(let k = 0; k < 30;k++) {
-            options[k] = k+1;
+        for (let k = 0; k < 30; k++) {
+            options[k] = k + 1;
         }
         const cards = (
             <div>
@@ -77,9 +77,9 @@ class UserOrders extends Component {
                             <Grid container spacing={16}>
                                 <Grid item>
                                     <ButtonBase className={classes.media}>
-                                        <img className={classes.img} 
-                                                alt={order.nom} 
-                                                src={order.photo} />
+                                        <img className={classes.img}
+                                            alt={order.nom}
+                                            src={order.photo} />
                                     </ButtonBase>
                                 </Grid>
                                 <Grid item xs={12} sm container>
@@ -106,7 +106,7 @@ class UserOrders extends Component {
                                         </Grid>
                                     </Grid>
                                 </Grid>
-                                
+
                                 <Grid item>
                                     <Button color="secondary" title="Supprimer" onClick={() => this.props.handleRemoveOrder(order.id)}>
                                         <Delete />
@@ -119,16 +119,16 @@ class UserOrders extends Component {
                 ))}
 
                 <Divider />
-                <Button variant="contained" 
-                        color="secondary" 
-                        className={classes.validbutton} 
-                        onClick={this.props.handleCancelOrders}>
+                <Button variant="contained"
+                    color="secondary"
+                    className={classes.validbutton}
+                    onClick={this.props.handleCancelOrders}>
                     Annuler
                 </Button>
-                <Button variant="contained" 
-                        color="primary" 
-                        className={classes.validbutton} 
-                        onClick={this.props.handleValidateOrders}>
+                <Button variant="contained"
+                    color="primary"
+                    className={classes.validbutton}
+                    onClick={this.props.handleValidateOrders}>
                     Valider
                 </Button>
             </div>
@@ -144,19 +144,19 @@ class UserOrders extends Component {
 
         return (
             <Drawer
-                    className={classes.drawer}
-                    variant="permanent"
-                    classes={{
-                        paper: classes.drawerPaper,
-                    }}
-                    anchor="right"
-                >
+                className={classes.drawer}
+                variant="permanent"
+                classes={{
+                    paper: classes.drawerPaper,
+                }}
+                anchor="right"
+            >
                 <Typography component="h6" variant="h6" className={classNames(classes.toolbar, classes.toolbarText)}>
-                    Commandes {this.props.orders.commandes.length> 0 && `(${this.calculatePrix().quantity}) - Rs. ${this.calculatePrix().somme}`}
+                    Commandes {this.props.orders.commandes.length > 0 && `(${this.calculatePrix().quantity}) - Rs. ${this.calculatePrix().somme}`}
                 </Typography>
                 <Divider />
                 {command ? cards : noCards}
-                
+
             </Drawer>
         );
     }
