@@ -110,8 +110,8 @@ class Restos extends Component {
     }
 
     filterList = () => {
-        const { searchName , searchTypeCuisine} = this.state;
-        
+        const { searchName, searchTypeCuisine } = this.state;
+
         this.props.firebase.restos().on('value', snapshot => {
             const restosObject = snapshot.val();
             const restosList = Object.keys(restosObject).map(key => ({
@@ -121,7 +121,7 @@ class Restos extends Component {
 
             const listeResto = [];
             restosList.forEach(resto => {
-                if (resto.nom_resto.toLowerCase().indexOf(searchName.toLowerCase()) > -1 && resto.type_cuisine.toLowerCase().indexOf(searchTypeCuisine.toLowerCase()) > -1 )
+                if (resto.nom_resto.toLowerCase().indexOf(searchName.toLowerCase()) > -1 && resto.type_cuisine.toLowerCase().indexOf(searchTypeCuisine.toLowerCase()) > -1)
                     listeResto.push(resto);
             });
             this.setState({
@@ -225,12 +225,12 @@ class Restos extends Component {
                         </CardContent>
                         <CardActions className={classes.cardButton}>
 
-                        <Link to={`/fiche-resto/${resto._id}`} color="primary">
-                            <Button color="primary">
-                                <Map />
-                                Voir la carte
+                            <Link to={`/fiche-resto/${resto._id}`} color="primary">
+                                <Button color="primary">
+                                    <Map />
+                                    Voir la carte
                             </Button>
-                        </Link>
+                            </Link>
                         </CardActions>
                     </Card>
                 ))}
@@ -246,15 +246,15 @@ class Restos extends Component {
                                 rowsPerPage={rowsPerPage}
                                 page={page}
                                 SelectProps={{ native: true }}
-                                onChangePage={this.handleChangePage}     
-                                labelDisplayedRows={({ from, to, count }) => `Resto ${from} - ${to} sur ${count} restos (page ${page+1})`}
+                                onChangePage={this.handleChangePage}
+                                labelDisplayedRows={({ from, to, count }) => `Resto ${from} - ${to} sur ${count} restos (page ${page + 1})`}
                                 labelRowsPerPage="Lignes par page" />
                         </TableRow>
                     </TableFooter>
                 </Table>}
 
                 {!loading && restos.length === 0 && noResult}
-                
+
             </Paper>
         );
     }
