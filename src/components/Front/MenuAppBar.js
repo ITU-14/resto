@@ -11,18 +11,18 @@ const drawerWidth = 400;
 
 const styles = theme => ({
     root: {
-      flexGrow: 1,
+        flexGrow: 1,
     },
     appbar: {
         width: `calc(100% - ${drawerWidth}px)`,
         marginRight: drawerWidth,
     },
     grow: {
-      flexGrow: 1,
+        flexGrow: 1,
     },
     menuButton: {
-      marginLeft: -12,
-      marginRight: 20,
+        marginLeft: -12,
+        marginRight: 20,
     },
     drawerPaper: {
         position: 'relative',
@@ -56,17 +56,17 @@ const styles = theme => ({
 class MenuAppBar extends Component {
     constructor(props) {
         super(props);
-        this.state = {auth: true, anchorEl: null, open: true};
+        this.state = { auth: true, anchorEl: null, open: true };
     }
-    
+
     handleMenu = event => {
         this.setState({ anchorEl: event.currentTarget });
     };
-    
+
     handleClose = () => {
         this.setState({ anchorEl: null });
     };
-    
+
     handleLogout = () => {
         this.props.firebase.logout();
         this.setState({ anchorEl: null });
@@ -81,62 +81,62 @@ class MenuAppBar extends Component {
     }
 
     handleDrawerOpen = () => {
-        this.setState({open: true});
+        this.setState({ open: true });
     }
 
     handleDrawerClose = () => {
-        this.setState({open: false});
+        this.setState({ open: false });
     }
 
     render() {
         const { classes } = this.props;
         const { anchorEl } = this.state;
         const open = Boolean(anchorEl);
-        
+
 
         return (
             <div className={classes.divContainer}>
                 <AppBar position="fixed" className={classes.appbar}>
                     <Toolbar>
-                    
-                    <Typography variant="h6" color="inherit" className={classes.grow} onClick={this.handleHomePage}>
-                        <span className={classes.redirect}>Au resto</span>    
-                    </Typography>
-                    
-                    <AuthUserContext.Consumer>
-                        {authUser => authUser ? <div>
-                        <IconButton
-                            aria-owns={open ? 'menu-appbar' : undefined}
-                            aria-haspopup="true"
-                            onClick={this.handleMenu}
-                            color="inherit"
-                        >
-                            <AccountCircle />
-                        </IconButton>
-                        <Menu
-                            id="menu-appbar"
-                            anchorEl={anchorEl}
-                            anchorOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
-                            }}
-                            transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
-                            }}
-                            open={open}
-                            onClose={this.handleClose}
-                        >
-                            <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                            <MenuItem onClick={this.handleLogout}>Se d&eacute;connecter</MenuItem>
-                        </Menu>
-                        
-                        </div> : <Button color="inherit" onClick={this.handleLogin}>Se connecter</Button>}
-                    </AuthUserContext.Consumer>
-                    
+
+                        <Typography variant="h6" color="inherit" className={classes.grow} onClick={this.handleHomePage}>
+                            <span className={classes.redirect}>Au resto</span>
+                        </Typography>
+
+                        <AuthUserContext.Consumer>
+                            {authUser => authUser ? <div>
+                                <IconButton
+                                    aria-owns={open ? 'menu-appbar' : undefined}
+                                    aria-haspopup="true"
+                                    onClick={this.handleMenu}
+                                    color="inherit"
+                                >
+                                    <AccountCircle />
+                                </IconButton>
+                                <Menu
+                                    id="menu-appbar"
+                                    anchorEl={anchorEl}
+                                    anchorOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    open={open}
+                                    onClose={this.handleClose}
+                                >
+                                    <MenuItem onClick={this.handleClose}>Profile</MenuItem>
+                                    <MenuItem onClick={this.handleLogout}>Se d&eacute;connecter</MenuItem>
+                                </Menu>
+
+                            </div> : <Button color="inherit" onClick={this.handleLogin}>Se connecter</Button>}
+                        </AuthUserContext.Consumer>
+
                     </Toolbar>
                 </AppBar>
-                
+
             </div>
         );
     }
