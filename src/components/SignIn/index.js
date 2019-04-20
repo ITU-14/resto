@@ -14,9 +14,9 @@ const styles = theme => ({
         marginLeft: theme.spacing.unit * 3,
         marginRight: theme.spacing.unit * 3,
         [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
-        width: 400,
-        marginLeft: 'auto',
-        marginRight: 'auto',
+            width: 400,
+            marginLeft: 'auto',
+            marginRight: 'auto',
         },
     },
     paper: {
@@ -41,7 +41,7 @@ const styles = theme => ({
     section1: {
         marginBottom: `${theme.spacing.unit * 2}px`,
     },
-    link: { 
+    link: {
         textDecoration: 'none',
         color: '#2196F3'
     },
@@ -76,15 +76,15 @@ class SignInFormBase extends Component {
     }
 
     onSubmit = (event) => {
-        const {email, password} = this.state;
+        const { email, password } = this.state;
         this.props.firebase
-        .loginWithEmailAndPassword(email, password)
-        .then( () => {
-            this.setState({ ...INITIAL_STATE });
-            this.props.history.push(ROUTES.LANDING);
-        }).catch( error => {
-            this.setState({ error });
-        });
+            .loginWithEmailAndPassword(email, password)
+            .then(() => {
+                this.setState({ ...INITIAL_STATE });
+                this.props.history.push(ROUTES.LANDING);
+            }).catch(error => {
+                this.setState({ error });
+            });
         event.preventDefault();
     }
 
@@ -109,10 +109,10 @@ class SignInFormBase extends Component {
                     <Typography component="h1" variant="h5">
                         Veuillez-vous connecter
                     </Typography>
-                    {error && 
-                    <div className={classes.errorMessage}>
-                        <p>{error.message}</p>
-                    </div>
+                    {error &&
+                        <div className={classes.errorMessage}>
+                            <p>{error.message}</p>
+                        </div>
                     }
                     <form onSubmit={this.onSubmit} className={classes.form}>
                         <div className={classes.section1}>
@@ -123,7 +123,7 @@ class SignInFormBase extends Component {
                             <FormControl margin="normal" required fullWidth>
                                 <TextField id="password" label="Mot de passe" type="password" name="password" variant="outlined" value={password} onChange={this.onChange} required />
                             </FormControl>
-                            
+
                             <Button variant="contained" type="submit" color="primary" className={classes.submit} fullWidth>Se connecter</Button>
                         </div>
                         <Divider variant="middle" />
