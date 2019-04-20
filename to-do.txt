@@ -151,6 +151,10 @@ Hosting URL: https://resto-39060.firebaseapp.com
 - B.O
 	- CRUD
 
+- Inscription: à verifier
+	
+- Change database
+
 - remove duplicate data from initdata
 
 
