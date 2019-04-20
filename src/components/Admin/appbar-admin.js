@@ -73,7 +73,7 @@ const styles = theme => ({
 });
 
 class AppBarAdmin extends Component {
-    
+
     constructor(props) {
         super(props)
 
@@ -83,11 +83,11 @@ class AppBarAdmin extends Component {
     }
 
     handleDrawerOpen = () => {
-        this.setState({open: true});
+        this.setState({ open: true });
     }
 
     handleDrawerClose = () => {
-        this.setState({open: false});
+        this.setState({ open: false });
     }
 
     render() {
@@ -96,9 +96,9 @@ class AppBarAdmin extends Component {
         return (
             <div className={classes.divContainer}>
                 <AppBar
-                        position="absolute"
-                        className={classNames(classes.appBar, this.state.open && classes.appBarShift)}
-                    >
+                    position="absolute"
+                    className={classNames(classes.appBar, this.state.open && classes.appBarShift)}
+                >
                     <Toolbar disableGutters={!this.state.open} className={classes.toolbar}>
                         <IconButton color="inherit" aria-label="Open drawer" onClick={this.handleDrawerOpen} className={classNames(classes.menuButton, this.state.open && classes.menuButtonHidden)}>
                             <Menu />
@@ -112,7 +112,7 @@ class AppBarAdmin extends Component {
                     </Toolbar>
                 </AppBar>
 
-                <Drawer variant="permanent" classes={{paper: classNames(classes.drawerPaper, !this.state.open && classes.drawerPaperClose)}} open={this.state.open}>
+                <Drawer variant="permanent" classes={{ paper: classNames(classes.drawerPaper, !this.state.open && classes.drawerPaperClose) }} open={this.state.open}>
                     <div className={classes.toolbarIcon}>
                         <IconButton onClick={this.handleDrawerClose}>
                             <ChevronLeftSharp />
