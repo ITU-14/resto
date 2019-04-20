@@ -17,6 +17,7 @@ const App = () => (
             <Route path={ROUTES.DETAILS} component={DetailsResto} />
             <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
             <Route path={ROUTES.SIGN_IN} component={SignInPage} />
+            <Route exact path={ROUTES.ADMIN} component={RestosAdminPage} />
             <Route path={ROUTES.ADMIN_RESTOS} component={RestosAdminPage} />
             <Route path={ROUTES.ADMIN_CARTES} component={CardsAdminPage} />
             <Route path={ROUTES.ADMIN_MENUS} component={MenusAdminPage} />

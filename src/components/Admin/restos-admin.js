@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { compose } from 'recompose';
 
-import { withStyles, CssBaseline, IconButton, Paper, Table, TableHead, TableCell, TableRow, TableBody, TableFooter, TablePagination, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Avatar, CircularProgress, Snackbar } from '@material-ui/core';
+import { withStyles, CssBaseline, IconButton, Paper, Table, TableHead, TableCell, TableRow, TableBody, TableFooter, TablePagination, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Avatar, CircularProgress, Snackbar, Typography } from '@material-ui/core';
 import { Add, Edit } from '@material-ui/icons';
 
 import { withFirebase } from '../Firebase';
@@ -208,6 +208,9 @@ class RestosAdminPage extends Component {
                     <div className={classes.appBarSpacer} />
 
                     <div className={classes.tableContainer}>
+                        <Typography variant="h5">
+                            Liste des restos (pagin&eacute;e)
+                        </Typography>
                         <Button variant="contained" className={classes.buttonAdd} onClick={this.handleOpenCreateDialog}>
                             Ajouter
                             <Add className={classes.rightIcon} />
