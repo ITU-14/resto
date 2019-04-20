@@ -1,7 +1,7 @@
 # Resto
-Projet MBDS - REACT. 
-LAI Christophe 
-NIRIJAONA Lala Ricoeur Khino
+>Projet MBDS - REACT. 
+* LAI Christophe 
+* NIRIJAONA Lala Ricoeur Khino
 
 ## Description
 ### Mini Projet - un gestionnaire de menus / cartes pour des restaurants
