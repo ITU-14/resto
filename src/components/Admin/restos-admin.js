@@ -159,7 +159,7 @@ class RestosAdminPage extends Component {
             longitude: "null",
             nom_resto: document.getElementById("resto_name").value,
             photo: "",
-            telephone: "resto.telephone",
+            telephone: document.getElementById("phone").value,
             type_cuisine: "resto.type_cuisine"
         };
         this.props.firebase.restos().push(newresto);
@@ -287,7 +287,7 @@ class RestosAdminPage extends Component {
                                 <TextField
                                     margin="normal"
                                     id="phone"
-                                    name="phoneNumber"
+                                    name="phone"
                                     label="Numero de t&eacute;l&eacute;phone"
                                     type="text"
                                     fullWidth
